@@ -1,0 +1,265 @@
+.header {
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.importCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  max-width: 860px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Steps ── */
+.stepBlock {
+  margin-bottom: var(--space-6);
+}
+
+.stepLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 700;
+  color: var(--ka-black);
+  margin-bottom: var(--space-3);
+}
+
+.stepNumber {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background-color: var(--ka-blue);
+  color: var(--ka-white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Class Selector ── */
+.classSelect {
+  width: 100%;
+  padding: 0.75rem var(--space-4);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  background-color: var(--ka-white);
+  font-size: 1rem;
+  color: var(--ka-black);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.classSelect:focus {
+  outline: none;
+  border-color: var(--ka-blue);
+  box-shadow: 0 0 0 3px rgba(71, 169, 218, 0.15);
+}
+
+.classNote {
+  font-size: 0.875rem;
+  color: var(--color-warning);
+  margin-top: var(--space-2);
+}
+
+/* ── Upload Area ── */
+.fileInput {
+  display: none;
+}
+
+.dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  text-align: center;
+  background-color: var(--bg-light);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  user-select: none;
+}
+
+.dropzone:hover {
+  border-color: var(--ka-blue);
+  background-color: var(--bg-tint);
+}
+
+.dropzoneActive {
+  border-color: var(--ka-blue);
+  background-color: var(--bg-tint);
+  box-shadow: 0 0 0 3px rgba(71, 169, 218, 0.2);
+}
+
+.dropzoneIcon {
+  width: 48px;
+  height: 48px;
+  color: var(--ka-blue);
+}
+
+.dropzoneText {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.dropzoneSubtext {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Requirements ── */
+.reqBox {
+  background-color: #f8fafc;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+  border: 1px solid var(--border-gray);
+}
+
+.reqTitle {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-2);
+  margin-top: 0;
+}
+
+.reqList {
+  margin: 0;
+  padding-left: var(--space-4);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.reqList li {
+  margin-bottom: var(--space-1);
+}
+
+.codeSpan {
+  background-color: #e2e8f0;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #334155;
+  font-size: 0.8rem;
+}
+
+/* ── Preview ── */
+.previewSection {
+  border-top: 1px solid var(--border-gray);
+  padding-top: var(--space-6);
+}
+
+.previewHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.previewTitle {
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.parseStatsBadges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--bg-light);
+}
+
+.table th {
+  padding: var(--space-3);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.table td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--bg-light);
+  color: var(--ka-black);
+}
+
+.rowNum {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: 40px;
+}
+
+.confirmRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* ── Status Messages ── */
+.statusMessage {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+  font-weight: 500;
+}
+
+.statusSuccess {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.statusError {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}

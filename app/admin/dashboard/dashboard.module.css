@@ -1,0 +1,301 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.actionBtnIcon {
+  margin-right: var(--space-1);
+}
+
+/* ── Metrics Grid ── */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.metricLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.metricValue {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.metricNumber {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--ka-black);
+}
+
+.metricNumberDanger {
+  color: var(--color-danger);
+}
+
+.trendText {
+  font-size: 0.875rem;
+  color: var(--color-success);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.trendTextNeutral {
+  color: var(--text-secondary);
+}
+
+.trendIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Content Grid ── */
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.cardAction {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ka-blue);
+  text-decoration: none;
+}
+
+.cardAction:hover {
+  text-decoration: underline;
+}
+
+/* ── Recent Payments List ── */
+.paymentList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.paymentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-gray);
+  background-color: var(--ka-white);
+  transition: background-color var(--transition-fast);
+}
+
+.paymentItem:hover {
+  background-color: var(--bg-light);
+}
+
+.paymentInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.paymentAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.paymentName {
+  font-weight: 600;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.paymentDetails {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+  margin-top: 2px;
+}
+
+.paymentAmount {
+  text-align: right;
+}
+
+.paymentTotal {
+  font-weight: 600;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.paymentTime {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+  margin-top: 2px;
+}
+
+/* ── Task Board ── */
+.taskBoardCard {
+  background-color: var(--bg-light);
+  border: 1px dashed #d1d5db;
+}
+
+.taskIconButton {
+  background: none;
+  border: none;
+  color: var(--ka-blue);
+  cursor: pointer;
+  padding: 0;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.taskItem {
+  background-color: var(--ka-white);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-gray);
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+}
+
+.taskTitle {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  margin-top: 6px;
+}
+
+.priorityHigh { background-color: var(--color-danger); }
+.priorityMedium { background-color: var(--color-warning); }
+.priorityLow { background-color: #d1d5db; }
+
+.taskAssignee {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.viewAllTasksBtn {
+  margin-top: var(--space-4);
+}
+
+/* ── Quick Actions ── */
+.quickActionItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  color: var(--ka-black);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.quickActionItem:hover {
+  background-color: var(--bg-tint);
+  border-color: var(--ka-blue);
+}
+
+.quickActionItem svg:first-child {
+  color: var(--ka-blue);
+  flex-shrink: 0;
+}
+
+.chevron {
+  margin-left: auto;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* ── Empty state ── */
+.emptyText {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  text-align: center;
+  padding: var(--space-8) 0;
+  line-height: 1.6;
+}

@@ -1,0 +1,326 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.errorAlert {
+  background-color: #fef2f2;
+  color: var(--color-danger);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+  font-size: 0.875rem;
+  border: 1px solid #fecaca;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.emptyCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-12);
+  text-align: center;
+}
+
+.emptyText {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.invoiceCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.invoiceMain {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  font-weight: 700;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.invoiceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.studentName {
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.2;
+}
+
+.invoiceMeta {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.amount {
+  font-weight: 600;
+  color: var(--color-success);
+  margin: 0;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .invoiceCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .actions {
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+  .actions button, .actions a {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* ── Custom Invoice Form ── */
+.formCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.formCardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin-bottom: 24px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.formGridFull {
+  grid-column: 1 / -1;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ka-black);
+}
+
+.formInput {
+  padding: 12px 16px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  background-color: var(--ka-white);
+  color: var(--ka-black);
+}
+
+.formInput:focus { border-color: var(--ka-blue); }
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid var(--border-gray);
+  padding-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .formGrid { grid-template-columns: 1fr; }
+}
+
+/* DENSE TABLE */
+.denseTableCard {
+  background: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+.denseTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  min-width: 800px;
+}
+.denseTable thead { background: var(--bg-light); }
+.denseTable th {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border-gray);
+  white-space: nowrap;
+}
+.denseTable td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--bg-light);
+  color: var(--ka-black);
+  vertical-align: middle;
+}
+.denseTable tbody tr:last-child td { border-bottom: none; }
+.denseTable tbody tr:hover { background: #f8fafc; }
+
+.denseStudentName { font-weight: 600; font-size: 0.9rem; }
+.denseInvNo { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
+
+.actionBtn {
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.actionApprove { background: var(--ka-blue); color: white; }
+.actionApprove:disabled { opacity: 0.5; cursor: not-allowed; }
+.actionReceipt { background: #e2e8f0; color: #475569; margin-right: 8px; text-decoration: none; display: inline-block; padding: 4px 12px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; }
+.actionReceipt:hover { background: #cbd5e1; }
+
+
+/* TOOLBAR */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  background: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-sm);
+}
+.toolbarLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.toolbarInput, .toolbarSelect {
+  padding: 8px 10px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: var(--ka-black);
+  background: var(--ka-white);
+}
+.toolbarSep {
+  width: 1px;
+  height: 28px;
+  background: var(--border-gray);
+  flex-shrink: 0;
+}
+
+
+/* PAGINATION */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.pageBtn {
+  padding: 7px 14px;
+  border: 1px solid var(--border-gray);
+  background: var(--ka-white);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ka-black);
+  transition: background 0.15s;
+}
+.pageBtn:hover:not(:disabled) { background: var(--bg-light); }
+.pageBtn:disabled { opacity: 0.45; cursor: not-allowed; }
+.pageInfo { font-size: 0.85rem; color: var(--text-secondary); padding: 0 8px; }
+

@@ -1,0 +1,101 @@
+.header {
+  margin-bottom: 24px;
+}
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--ka-black);
+}
+.subtitle {
+  color: var(--text-secondary);
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.card {
+  background: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-gray);
+  padding-bottom: 8px;
+}
+.formGroup {
+  margin-bottom: 16px;
+}
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+.input, .select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-gray);
+  border-radius: 8px;
+  font-family: inherit;
+}
+.submitBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--ka-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.submitBtn:hover {
+  opacity: 0.9;
+}
+.rowGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.resultItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--bg-light);
+  border-radius: 8px;
+}
+.resultInfo {
+  display: flex;
+  flex-direction: column;
+}
+.resultStudent {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.resultDetails {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.resultTime {
+  font-weight: 800;
+  color: var(--ka-blue);
+  background: var(--bg-tint);
+  padding: 4px 10px;
+  border-radius: 100px;
+}

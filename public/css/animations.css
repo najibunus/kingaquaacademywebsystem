@@ -1,0 +1,209 @@
+/* ============================================
+   KINGAQUA ACADEMY — Scroll Animations
+   ============================================ */
+
+/* --- Reveal on Scroll --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Delay classes */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.18s; }
+.delay-3 { transition-delay: 0.26s; }
+.delay-4 { transition-delay: 0.34s; }
+.delay-5 { transition-delay: 0.42s; }
+.delay-6 { transition-delay: 0.50s; }
+.delay-7 { transition-delay: 0.58s; }
+.delay-8 { transition-delay: 0.66s; }
+
+/* --- Hero Entrance Animations --- */
+@keyframes hero-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes hero-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-badge {
+  animation: hero-slide-up 0.6s 0.2s both;
+}
+
+.hero-title {
+  animation: hero-title-in 0.8s 0.35s both;
+}
+
+.hero-description {
+  animation: hero-slide-up 0.7s 0.5s both;
+}
+
+.hero-actions {
+  animation: hero-slide-up 0.7s 0.65s both;
+}
+
+.hero-stats {
+  animation: hero-fade-in 0.7s 0.85s both;
+}
+
+.hero-image-wrap {
+  animation: hero-fade-in 1s 0.4s both;
+}
+
+/* --- Wave Animation --- */
+@keyframes wave-anim {
+  0% { d: path("M0,128L60,138.7C120,149,240,171,360,165.3C480,160,600,128,720,117.3C840,107,960,117,1080,133.3C1200,149,1320,171,1380,181.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"); }
+  50% { d: path("M0,160L60,149.3C120,139,240,117,360,128C480,139,600,181,720,192C840,203,960,181,1080,160C1200,139,1320,117,1380,106.7L1440,96L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"); }
+  100% { d: path("M0,128L60,138.7C120,149,240,171,360,165.3C480,160,600,128,720,117.3C840,107,960,117,1080,133.3C1200,149,1320,171,1380,181.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"); }
+}
+
+/* --- Shimmer Effect (skeleton loader alternative) --- */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* --- Pulse Ring Effect (for WhatsApp btn) --- */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.contact-whatsapp-btn {
+  position: relative;
+}
+
+.contact-whatsapp-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background: rgba(37, 211, 102, 0.35);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+}
+
+/* --- Counter Animation --- */
+.stat-number.counting {
+  animation: count-pulse 0.1s ease-in-out;
+}
+
+@keyframes count-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+/* --- Floating elements on hero --- */
+@keyframes float-card-1 {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-12px) rotate(-1deg); }
+}
+
+@keyframes float-card-2 {
+  0%, 100% { transform: translateY(0) rotate(2deg); }
+  50% { transform: translateY(-10px) rotate(1.5deg); }
+}
+
+.hero-float-card.card-1 {
+  animation: float-card-1 4.5s ease-in-out infinite;
+}
+
+.hero-float-card.card-2 {
+  animation: float-card-2 5s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+/* --- Background particles --- */
+.particle:nth-child(1) { width: 280px; height: 280px; top: 10%; left: 5%; animation-duration: 7s; }
+.particle:nth-child(2) { width: 180px; height: 180px; top: 50%; right: 10%; animation-duration: 9s; animation-delay: -3s; }
+.particle:nth-child(3) { width: 120px; height: 120px; bottom: 20%; left: 20%; animation-duration: 6s; animation-delay: -1s; }
+.particle:nth-child(4) { width: 80px; height: 80px; top: 30%; right: 30%; animation-duration: 8s; animation-delay: -4s; }
+.particle:nth-child(5) { width: 60px; height: 60px; bottom: 30%; right: 5%; animation-duration: 5s; animation-delay: -2s; }
+
+/* --- Loading State Improvement --- */
+img {
+  transition: opacity 0.3s ease;
+}
+
+/* --- Smooth section transitions --- */
+section {
+  transition: background-color var(--transition-slow);
+}
+
+/* --- Hover glow effect for primary buttons --- */
+.btn-primary:hover {
+  box-shadow: var(--shadow-xl), 0 8px 25px rgba(21, 66, 103, 0.4), 0 0 0 4px rgba(21, 66, 103, 0.1);
+}
+
+/* --- Timeline connector animation --- */
+.timeline-item:hover .timeline-dot::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  from { transform: scale(1); opacity: 0.6; }
+  to { transform: scale(2.5); opacity: 0; }
+}

@@ -1,0 +1,243 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--space-8);
+  }
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-1);
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 1.875rem;
+  }
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.clockInBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-4);
+  font-size: 1.125rem;
+  font-weight: 700;
+  background-color: var(--ka-black);
+  color: var(--ka-white);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .clockInBtn {
+    width: auto;
+    padding: var(--space-3) var(--space-8);
+  }
+}
+
+/* ── Schedule List ── */
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scheduleList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.classCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.classHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.className {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.classTime {
+  font-size: 0.875rem;
+  color: var(--ka-blue);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.classDetails {
+  display: flex;
+  gap: var(--space-4);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.classDetailItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.classActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.actionBtn {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  border: 1px solid var(--border-gray);
+  background-color: var(--ka-white);
+  color: var(--ka-black);
+}
+
+.actionBtnPrimary {
+  background-color: var(--ka-blue);
+  color: var(--ka-white);
+  border: none;
+}
+
+.action.evalBtn:hover {
+  background-color: var(--ka-blue);
+  color: var(--ka-white);
+  border-color: var(--ka-blue);
+}
+
+/* ── Modal ── */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modalContent {
+  background-color: var(--ka-white);
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+/* ── Needs Evaluation Queue ── */
+.evalCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.evalItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.evalItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.evalStudent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.evalAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.evalName {
+  font-weight: 600;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.evalClass {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.evalBtn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  border: none;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+}

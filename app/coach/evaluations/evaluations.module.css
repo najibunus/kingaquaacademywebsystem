@@ -1,0 +1,307 @@
+.header {
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* ── Two-panel layout ── */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .contentGrid { grid-template-columns: 1fr; }
+}
+
+.formPanel, .historyPanel {}
+
+.panelTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin-bottom: 24px;
+}
+
+.emptyText {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* ── Student picker grid ── */
+.studentGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.studentPickerBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  background: var(--bg-light);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.studentPickerBtn:hover {
+  border-color: var(--ka-blue);
+  background: var(--bg-tint);
+}
+
+.studentInitial, .evalInitial {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.studentPickerName {
+  font-weight: 600;
+  color: var(--ka-black);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.studentPickerClass {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Eval Form ── */
+.evalCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.evalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formLabel {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ka-black);
+}
+
+.optional { font-weight: 400; color: var(--text-secondary); font-size: 0.85rem; }
+.required { color: var(--color-danger); }
+
+/* ── Star Picker ── */
+.starPicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.star {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #d1d5db;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.1s, transform 0.1s;
+}
+
+.star:hover, .starFilled {
+  color: #f59e0b;
+}
+
+.star:hover {
+  transform: scale(1.15);
+}
+
+.starLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #92400e;
+  margin-left: var(--space-2);
+}
+
+/* ── Skill Tag grid ── */
+.tagGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tagBtn {
+  padding: 8px 16px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-full);
+  background: var(--bg-light);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tagBtn:hover { border-color: var(--ka-blue); color: var(--ka-blue); }
+
+.tagBtnActive {
+  background-color: var(--ka-blue);
+  border-color: var(--ka-blue);
+  color: var(--ka-white);
+}
+
+/* ── Textarea ── */
+.textarea {
+  padding: 16px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--ka-black);
+  background-color: var(--ka-white);
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+
+.textarea:focus { border-color: var(--ka-blue); }
+
+.charCount {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: right;
+  margin: 0;
+}
+
+/* ── Messages ── */
+.errorMsg {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+}
+
+.successMsg {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+}
+
+.formActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* ── History Panel ── */
+.evalList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-height: 680px;
+  overflow-y: auto;
+}
+
+.evalItem {
+  border-bottom: 1px solid var(--border-gray);
+  padding-bottom: var(--space-4);
+}
+
+.evalItem:last-child { border-bottom: none; padding-bottom: 0; }
+
+.evalTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.evalStudent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.evalStudentName {
+  font-weight: 600;
+  color: var(--ka-black);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.evalTag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.evalStars {
+  color: #f59e0b;
+  font-size: 1.1rem;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+
+.evalComment {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 var(--space-1);
+  font-style: italic;
+}
+
+.evalDate {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+}

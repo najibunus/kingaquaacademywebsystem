@@ -1,0 +1,165 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.metricLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.metricValue {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.metricNumber {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--ka-black);
+}
+
+.progressBar {
+  width: 100%;
+  background-color: var(--border-gray);
+  height: 8px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-3);
+}
+
+.progressFill {
+  background-color: var(--color-success);
+  height: 100%;
+}
+
+.statusText {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-success);
+}
+
+.trendText {
+  font-size: 0.875rem;
+  color: var(--color-success);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.trendIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.adminList {
+  display: flex;
+  margin-left: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.adminAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--ka-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ka-white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: -8px;
+}
+
+.adminAvatarPrimary {
+  background-color: var(--ka-blue);
+}
+
+.adminAvatarSecondary {
+  background-color: var(--ka-black);
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.tableTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin-bottom: var(--space-4);
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  padding-bottom: var(--space-3);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.table td {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--bg-light);
+}
+
+.tableRow:last-child td {
+  border-bottom: none;
+}
+
+.fontMono {
+  font-family: monospace;
+  font-size: 0.75rem;
+}

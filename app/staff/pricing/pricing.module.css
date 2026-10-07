@@ -1,0 +1,369 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* ─── Add Button ─────────────────────── */
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background-color: var(--ka-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.addBtn:hover { opacity: 0.88; }
+
+/* ─── Toast Message ──────────────────── */
+.toast {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ─── Location Tabs ──────────────────── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border-gray);
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: color 0.15s, background 0.15s;
+}
+.tab:hover {
+  color: var(--ka-black);
+  background: var(--bg-light);
+}
+.tabActive {
+  color: var(--ka-blue);
+  border-bottom-color: var(--ka-blue);
+  font-weight: 700;
+}
+
+/* ─── Table Card ─────────────────────── */
+.tableCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 560px;
+}
+
+.table thead {
+  background-color: var(--bg-light);
+}
+
+.table th {
+  padding: 12px 18px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--bg-light);
+  color: var(--ka-black);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background-color: var(--bg-light); }
+
+.thRight { text-align: right; }
+.thCenter { text-align: center; }
+.tdRight { text-align: right; font-weight: 700; }
+.tdCenter { text-align: center; }
+
+.className { font-weight: 600; }
+.tierPill {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--bg-light);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.locationBadge {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.price { font-weight: 700; color: var(--ka-black); }
+.emptyRow td {
+  padding: 48px 18px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* ─── Action Buttons ─────────────────── */
+.actions { display: flex; gap: 8px; justify-content: center; }
+
+.btnEdit {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1.5px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btnEdit:hover { background: #dbeafe; border-color: #93c5fd; }
+
+.btnDelete {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1.5px solid #fecaca;
+  background: #fff1f2;
+  color: #dc2626;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btnDelete:hover { background: #fee2e2; border-color: #fca5a5; }
+
+/* ─── Modal Overlay ──────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: var(--ka-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+}
+
+.modalTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0 0 4px;
+}
+
+.modalSub {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.formGroup { margin-bottom: 16px; }
+.formLabel {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--ka-black);
+  margin-bottom: 6px;
+}
+.formInput, .formSelect {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--ka-black);
+  background: var(--ka-white);
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.formInput:focus, .formSelect:focus {
+  outline: none;
+  border-color: var(--ka-blue);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-gray);
+}
+
+.btnCancel {
+  padding: 9px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1.5px solid var(--border-gray);
+  background: var(--ka-white);
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnCancel:hover { background: var(--bg-light); }
+
+.btnSave {
+  padding: 9px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: var(--ka-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btnSave:hover { opacity: 0.88; }
+.btnSave:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ─── Delete Modal ───────────────────── */
+.deleteModal {
+  background: var(--ka-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.deleteIcon {
+  width: 56px;
+  height: 56px;
+  background: #fff1f2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: #dc2626;
+}
+
+.deleteTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0 0 8px;
+}
+
+.deleteMessage {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+  line-height: 1.5;
+}
+
+.deleteActions {
+  display: flex;
+  gap: 10px;
+}
+
+.btnKeep {
+  flex: 1;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1.5px solid var(--border-gray);
+  background: var(--ka-white);
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnKeep:hover { background: var(--bg-light); }
+
+.btnConfirmDelete {
+  flex: 1;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btnConfirmDelete:hover { opacity: 0.88; }
+.btnConfirmDelete:disabled { opacity: 0.6; cursor: not-allowed; }

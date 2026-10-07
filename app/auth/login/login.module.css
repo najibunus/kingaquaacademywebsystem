@@ -1,0 +1,227 @@
+/* =====================================================
+   Login Page - CSS Module (Kingaqua Academy)
+   ===================================================== */
+
+.loginWrapper {
+  display: grid;
+  grid-template-columns: 1fr 500px;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bg-light);
+}
+
+@media (max-width: 900px) {
+  .loginWrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bannerPanel {
+  display: none;
+}
+
+@media (min-width: 901px) {
+  .bannerPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--ka-blue);
+    background: linear-gradient(135deg, var(--ka-blue) 0%, #0284c7 100%);
+  }
+}
+
+.bannerImage {
+  z-index: 0;
+}
+
+.bannerOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(71, 169, 218, 0.3) 0%, rgba(2, 132, 199, 0.35) 100%);
+}
+
+.rightPanel {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-6);
+  background-color: var(--ka-white);
+  overflow-y: auto;
+}
+
+@media (min-width: 901px) {
+  .rightPanel {
+    width: 100%;
+    flex-shrink: 0;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.03);
+  }
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.logoMobile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-10);
+}
+
+@media (min-width: 901px) {
+  .logoMobile {
+    display: none;
+  }
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  background-color: var(--ka-blue);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ka-white);
+}
+
+.logoName {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.heading {
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+}
+
+.inputWithIcon {
+  padding-left: 42px;
+}
+
+.inputWithToggle {
+  padding-right: 44px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: flex;
+}
+
+.passwordToggle:hover {
+  color: var(--ka-black);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.forgotLink {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.errorAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-6);
+}
+
+.submitBtn {
+  margin-top: var(--space-4);
+}
+
+.roles {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-gray);
+}
+
+.rolesLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  margin-bottom: var(--space-4);
+  margin-top: 0;
+}
+
+.rolesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.footer {
+  margin-top: var(--space-12);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}

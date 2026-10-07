@@ -1,0 +1,415 @@
+/* ============================================
+   KINGAQUA ACADEMY — Mobile UI Overhaul
+   Target: max-width 768px (phones)
+   ============================================ */
+
+/* ─── GLOBAL SAFEGUARDS ─────────────────────── */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Wide program card — desktop only spans 2 cols */
+.program-card-wide {
+  grid-column: span 2;
+}
+.program-card-wide-inner {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  min-height: 260px;
+}
+
+/* ─── TABLET (max 900px) ────────────────────── */
+@media (max-width: 900px) {
+
+  /* NAV */
+  .nav-links  { display: none; }
+  .nav-cta    { display: none; }
+  .nav-toggle { display: flex; }
+  .nav-mobile { display: block; }
+
+  /* HERO — single column, left-aligned */
+  .hero-inner {
+    grid-template-columns: 1fr;
+    text-align: left;
+    padding: 0 !important;
+  }
+  .hero-visual   { display: none; }
+  .hero-description {
+    margin: 0 0 var(--space-10) 0;
+    max-width: 100%;
+  }
+  .hero-actions  { justify-content: flex-start; }
+  .hero-stats    { justify-content: flex-start; }
+
+  /* ABOUT */
+  .about-grid { grid-template-columns: 1fr; }
+  .about-image-wrap { max-width: 100%; margin: 0 auto; }
+
+  /* COACHES */
+  .coaches-grid { grid-template-columns: 1fr 1fr; }
+
+  /* STATS / ACHIEVEMENTS */
+  .achievements-grid { grid-template-columns: 1fr 1fr; }
+  .stats-band { grid-template-columns: repeat(2, 1fr); }
+
+  /* CONTACT / FAQ */
+  .contact-grid { grid-template-columns: 1fr; }
+  .faq-grid     { grid-template-columns: 1fr; }
+  .faq-intro    { position: static; }
+}
+
+/* ─── MOBILE PHONE (max 640px) ──────────────── */
+@media (max-width: 640px) {
+
+  /* ── ROOT TOKENS ── */
+  :root {
+    --nav-height: 64px;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: var(--space-12) 0;
+  }
+  .container {
+    padding: 0 var(--space-4);
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .section-heading {
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+  .section-subheading {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar-inner {
+    padding: 0 var(--space-4);
+  }
+  .nav-logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .nav-logo-name {
+    font-size: 15px;
+  }
+  .nav-logo-tagline {
+    display: none;
+  }
+  /* Action buttons (Join Now + Login) sit between logo & hamburger */
+  .nav-actions-container {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    margin-right: 10px;
+  }
+  .mobile-nav-btn {
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+    border-radius: var(--radius-full) !important;
+    white-space: nowrap;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: auto !important;
+    align-items: flex-start;
+    padding-top: calc(var(--nav-height) + 32px);
+    padding-bottom: 60px;
+  }
+  .hero-badge {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+  }
+  .hero-title {
+    font-size: 2.6rem !important;
+    line-height: 1.08 !important;
+    margin-bottom: var(--space-4);
+  }
+  .hero-description {
+    font-size: 0.98rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: var(--space-6) !important;
+  }
+  .hero-float-card { display: none !important; }
+
+  /* Hero buttons — stack full width */
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: var(--space-3);
+    justify-content: flex-start !important;
+  }
+  .hero-actions .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Hero stats — compact row */
+  .hero-stats {
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    flex-wrap: wrap;
+    justify-content: flex-start !important;
+  }
+  .hero-stat-number {
+    font-size: 1.6rem;
+  }
+  .hero-stat-label {
+    font-size: 0.75rem;
+  }
+
+  /* ── ABOUT ── */
+  .about-image-wrap {
+    max-width: 100%;
+    border-radius: var(--radius-xl);
+  }
+  .about-text p {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: var(--space-4);
+  }
+  .about-features {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-4);
+  }
+  .about-content {
+    gap: var(--space-5);
+  }
+
+  /* ── WHY CHOOSE US ── */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .feature-card {
+    padding: var(--space-6);
+  }
+
+  /* ── PROGRAMS ── */
+  .programs-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  .program-card-wide {
+    grid-column: span 1 !important;
+  }
+  .program-card-wide-inner {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── COACHES ── */
+  .coaches-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  /* ── STATS BAND ── */
+  .stats-band {
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-6);
+    gap: var(--space-5);
+    border-radius: var(--radius-xl);
+  }
+  .stat-number {
+    font-size: 2rem;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+  }
+
+  /* ── ACHIEVEMENTS ── */
+  .achievements-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .achievement-card {
+    padding: var(--space-6);
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-slider-wrap {
+    margin: 0;
+    padding: 0;
+  }
+  .testimonial-card {
+    flex: 0 0 100%;
+    padding: var(--space-6);
+  }
+  .testimonials-track {
+    gap: var(--space-4);
+  }
+  .testimonial-quote {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  /* ── GALLERY ── */
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 140px;
+    gap: 8px;
+    grid-auto-flow: dense;
+  }
+  .gallery-item.wide { grid-column: span 2; }
+  .gallery-item.tall { grid-row: span 2; }
+
+  /* ── FACILITIES ── */
+  .facilities-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 200px;
+    gap: 10px;
+  }
+  .facility-item.large { grid-column: span 1; }
+
+  /* ── TIMELINE (Your Journey) ── */
+  .timeline {
+    max-width: 100%;
+    padding-left: 0;
+  }
+  /* Move the vertical track to the left edge */
+  .timeline-track {
+    left: 20px;
+    transform: none;
+  }
+  /* Every item: left-to-right, dot on the left */
+  .timeline-item,
+  .timeline-item:nth-child(odd) {
+    flex-direction: row !important;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-4) 0 var(--space-4) 0;
+  }
+  /* Kill the odd-item right-align */
+  .timeline-item:nth-child(odd) .timeline-content,
+  .timeline-item .timeline-content {
+    text-align: left !important;
+  }
+  /* Dot stays small and on the left */
+  .timeline-dot {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 1rem;
+    margin-left: 0;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  /* Content fills the remaining width */
+  .timeline-content {
+    flex: 1;
+    padding: var(--space-4) var(--space-5);
+  }
+  .timeline-title { font-size: 1rem; }
+  .timeline-desc  { font-size: 0.875rem; }
+
+  /* ── FAQ ── */
+  .faq-grid { gap: var(--space-6); }
+  .faq-item {
+    width: 100%;
+  }
+  .faq-question { 
+    font-size: 0.95rem; 
+    padding: var(--space-4) var(--space-4);
+    gap: var(--space-2);
+    width: 100%;
+    background: transparent;
+    text-align: left;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .faq-answer-inner { 
+    font-size: 0.9rem; 
+    padding: 0 var(--space-4) var(--space-4);
+  }
+  /* Force CSS max-height to override any buggy JS inline height calculation on wrapped mobile text */
+  .faq-item.open .faq-answer {
+    max-height: 1000px !important;
+  }
+  /* Stack the contact prompt on mobile */
+  .faq-contact-prompt {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: var(--space-5);
+    gap: var(--space-3);
+  }
+
+  /* Global Mobile Button Shrink */
+  .btn-lg {
+    padding: 12px 24px !important;
+    font-size: 1rem !important;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section { padding: var(--space-12) 0 !important; }
+  .cta-title { font-size: 1.6rem; margin-bottom: var(--space-3) !important; }
+  .cta-desc { 
+    font-size: 0.9rem; 
+    margin-bottom: var(--space-6) !important; 
+    padding: 0 var(--space-2);
+  }
+  .cta-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: var(--space-3);
+    padding: 0 var(--space-4);
+  }
+  .cta-actions .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* ── CONTACT ── */
+  .contact-info  { padding: var(--space-2) !important; }
+  .contact-info-header .section-heading { font-size: 1.8rem; }
+  .contact-form-wrap { padding: var(--space-5) !important; }
+  .form-row      { grid-template-columns: 1fr; }
+  .contact-whatsapp-btn {
+    padding: 12px 20px !important;
+    width: 100%;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+  .contact-map   { height: 180px; }
+
+  /* ── FOOTER ── */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-4);
+  }
+  .footer-bottom-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  .footer-social { flex-wrap: wrap; gap: var(--space-3); }
+
+  /* ── SCROLL TO TOP ── */
+  .scroll-top {
+    bottom: var(--space-5);
+    right: var(--space-5);
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery-item {
+    border-radius: var(--radius-lg);
+  }
+}
+

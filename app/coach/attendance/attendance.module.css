@@ -1,0 +1,162 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.presentCount { color: var(--color-success); font-weight: 600; }
+.absentCount { color: var(--color-danger); font-weight: 600; }
+
+.classFilter {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  background-color: var(--ka-white);
+  color: var(--ka-black);
+  cursor: pointer;
+}
+
+.emptyCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-12);
+  text-align: center;
+}
+
+.emptyText { color: var(--text-secondary); line-height: 1.6; }
+
+/* ── Student Cards ── */
+.studentList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.studentCard {
+  background-color: var(--ka-white);
+  border: 2px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  transition: border-color 0.15s;
+  position: relative;
+}
+
+.cardPresent { border-color: var(--color-success); background-color: #f0fdf4; }
+.cardAbsent  { border-color: var(--color-danger);  background-color: #fef2f2; }
+.cardExcused { border-color: #f59e0b;              background-color: #fffbeb; }
+
+.studentInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 160px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.studentName {
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.studentMeta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+  margin-top: 2px;
+}
+
+/* ── Action Buttons ── */
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.statusBtn {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  background-color: var(--bg-light);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.statusBtn:hover:not(:disabled) { opacity: 0.85; }
+.statusBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btnPresent { }
+.btnPresent.btnActive {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+.btnPresent:hover:not(.btnActive):not(:disabled) {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.btnAbsent.btnActive {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: white;
+}
+.btnAbsent:hover:not(.btnActive):not(:disabled) {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.btnExcused.btnActive {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: white;
+}
+.btnExcused:hover:not(.btnActive):not(:disabled) {
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.savingText { font-size: 0.75rem; color: var(--text-secondary); margin: 0; }
+.savedText  { font-size: 0.75rem; color: var(--color-success);   font-weight: 600; margin: 0; }
+.errorText  { font-size: 0.75rem; color: var(--color-danger);    font-weight: 600; margin: 0; }

@@ -1,0 +1,198 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Metrics Grid ── */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.metricLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.metricValue {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.metricNumber {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--ka-black);
+}
+
+.metricNumberDanger {
+  color: var(--color-danger);
+}
+
+.metricNumberWarning {
+  color: var(--color-warning);
+}
+
+.trendTextNeutral {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ── Content Grid ── */
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 2fr 1.5fr;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.cardAction {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ka-blue);
+  text-decoration: none;
+}
+
+.cardAction:hover {
+  text-decoration: underline;
+}
+
+/* ── Table Area ── */
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  padding-bottom: var(--space-3);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.table td {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--bg-light);
+  color: var(--ka-black);
+}
+
+.tableRow:last-child td {
+  border-bottom: none;
+}
+
+/* ── Task Board ── */
+.taskBoardCard {
+  background-color: var(--bg-light);
+  border: 1px dashed #d1d5db;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.taskItem {
+  background-color: var(--ka-white);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-gray);
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+}
+
+.taskTitle {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  margin-top: 6px;
+}
+
+.priorityHigh { background-color: var(--color-danger); }
+.priorityMedium { background-color: var(--color-warning); }
+
+.taskFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-3);
+  border-top: 1px solid var(--bg-light);
+  padding-top: var(--space-2);
+}
+
+.taskDue {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+}

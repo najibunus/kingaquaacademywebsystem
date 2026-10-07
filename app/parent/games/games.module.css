@@ -1,0 +1,156 @@
+.header {
+  margin-bottom: var(--space-8);
+}
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ka-black);
+  margin-bottom: var(--space-2);
+}
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.childTabs {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+}
+.childTab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: max-content;
+}
+.childTabIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.childTabName {
+  font-size: 1rem;
+}
+
+.emptyCard {
+  text-align: center;
+  padding: 48px 24px;
+  background-color: var(--ka-white);
+  border: 1px dashed var(--border-gray);
+  border-radius: 16px;
+}
+
+.gamesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.gameCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.gameHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-gray);
+  padding-bottom: 16px;
+}
+
+.gameIcon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gameName {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--ka-black);
+  margin: 0 0 4px 0;
+}
+
+.gameDate {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+}
+
+.resultsGrid {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-gray);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.gridHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 12px 16px;
+  background-color: var(--bg-light);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.gridRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 16px;
+  align-items: center;
+  border-bottom: 1px solid var(--border-gray);
+  background-color: var(--ka-white);
+}
+
+.gridRow:last-child {
+  border-bottom: none;
+}
+
+.strokeBadge {
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: max-content;
+}
+
+.distanceText {
+  font-weight: 600;
+  color: var(--ka-black);
+}
+
+.timeText {
+  text-align: right;
+  font-weight: 800;
+  font-family: monospace;
+  font-size: 1.1rem;
+  color: var(--ka-blue);
+}

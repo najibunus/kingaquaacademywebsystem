@@ -1,0 +1,279 @@
+.header {
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--ka-black);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 1.875rem;
+  }
+}
+
+/* ── Alert Card ── */
+.alertCard {
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.alertIcon {
+  color: #dc2626;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alertContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.alertTitle {
+  font-weight: 700;
+  color: #dc2626;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.alertText {
+  color: #991b1b;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.alertBtn {
+  display: inline-block;
+  align-self: flex-start;
+  background-color: #dc2626;
+  color: white;
+  text-decoration: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.alertBtn:hover {
+  background-color: #b91c1c;
+}
+
+/* ── Child Card ── */
+.childList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .childList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.childCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.childHeader {
+  padding: var(--space-4);
+  background-color: var(--bg-light);
+  border-bottom: 1px solid var(--border-gray);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.childAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.childName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--ka-black);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.childClassName {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .childName {
+    font-size: 1.5rem;
+  }
+  .childClassName {
+    font-size: 1rem;
+  }
+}
+
+.childClass {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.childContent {
+  padding: var(--space-4);
+}
+
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+  margin-top: 0;
+}
+
+.nextClassCard {
+  background-color: var(--bg-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.dateBox {
+  background-color: var(--ka-white);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  text-align: center;
+  min-width: 50px;
+  border: 1px solid var(--border-gray);
+}
+
+.dateMonth {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-danger);
+  text-transform: uppercase;
+}
+
+.dateDay {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  line-height: 1;
+}
+
+.nextClassTime {
+  font-weight: 600;
+  color: var(--ka-black);
+  margin: 0;
+}
+
+.nextClassStatus {
+  font-size: 0.75rem;
+  color: var(--color-success);
+  margin: 0;
+}
+
+/* ── Progress ── */
+.progressItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.progressItem:last-child {
+  margin-bottom: 0;
+}
+
+.progressIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.progressTitle {
+  font-weight: 600;
+  color: var(--ka-black);
+  font-size: 0.875rem;
+  margin: 0 0 2px 0;
+}
+
+.progressDesc {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  margin-top: 4px;
+  color: var(--color-warning);
+}
+
+/* Student Selection Pills */
+.pillContainer {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  padding-right: 16px;
+  margin-bottom: 8px;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+
+.pillContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}

@@ -1,0 +1,105 @@
+.header {
+  margin-bottom: var(--space-8);
+}
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ka-black);
+  margin-bottom: var(--space-2);
+}
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.childTabs {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+}
+.childTab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: max-content;
+}
+.childTabIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.childTabName {
+  font-size: 1rem;
+}
+
+.evalGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.evalCard {
+  background-color: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+.evalTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.skillTag {
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.evalDate {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.stars {
+  display: flex;
+  gap: 4px;
+  color: #fbbf24;
+  margin-bottom: 16px;
+}
+.commentBox {
+  background-color: var(--bg-light);
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid var(--ka-blue);
+}
+.commentText {
+  font-size: 1rem;
+  color: var(--ka-black);
+  line-height: 1.5;
+  font-style: italic;
+  margin: 0;
+}
+.emptyCard {
+  text-align: center;
+  padding: 48px 24px;
+  background-color: var(--ka-white);
+  border: 1px dashed var(--border-gray);
+  border-radius: 16px;
+}
