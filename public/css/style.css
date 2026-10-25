@@ -406,6 +406,18 @@ button {
   color: var(--color-accent);
 }
 
+.navbar.scrolled .btn-outline {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.navbar.scrolled .btn-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md), 0 4px 15px rgba(21, 66, 103, 0.3);
+}
+
 /* Logo */
 .nav-logo {
   display: flex;
@@ -481,6 +493,14 @@ button {
 .nav-link:hover {
   color: var(--color-white);
   background: rgba(255, 255, 255, 0.12);
+}
+
+.nav-actions-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  margin-right: var(--space-3);
 }
 
 .nav-cta {
@@ -693,6 +713,7 @@ button {
 .hero-title .accent-word {
   color: var(--color-accent);
   display: block;
+  font-size: 1em;
 }
 
 .hero-description {
@@ -1292,6 +1313,7 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 12%;
   transition: transform var(--transition-slow);
 }
 
@@ -1730,7 +1752,12 @@ button {
   border-radius: var(--radius-lg);
   overflow: hidden;
   position: relative;
-  cursor: pointer;
+  cursor: default;
+  transition: box-shadow var(--transition-base);
+}
+
+.gallery-item:hover {
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.15);
 }
 
 .gallery-item.tall {
@@ -1750,37 +1777,12 @@ button {
 }
 
 .gallery-item:hover .gallery-bg {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-.gallery-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(21, 66, 103, 0);
-  transition: all var(--transition-base);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.gallery-item:hover .gallery-overlay {
-  background: rgba(21, 66, 103, 0.5);
-}
-
+.gallery-overlay,
 .gallery-zoom-icon {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--color-white);
-  opacity: 0;
-  transform: scale(0.5);
-  transition: all var(--transition-base);
-  line-height: 1;
-  font-family: var(--font-heading);
-}
-
-.gallery-item:hover .gallery-zoom-icon {
-  opacity: 1;
-  transform: scale(1);
+  display: none !important;
 }
 
 /* ============================================
@@ -1855,9 +1857,13 @@ button {
 }
 
 .faq-question {
+  width: 100%;
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  text-align: left;
   gap: var(--space-4);
   padding: var(--space-5) var(--space-6);
   cursor: pointer;
@@ -1866,14 +1872,19 @@ button {
   font-weight: var(--fw-semibold);
   color: var(--color-primary);
   user-select: none;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), background var(--transition-fast);
 }
 
 .faq-question:hover {
   color: var(--color-secondary);
+  background: rgba(106, 170, 200, 0.05);
 }
 
-/* FAQ chevron uses HTML entity &#8964; (down angle bracket) */
+.faq-item.open .faq-question {
+  color: var(--color-secondary);
+}
+
+/* FAQ chevron */
 .faq-chevron {
   width: 32px;
   height: 32px;
@@ -1884,8 +1895,12 @@ button {
   justify-content: center;
   flex-shrink: 0;
   transition: all var(--transition-base);
-  font-size: 0.75rem;
   color: var(--color-accent);
+}
+
+.faq-chevron svg {
+  display: block;
+  transition: transform var(--transition-base);
 }
 
 .faq-item.open .faq-chevron {
@@ -1966,6 +1981,11 @@ button {
   justify-content: center;
   font-size: 1.2rem;
   flex-shrink: 0;
+  color: var(--color-white);
+}
+
+.contact-item-icon svg {
+  display: block;
 }
 
 .contact-item-label {
@@ -2008,25 +2028,78 @@ button {
 .contact-map {
   border-radius: var(--radius-xl);
   overflow: hidden;
-  height: 200px;
-  background: var(--color-gray-100);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--color-gray-200);
+  height: 230px;
+  background: #e8f0f6;
+  border: 1px solid var(--color-gray-200);
   position: relative;
+  box-shadow: var(--shadow-sm);
 }
 
-.contact-map-placeholder {
+.contact-map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.contact-map-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-3);
-  color: var(--color-text-muted);
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.9);
 }
 
-.contact-map-placeholder .map-icon {
-  font-size: 3rem;
+.contact-map-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.map-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  flex-shrink: 0;
+}
+
+.map-badge-title {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-xs);
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.map-badge-sub {
+  font-size: 11px;
+  color: var(--color-text-light);
+  line-height: 1.2;
+}
+
+@media (max-width: 480px) {
+  .contact-map-overlay {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .contact-map-overlay #map-directions-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .contact-form-wrap {
@@ -2466,3 +2539,60 @@ button {
   --rot: 15deg;
   animation-delay: 2s;
 }
+
+.hero-slider-dots {
+  display: none;
+}
+
+/* ── LANGUAGE SWITCHER (EN | BM) ── */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-full);
+  padding: 2px;
+  gap: 2px;
+  backdrop-filter: blur(8px);
+}
+
+.navbar.scrolled .lang-switch {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.navbar.scrolled .lang-btn {
+  color: #475569;
+}
+
+.lang-btn.active {
+  background: var(--color-accent);
+  color: #0f172a !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.lang-switch-mobile {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 3px;
+}
+
+.lang-switch-mobile .lang-btn {
+  color: #475569;
+  font-size: 12px;
+  padding: 6px 12px;
+}
+

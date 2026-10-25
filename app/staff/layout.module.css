@@ -1,16 +1,34 @@
 .layoutContainer {
   display: flex;
-  height: 100vh;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
   background-color: var(--bg-light);
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .layoutContainer {
+    flex-direction: row;
+  }
 }
 
 /* ── Sidebar ── */
 .sidebar {
+  display: none;
   width: 260px;
   background-color: var(--ka-white);
   border-right: 1px solid var(--border-gray);
-  display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex;
+  }
 }
 
 .brand {
@@ -47,6 +65,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  overflow-y: auto;
 }
 
 .navSectionLabel {
@@ -117,7 +136,11 @@
 /* ── Main Content ── */
 .mainContent {
   flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -125,41 +148,112 @@
 .topbar {
   background-color: var(--ka-white);
   border-bottom: 1px solid var(--border-gray);
-  height: 64px;
+  height: 56px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-8);
+  padding: 0 var(--space-4);
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .topbar {
+    height: 64px;
+    padding: 0 var(--space-8);
+  }
+}
+
+.mobileBrandIcon {
+  width: 28px;
+  height: 28px;
+  background-color: var(--ka-blue);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ka-white);
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .mobileBrandIcon {
+    display: none;
+  }
 }
 
 .topbarTitle {
   font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--ka-black);
   margin: 0;
+}
+
+@media (min-width: 768px) {
+  .topbarTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
 }
 
 .userProfile {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .userProfile {
+    gap: var(--space-4);
+  }
 }
 
 .divider {
+  display: none;
   height: 24px;
   width: 1px;
   background-color: var(--border-gray);
 }
 
 .userEmail {
+  display: none;
   font-size: 0.875rem;
   color: var(--ka-black);
   font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .divider,
+  .userEmail {
+    display: block;
+  }
+}
+
+.mobileLogoutForm {
+  margin: 0;
+}
+
+.mobileLogoutBtn {
+  background: none;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .mobileLogoutForm {
+    display: none;
+  }
 }
 
 .avatar {
@@ -173,8 +267,62 @@
   justify-content: center;
   font-weight: 700;
   font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* ── Mobile Navigation Strip ── */
+.mobileNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px var(--space-4);
+  background-color: var(--ka-white);
+  border-bottom: 1px solid var(--border-gray);
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  flex-shrink: 0;
+  scrollbar-width: none;
+  box-sizing: border-box;
+}
+
+.mobileNav::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobileNav {
+    display: none;
+  }
+}
+
+.mobileNavLink {
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: var(--bg-light);
+  white-space: nowrap;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.mobileNavLinkActive {
+  background-color: var(--ka-blue);
+  color: var(--ka-white);
 }
 
 .pageContainer {
-  padding: var(--space-8);
+  padding: var(--space-4);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .pageContainer {
+    padding: var(--space-8);
+  }
 }

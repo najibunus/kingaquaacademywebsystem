@@ -31,11 +31,91 @@ html, body {
 
   /* HERO — single column, left-aligned */
   .hero-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) !important;
     text-align: left;
     padding: 0 !important;
+    width: 100%;
+    max-width: 100%;
   }
-  .hero-visual   { display: none; }
+  .hero-text {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100%;
+  }
+  .hero-visual {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-top: var(--space-4);
+    overflow: hidden;
+  }
+  .hero-image-wrap {
+    position: relative;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    aspect-ratio: auto !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 14px;
+    padding: 4px 6% 12px 6%;
+    margin: 0 auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .hero-image-wrap::-webkit-scrollbar {
+    display: none;
+  }
+  .hero-image-card,
+  .hero-image-card.card-left,
+  .hero-image-card.card-middle,
+  .hero-image-card.card-right {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    margin-left: 0 !important;
+    flex: 0 0 88% !important;
+    width: 88% !important;
+    aspect-ratio: 4/3.6 !important;
+    scroll-snap-align: center;
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    border-width: 4px;
+    border-radius: var(--radius-2xl);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+  }
+  .hero-slider-dots {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .hero-slider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.38);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+  .hero-slider-dot.active {
+    width: 24px;
+    background: var(--color-accent);
+  }
   .hero-description {
     margin: 0 0 var(--space-10) 0;
     max-width: 100%;
@@ -48,15 +128,33 @@ html, body {
   .about-image-wrap { max-width: 100%; margin: 0 auto; }
 
   /* COACHES */
-  .coaches-grid { grid-template-columns: 1fr 1fr; }
+  .coaches-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .coach-overlay {
+    opacity: 1 !important;
+    background: linear-gradient(to top, rgba(21, 66, 103, 0.88) 0%, transparent 55%);
+    padding: var(--space-4);
+  }
 
   /* STATS / ACHIEVEMENTS */
   .achievements-grid { grid-template-columns: 1fr 1fr; }
   .stats-band { grid-template-columns: repeat(2, 1fr); }
 
   /* CONTACT / FAQ */
-  .contact-grid { grid-template-columns: 1fr; }
-  .faq-grid     { grid-template-columns: 1fr; }
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: var(--space-8);
+    width: 100%;
+    max-width: 100%;
+  }
+  .contact-form-wrap,
+  .contact-info {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .contact-form-wrap { order: -1; }
+  .faq-grid     { grid-template-columns: minmax(0, 1fr) !important; }
   .faq-intro    { position: static; }
 }
 
@@ -109,10 +207,17 @@ html, body {
     margin-right: 10px;
   }
   .mobile-nav-btn {
-    padding: 6px 12px !important;
+    padding: 6px 10px !important;
     font-size: 11px !important;
     border-radius: var(--radius-full) !important;
     white-space: nowrap;
+  }
+  .lang-switch {
+    padding: 2px;
+  }
+  .lang-btn {
+    padding: 4px 6px;
+    font-size: 10px;
   }
 
   /* ── HERO ── */
@@ -127,9 +232,14 @@ html, body {
     padding: 6px 14px;
   }
   .hero-title {
-    font-size: 2.6rem !important;
-    line-height: 1.08 !important;
-    margin-bottom: var(--space-4);
+    font-size: clamp(3.25rem, 13.5vw, 4.1rem) !important;
+    line-height: 1.04 !important;
+    letter-spacing: -0.03em !important;
+    margin-bottom: var(--space-5);
+  }
+  .hero-title .accent-word {
+    font-size: 1em !important;
+    margin-top: 4px;
   }
   .hero-description {
     font-size: 0.98rem !important;
@@ -151,25 +261,56 @@ html, body {
     justify-content: center;
   }
 
-  /* Hero stats — compact row */
+  /* Hero stats — balanced 3-column row */
   .hero-stats {
-    gap: var(--space-6);
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
     margin-top: var(--space-8);
     padding-top: var(--space-6);
-    flex-wrap: wrap;
-    justify-content: flex-start !important;
+    text-align: center;
+    width: 100%;
+  }
+  .hero-stat {
+    align-items: center;
   }
   .hero-stat-number {
-    font-size: 1.6rem;
+    font-size: 1.55rem;
   }
   .hero-stat-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+  .hero-visual {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+  .hero-image-wrap {
+    max-width: 100% !important;
+    width: 100% !important;
   }
 
   /* ── ABOUT ── */
   .about-image-wrap {
     max-width: 100%;
     border-radius: var(--radius-xl);
+  }
+  .about-badge {
+    width: 92px;
+    height: 92px;
+    right: 12px;
+    bottom: -16px;
+    border-width: 3px;
+  }
+  .about-badge-number {
+    font-size: 1.5rem;
+  }
+  .about-badge-text {
+    font-size: 0.55rem;
+    padding: 0 6px;
   }
   .about-text p {
     font-size: 0.95rem !important;
@@ -182,6 +323,19 @@ html, body {
   }
   .about-content {
     gap: var(--space-5);
+  }
+  .about-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px !important;
+    width: 100%;
+  }
+  .about-actions .btn {
+    width: 100%;
+    padding: 12px 14px !important;
+    font-size: 0.88rem !important;
+    justify-content: center;
+    text-align: center;
   }
 
   /* ── WHY CHOOSE US ── */
@@ -369,17 +523,136 @@ html, body {
   }
 
   /* ── CONTACT ── */
-  .contact-info  { padding: var(--space-2) !important; }
-  .contact-info-header .section-heading { font-size: 1.8rem; }
-  .contact-form-wrap { padding: var(--space-5) !important; }
-  .form-row      { grid-template-columns: 1fr; }
-  .contact-whatsapp-btn {
-    padding: 12px 20px !important;
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: var(--space-8) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .contact-info {
+    padding: 0 !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    gap: var(--space-5) !important;
+  }
+  .contact-info-header .section-heading {
+    font-size: 1.6rem !important;
+    line-height: 1.22 !important;
+    word-break: break-word;
+  }
+  .contact-items {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .contact-item {
+    padding: 14px !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .contact-item > div:last-child {
+    min-width: 0 !important;
+    flex: 1;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .contact-item-value {
+    font-size: 0.92rem !important;
+    line-height: 1.35 !important;
+    display: block;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .contact-form-wrap {
+    padding: 18px 16px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: var(--radius-xl);
+  }
+  .form-title {
+    font-size: 1.35rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: var(--space-4) !important;
+  }
+  .form,
+  .form-group,
+  .form-row > div {
+    min-width: 0 !important;
+    max-width: 100% !important;
     width: 100%;
+  }
+  .form-row {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: var(--space-3);
+  }
+  .child-row-grid {
+    grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    font-size: 0.92rem !important;
+    padding: 10px 12px !important;
+  }
+  .form-select {
+    padding-right: 36px !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  #add-child-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  #form-submit-btn {
+    white-space: normal !important;
+    font-size: 0.92rem !important;
+    padding: 12px 16px !important;
+    line-height: 1.3 !important;
+    text-align: center;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+  }
+  .contact-whatsapp-btn {
+    padding: 12px 18px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     justify-content: center;
     font-size: 0.95rem;
+    white-space: normal !important;
+    text-align: center;
   }
-  .contact-map   { height: 180px; }
+  .contact-map {
+    height: 200px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .contact-map-overlay {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 12px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+  .contact-map-overlay #map-directions-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 12px !important;
+    font-size: 0.82rem !important;
+  }
 
   /* ── FOOTER ── */
   .footer-grid {

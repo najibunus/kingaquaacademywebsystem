@@ -1,4 +1,5 @@
 import NavLink from "@/components/NavLink";
+import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
 import styles from "./layout.module.css";
 
@@ -9,17 +10,11 @@ export default function StaffLayout({
 }) {
   return (
     <div className={styles.layoutContainer}>
-      {/* ── Sidebar ── */}
+      {/* ── Sidebar (Desktop) ── */}
       <aside className={styles.sidebar}>
         {/* Brand Area */}
         <div className={styles.brand}>
-          <div className={styles.logoIcon}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 14c2-2 4-3 6-2l4 2c2 1 4 1 6-1" />
-              <path d="M6 18c1.5-1 3-1.5 4.5-1l2 1c1.5.5 3 .5 4.5-1" opacity="0.6" />
-            </svg>
-          </div>
-          <span className={styles.brandName}>Kingaqua</span>
+          <BrandLogo size={36} textSize="1.05rem" />
         </div>
 
         {/* Navigation */}
@@ -87,6 +82,15 @@ export default function StaffLayout({
             </svg>
             Attendance
           </NavLink>
+          <NavLink href="/staff/coach-schedule" exact className={styles.navLink} activeClassName={styles.navLinkActive}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Coach Schedule
+          </NavLink>
         </nav>
 
         {/* User / Logout */}
@@ -108,13 +112,48 @@ export default function StaffLayout({
       <main className={styles.mainContent}>
         {/* Topbar */}
         <header className={styles.topbar}>
-          <h2 className={styles.topbarTitle}>Staff Operations</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+            <BrandLogo size={30} textSize="0.95rem" />
+          </div>
           <div className={styles.userProfile}>
             <span className={styles.userEmail}>staff@kingaqua.test</span>
             <div className={styles.divider}></div>
+            <form action={logoutAction} className={styles.mobileLogoutForm}>
+              <button type="submit" className={styles.mobileLogoutBtn}>
+                Sign Out
+              </button>
+            </form>
             <div className={styles.avatar}>ST</div>
           </div>
         </header>
+
+        {/* Mobile Navigation Strip */}
+        <nav className={styles.mobileNav}>
+          <NavLink href="/staff/dashboard" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Dashboard
+          </NavLink>
+          <NavLink href="/staff/invoices" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Invoices
+          </NavLink>
+          <NavLink href="/staff/students" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Students
+          </NavLink>
+          <NavLink href="/staff/parents" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Parents
+          </NavLink>
+          <NavLink href="/staff/attendance" className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Attendance
+          </NavLink>
+          <NavLink href="/staff/coach-schedule" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Coach Schedule
+          </NavLink>
+          <NavLink href="/staff/games" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Competition
+          </NavLink>
+          <NavLink href="/staff/pricing" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Pricing
+          </NavLink>
+        </nav>
 
         {/* Page Content */}
         <div className={styles.pageContainer}>

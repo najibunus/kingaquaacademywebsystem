@@ -154,3 +154,33 @@
   font-size: 1.1rem;
   color: var(--ka-blue);
 }
+
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: var(--space-4);
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  .gameCard {
+    padding: 16px;
+  }
+  .gameName {
+    font-size: 1.15rem;
+  }
+  .gridHeader,
+  .gridRow {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .strokeBadge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+  .timeText {
+    font-size: 0.95rem;
+  }
+}

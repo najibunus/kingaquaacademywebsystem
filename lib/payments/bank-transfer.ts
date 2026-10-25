@@ -24,12 +24,12 @@ export class BankTransferProvider implements IPaymentProvider {
       methodLabel: "Bank Transfer / DuitNow",
       bankName: process.env.NEXT_PUBLIC_BANK_NAME ?? "Maybank",
       accountName:
-        process.env.NEXT_PUBLIC_BANK_ACCOUNT_NAME ?? "Kingaqua Academy",
+        process.env.NEXT_PUBLIC_BANK_ACCOUNT_NAME ?? "KENCANA AQUA ACADEMY",
       accountNumber:
-        process.env.NEXT_PUBLIC_BANK_ACCOUNT_NUMBER ?? "XXXX-XXXX-XXXX",
-      duitnowId: process.env.NEXT_PUBLIC_DUITNOW_ID ?? "",
-      // QR data is the DuitNow ID — the parent's banking app generates the QR
-      qrData: process.env.NEXT_PUBLIC_DUITNOW_ID ?? "",
+        process.env.NEXT_PUBLIC_BANK_ACCOUNT_NUMBER ?? "5515 8406 8475",
+      duitnowId: process.env.NEXT_PUBLIC_DUITNOW_ID ?? "551584068475",
+      // QR image path or DuitNow ID
+      qrData: "/images/duitnow-qr.png",
       receiptUploadUrl: `${appUrl}/parent/portal/receipts/upload?invoice=${invoice.invoiceId}`,
     };
   }

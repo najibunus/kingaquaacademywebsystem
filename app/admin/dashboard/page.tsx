@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
           {recentInvoices && recentInvoices.length > 0 ? (
             <div className={styles.paymentList}>
               {recentInvoices.map((inv) => {
-                const student = inv.students as { name: string } | null;
+                const student = inv.students as any;
                 return (
                   <div key={inv.invoice_number} className={styles.paymentItem}>
                     <div className={styles.paymentInfo}>

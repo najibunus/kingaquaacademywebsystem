@@ -66,7 +66,7 @@ export default async function CoachEvaluationsPage() {
 
   const pastEvals = (rawEvals ?? []).map((ev) => ({
     id: ev.id,
-    student_name: (ev.students as { name: string } | null)?.name ?? "Unknown",
+    student_name: (ev.students as any)?.name ?? "Unknown",
     star_rating: ev.star_rating,
     comments: ev.comments,
     skill_tag: ev.skill_tag,

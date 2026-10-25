@@ -19,9 +19,16 @@
   background-color: var(--ka-white);
   border: 1px solid var(--border-gray);
   border-radius: var(--radius-lg);
-  padding: var(--space-8);
+  padding: var(--space-4);
   max-width: 860px;
   box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .importCard {
+    padding: var(--space-8);
+  }
 }
 
 /* ── Steps ── */

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "@/lib/utils/cropImage";
 
@@ -15,6 +16,16 @@ export default function ImageCropperModal({ imageSrc, onCropComplete, onCancel }
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
   const onCropCompleteHandler = useCallback((croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -36,17 +47,25 @@ export default function ImageCropperModal({ imageSrc, onCropComplete, onCancel }
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div style={{
       position: "fixed",
-      top: 0, left: 0, right: 0, bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.8)",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgba(0, 0, 0, 0.75)",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      zIndex: 9999,
-      padding: "20px"
+      zIndex: 99999,
+      padding: "20px",
+      boxSizing: "border-box"
     }}>
       <div style={{
         backgroundColor: "var(--ka-white)",
@@ -55,7 +74,8 @@ export default function ImageCropperModal({ imageSrc, onCropComplete, onCancel }
         maxWidth: "500px",
         overflow: "hidden",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)"
       }}>
         <div style={{ padding: "16px", borderBottom: "1px solid var(--border-gray)" }}>
           <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: "bold" }}>Adjust Profile Picture</h3>
@@ -123,6 +143,7 @@ export default function ImageCropperModal({ imageSrc, onCropComplete, onCancel }
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

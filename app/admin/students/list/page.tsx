@@ -95,7 +95,7 @@ export default async function AdminStudentsListPage({ searchParams }: PageProps)
               </thead>
               <tbody>
                 {students.map((s) => {
-                  const cls = s.classes as { name: string } | null;
+                  const cls = s.classes as any;
                   return (
                     <tr key={s.id}>
                       <td className={styles.idCell}>{s.temp_id}</td>
@@ -130,7 +130,7 @@ export default async function AdminStudentsListPage({ searchParams }: PageProps)
           {/* ── Mobile card list ── */}
           <div className={styles.mobileList}>
             {students.map((s) => {
-              const cls = s.classes as { name: string } | null;
+              const cls = s.classes as any;
               return (
                 <div key={s.id} className={styles.mobileCard}>
                   <div className={styles.mobileCardLeft}>

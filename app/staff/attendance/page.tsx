@@ -30,6 +30,6 @@ export default async function StaffAttendancePage() {
   }
 
   return (
-    <StaffAttendanceClient students={students || []} classes={classes || []} />
+    <StaffAttendanceClient students={(students as any) || []} classes={(classes as any) || []} />
   );
 }

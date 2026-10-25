@@ -205,8 +205,15 @@
   padding-top: 24px;
 }
 
-@media (max-width: 600px) {
-  .formGrid { grid-template-columns: 1fr; }
+@media (max-width: 640px) {
+  .title { font-size: 1.5rem; }
+  .formCard { padding: 16px; }
+  .formGrid { grid-template-columns: 1fr; gap: 16px; }
+  .formActions { flex-direction: column-reverse; }
+  .formActions button { width: 100%; }
+  .toolbar { padding: 12px; gap: 10px; }
+  .toolbarSep { display: none; }
+  .toolbarInput, .toolbarSelect { width: 100%; box-sizing: border-box; }
 }
 
 /* DENSE TABLE */

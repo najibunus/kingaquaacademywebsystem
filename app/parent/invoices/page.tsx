@@ -1,4 +1,4 @@
-﻿import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import ParentInvoicesClient from "./ParentInvoicesClient";
 import { ensureInvoicesGenerated } from "@/lib/actions/autoInvoiceHelper";
 
@@ -35,8 +35,8 @@ export default async function ParentInvoicesPage() {
     .eq("parent_id", parentUserId)
     .order("created_at", { ascending: false });
 
-  // Fetch all students for this parent so we can merge names for group billing
-  const { data: childrenData } = await supabase.from('students').select("id, name, classes(name, type), attendance(status, date, classes(name, type))").eq('parent_id', parentUserId);
+  // Fetch all students for this parent so we can merge names for group billing and show class progress
+  const { data: childrenData } = await supabase.from('students').select("id, name, session_count, avatar_url, classes(name, type), attendance(status, date, classes(name, type))").eq('parent_id', parentUserId);
 
   const { data: allInvoicesRaw } = await supabase.from('invoices').select('id, invoice_number, payment_status, created_at, type, payment_date, student_id').eq('parent_id', parentUserId);
 
@@ -48,7 +48,7 @@ export default async function ParentInvoicesPage() {
   const siblingList = siblings || [];
 
   const formatted = (invoices ?? []).map((inv) => {
-    const student = inv.students as { name: string } | null;
+    const student = inv.students as any;
     const items = inv.invoice_items as { description?: string, quantity: number; unit_price: number }[] | null;
     const title = items?.[0]?.description ?? (inv.type === "auto_4session" ? "4-Session Package" : inv.type === "auto_monthly" ? "Monthly Fee" : "Manual Fee");
     

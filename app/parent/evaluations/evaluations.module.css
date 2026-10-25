@@ -103,3 +103,18 @@
   border: 1px dashed var(--border-gray);
   border-radius: 16px;
 }
+
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: var(--space-4);
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  .evalCard {
+    padding: 16px;
+  }
+}

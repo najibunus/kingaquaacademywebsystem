@@ -14,7 +14,7 @@ export default async function CoachProfilePage() {
     .single();
 
   const fullProfile = {
-    ...userProfile,
+    ...((userProfile as any) || {}),
     email: user?.email,
   };
 

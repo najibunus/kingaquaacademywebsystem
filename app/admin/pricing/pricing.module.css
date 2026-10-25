@@ -63,6 +63,18 @@
   gap: 4px;
   border-bottom: 2px solid var(--border-gray);
   margin-bottom: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .title { font-size: 1.5rem; }
+  .modal { padding: 20px; }
 }
 
 .tab {

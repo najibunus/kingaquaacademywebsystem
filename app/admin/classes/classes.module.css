@@ -25,12 +25,14 @@
   border: 1px solid var(--border-gray);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  overflow-x: auto;
   box-shadow: var(--shadow-sm);
   margin-bottom: var(--space-6);
 }
 
 .table {
   width: 100%;
+  min-width: 560px;
   border-collapse: collapse;
   font-size: 0.9rem;
 }

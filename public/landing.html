@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -11,12 +11,12 @@
   <meta property="og:type" content="website" />
   <title>Kingaqua Academy Premier Swimming Academy</title>
 
-  <!-- EDIT: Favicon - replace "assets/images/favicon.png" with your own favicon file -->
+  <!-- EDIT: Favicon - replace "assets/images/favicon.png" with your own favicon file -->
   <link rel="icon" type="image/png" href="assets/images/favicon.png" />
 
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20261026_6" />
   <link rel="stylesheet" href="css/animations.css" />
-  <link rel="stylesheet" href="css/mobile.css" />
+  <link rel="stylesheet" href="css/mobile.css?v=20261026_6" />
 </head>
 <body>
 
@@ -28,9 +28,9 @@
 
     <!-- Logo -->
     <a href="#home" class="nav-logo" id="nav-logo" aria-label="Kingaqua Academy home">
-      <!-- EDIT: LOGO IMAGE - Replace "assets/images/logo.png" with your actual logo file.
+      <!-- EDIT: LOGO IMAGE - Replace "assets/images/logo.png" with your actual logo file.
            Recommended: a square or horizontal PNG/SVG with transparent background.
-           The .nav-logo-icon box is 48x48px - adjust the CSS if your logo needs more space. -->
+           The .nav-logo-icon box is 48x48px - adjust the CSS if your logo needs more space. -->
       <img src="assets/images/logo.png" alt="Kingaqua Academy Logo" class="brand-logo" />
     </a>
 
@@ -45,6 +45,10 @@
     </ul>
 
     <div class="nav-actions-container" style="display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 12px;">
+      <div class="lang-switch" id="lang-switch-nav" role="group" aria-label="Language switcher">
+        <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-lang="ms" aria-pressed="false">BM</button>
+      </div>
       <a href="#contact" class="btn btn-primary btn-sm mobile-nav-btn">Join Now</a>
       <a href="/auth/login" class="btn btn-outline btn-sm mobile-nav-btn">Login</a>
     </div>
@@ -75,6 +79,12 @@
     <a href="#contact" class="btn btn-primary" id="mobile-join-btn">Join Now</a>
     <a href="/auth/login" class="btn btn-secondary" id="mobile-call-btn">Login</a>
   </div>
+  <div style="display:flex; justify-content:center; margin-top:16px;">
+    <div class="lang-switch lang-switch-mobile" role="group" aria-label="Language switcher">
+      <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">English (EN)</button>
+      <button type="button" class="lang-btn" data-lang="ms" aria-pressed="false">Bahasa Melayu (BM)</button>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================ -->
@@ -82,7 +92,7 @@
 <!-- ============================================ -->
 <section id="home" class="hero" aria-labelledby="hero-title">
 
-  <!-- EDIT: HERO BACKGROUND IMAGE - Replace the src below with your hero/banner photo.
+  <!-- EDIT: HERO BACKGROUND IMAGE - Replace the src below with your hero/banner photo.
        Ideal size: 1920x1080px or wider. The image is darkened by an overlay so it shows
        behind the text. Save your photo in assets/images/ and update the filename here. -->
   <div class="hero-bg" aria-hidden="true">
@@ -108,7 +118,7 @@
 
           <h1 class="hero-title" id="hero-title">
             KingAqua Academy<br/>
-            <span class="accent-word">Fly</span>
+            <span class="accent-word">Fly High</span>
           </h1>
 
           <p class="hero-description">
@@ -130,7 +140,7 @@
               <span class="hero-stat-label">Students Trained</span>
             </div>
             <div class="hero-stat">
-              <span class="hero-stat-number">7</span>
+              <span class="hero-stat-number">8</span>
               <span class="hero-stat-label">Programs</span>
             </div>
             <div class="hero-stat">
@@ -142,23 +152,28 @@
 
         <!-- Visual Column -->
         <div class="hero-visual" aria-hidden="true">
-          <div class="hero-image-wrap">
-  <!-- Right Card (Bottom-most) -->
-  <div class="hero-image-card card-right reveal-right delay-4">
-    <img src="assets/images/hero_pool_1785109251929.png" alt="Kingaqua Academy swimming pool" />
-  </div>
+          <div class="hero-image-wrap" id="hero-image-slider">
+            <!-- Middle Card (Slide 1 on mobile, Center top on desktop) -->
+            <div class="hero-image-card card-middle reveal-up delay-3">
+              <img src="assets/images/hero_middle_coach_student.jpg" alt="Coach guiding student in pool" />
+            </div>
 
-  <!-- Middle Card -->
-  <div class="hero-image-card card-middle reveal-up delay-3">
-    <img src="assets/images/program_advanced_1785109320427.png" alt="Advanced Swimmer" />
-  </div>
+            <!-- Left Card (Slide 2 on mobile, Left fan on desktop) -->
+            <div class="hero-image-card card-left reveal-left delay-2">
+              <img src="assets/images/hero_card_left.jpg" alt="Coach instructing student with pool noodle" />
+            </div>
 
-  <!-- Left Card (Top-most) -->
-  <div class="hero-image-card card-left reveal-left delay-2">
-    <img src="assets/images/program_kiddies_1785109292831.png" alt="Swimming lesson" />
-  </div>
-</div>
-      </div>
+            <!-- Right Card (Slide 3 on mobile, Right fan on desktop) -->
+            <div class="hero-image-card card-right reveal-right delay-4">
+              <img src="assets/images/hero_card_right.jpg" alt="Student swimmer at lane pool" style="object-position: 70% center;" />
+            </div>
+          </div>
+          <div class="hero-slider-dots" id="hero-slider-dots">
+            <button type="button" class="hero-slider-dot active" data-slide="0" aria-label="Slide 1"></button>
+            <button type="button" class="hero-slider-dot" data-slide="1" aria-label="Slide 2"></button>
+            <button type="button" class="hero-slider-dot" data-slide="2" aria-label="Slide 3"></button>
+          </div>
+        </div>
     </div>
   </div>
 </div>
@@ -182,11 +197,11 @@
 
       <!-- Image -->
       <div class="about-image-wrap reveal-left">
-        <!-- EDIT: ABOUT SECTION IMAGE - Replace the src below with your own photo.
+        <!-- EDIT: ABOUT SECTION IMAGE - Replace the src below with your own photo.
              Ideal: a portrait-oriented photo (4:5 ratio, e.g. 800x1000px) showing
              a coach teaching a child or a welcoming pool scene. -->
         <div class="about-image-frame">
-          <img src="assets/images/about_coach_child_1785109263493.png" alt="Kingaqua Academy coach teaching a child to swim" loading="lazy" />
+          <img src="assets/images/about_founder.jpg" alt="Encik Abu Sufian bin Supaat, Founder of Kingaqua Academy" loading="lazy" />
         </div>
         <div class="about-badge" aria-label="10 years of excellence">
           <span class="about-badge-number">10+</span>
@@ -197,69 +212,62 @@
       <!-- Content -->
       <div class="about-content reveal-right">
         <div>
-          <p class="section-label">About Us</p>
+          <p class="section-label">About Kingaqua Academy</p>
           <h2 class="section-heading" id="about-heading">
-            Building Swimmers,<br/>
-            <span class="highlight">Building Confidence</span>
+            Aquatic Excellence,<br/>
+            <span class="highlight">Lifesaving &amp; Leadership</span>
           </h2>
         </div>
 
         <div class="about-text">
           <p>
-            At Kingaqua Academy, we believe swimming is more than a sport - it's a life skill. Founded with a passion for water safety and athletic excellence, our academy has helped hundreds of students discover the joy of swimming in a safe, supportive environment.
+            Founded by <strong>Encik Abu Sufian bin Supaat</strong> &mdash; President of Gerakan Belia 4B Sri Gading and President of MAQRA Johor &mdash; <strong>Kingaqua Academy</strong> is Johor's premier aquatic sports and lifesaving training center. Driven by our institutional slogan <em>"FlyHigh"</em>, we blend structured swimming programs with certified Lifesaver &amp; Basic Life Support (BLS) training and therapeutic aquatic rehabilitation.
           </p>
           <p>
-            Our certified coaches bring years of competitive swimming and teaching experience. Whether your child is taking their first splash or training for competition, we craft personalized programs to match every swimmer's pace, age, and goals.
+            From toddlers and adult beginners to competitive junior athletes and university cohorts, we are dedicated to drowning prevention, water confidence, and athletic excellence. In strategic partnership with <strong>Universiti Tun Hussein Onn Malaysia (UTHM)</strong>, we operate across training venues in <strong>Pura Kencana, Sri Gading (Batu Pahat)</strong>, alongside venues at <strong>UTHM Parit Raja</strong> and <strong>Pontian</strong>.
           </p>
         </div>
 
         <div class="about-features">
-          <!-- EDIT: ABOUT FEATURE ICONS - Each feature has a small icon image.
-               Replace each "assets/images/icon-*.png" with your own icon files.
-               Recommended: 32x32px or 40x40px simple flat icons. -->
           <div class="about-feature">
             <span class="about-feature-icon">
-              <!-- EDIT: Icon for "Certified Coaches" -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="32" height="32" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </span>
             <div class="about-feature-text">
-              <strong>Certified Coaches</strong>
-              <span>All instructors fully certified</span>
+              <strong>Lifesaving &amp; BLS</strong>
+              <span>Certified MAQRA rescue training</span>
             </div>
           </div>
           <div class="about-feature">
             <span class="about-feature-icon">
-              <!-- EDIT: Icon for "Safety First" -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="32" height="32" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent)"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
             </span>
             <div class="about-feature-text">
-              <strong>Safety First</strong>
-              <span>Lifeguards on duty always</span>
+              <strong>Institutional Partner</strong>
+              <span>Official UTHM swim modules</span>
             </div>
           </div>
           <div class="about-feature">
             <span class="about-feature-icon">
-              <!-- EDIT: Icon for "Family Friendly" -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="32" height="32" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent)"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
             </span>
             <div class="about-feature-text">
-              <strong>Family Friendly</strong>
-              <span>Programs for the whole family</span>
+              <strong>Multi-Hub Venues</strong>
+              <span>Pura Kencana, UTHM Parit Raja &amp; Pontian</span>
             </div>
           </div>
           <div class="about-feature">
             <span class="about-feature-icon">
-              <!-- EDIT: Icon for "Progress Tracking" -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="32" height="32" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent)"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </span>
             <div class="about-feature-text">
-              <strong>Progress Tracking</strong>
-              <span>Milestone reports every term</span>
+              <strong>All Demographics</strong>
+              <span>Toddlers, athletes &amp; university cohorts</span>
             </div>
           </div>
         </div>
 
-        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <div class="about-actions" style="display:flex; gap:1rem; flex-wrap:wrap;">
           <a href="#programs" class="btn btn-primary" id="about-programs-btn">Explore Programs</a>
           <a href="#contact" class="btn btn-secondary" id="about-contact-btn">Get in Touch</a>
         </div>
@@ -281,80 +289,114 @@
       </p>
     </div>
 
-    <!-- EDIT: FEATURE CARD ICONS - Replace each icon image src below with your own icons.
+    <!-- EDIT: FEATURE CARD ICONS - Replace each icon image src below with your own icons.
          Use 40x40px to 56x56px PNG or SVG files with transparent backgrounds. -->
     <div class="features-grid">
+
+      <!-- 1. Certified Coaches — medal / badge ribbon -->
       <div class="feature-card reveal delay-1">
-        <!-- EDIT: Icon for "Certified Coaches" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="6"/>
+            <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
+          </svg>
         </div>
         <h3 class="feature-title">Certified Coaches</h3>
         <p class="feature-desc">All our instructors hold nationally recognized swimming certifications with ongoing professional development.</p>
       </div>
 
+      <!-- 2. Small Class Sizes — people / group -->
       <div class="feature-card reveal delay-2">
-        <!-- EDIT: Icon for "Small Class Sizes" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
         </div>
         <h3 class="feature-title">Small Class Sizes</h3>
         <p class="feature-desc">We maintain small student-to-coach ratios to ensure personalized attention and rapid skill development.</p>
       </div>
 
+      <!-- 3. Modern Methods — lightbulb / idea -->
       <div class="feature-card reveal delay-3">
-        <!-- EDIT: Icon for "Modern Methods" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18h6"/>
+            <path d="M10 22h4"/>
+            <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/>
+          </svg>
         </div>
         <h3 class="feature-title">Modern Methods</h3>
         <p class="feature-desc">Evidence-based, progressive training techniques tailored to each swimmer's age, ability, and learning style.</p>
       </div>
 
+      <!-- 4. Safe Environment — shield with checkmark -->
       <div class="feature-card reveal delay-4">
-        <!-- EDIT: Icon for "Safe Environment" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
         </div>
         <h3 class="feature-title">Safe Environment</h3>
         <p class="feature-desc">Certified lifeguards, clean pools, and strict safety protocols keep every swimmer protected at all times.</p>
       </div>
 
+      <!-- 5. Flexible Scheduling — calendar clock -->
       <div class="feature-card reveal delay-1">
-        <!-- EDIT: Icon for "Flexible Scheduling" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <circle cx="15" cy="16" r="3"/>
+            <polyline points="15 15 15 16 16 16"/>
+          </svg>
         </div>
         <h3 class="feature-title">Flexible Scheduling</h3>
         <p class="feature-desc">Morning, evening, and weekend slots available to fit around school, work, and family commitments.</p>
       </div>
 
+      <!-- 6. Progress Tracking — bar chart trending up -->
       <div class="feature-card reveal delay-2">
-        <!-- EDIT: Icon for "Progress Tracking" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+            <line x1="2" y1="20" x2="22" y2="20"/>
+          </svg>
         </div>
         <h3 class="feature-title">Progress Tracking</h3>
         <p class="feature-desc">Regular assessments and milestone reports so parents always know exactly how their child is progressing.</p>
       </div>
 
+      <!-- 7. Family Programs — heart with family silhouette -->
       <div class="feature-card reveal delay-3">
-        <!-- EDIT: Icon for "Family Programs" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
         </div>
         <h3 class="feature-title">Family Programs</h3>
-        <p class="feature-desc">From toddlers to adults, we offer programs for the whole family - swim together and grow together.</p>
+        <p class="feature-desc">From toddlers to adults, we offer programs for the whole family - swim together and grow together.</p>
       </div>
 
+      <!-- 8. Affordable Packages — tag / price label -->
       <div class="feature-card reveal delay-4">
-        <!-- EDIT: Icon for "Affordable Packages" feature card -->
         <div class="feature-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
         </div>
         <h3 class="feature-title">Affordable Packages</h3>
         <p class="feature-desc">Premium quality at accessible prices, with flexible payment plans and sibling discounts available.</p>
       </div>
+
     </div>
   </div>
 </section>
@@ -374,18 +416,18 @@
 
     <div class="programs-grid">
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ PROGRAM CARD: Beginner Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── PROGRAM CARD: Beginner ── -->
       <div class="program-card reveal delay-1">
         <div class="program-image">
-          <!-- EDIT: BEGINNER PROGRAM IMAGE - Replace with your own photo of a beginner class.
+          <!-- EDIT: BEGINNER PROGRAM IMAGE - Replace with your own photo of a beginner class.
                Ideal: landscape photo, 16:10 ratio (e.g. 800x500px). Save in assets/images/. -->
-          <img src="assets/images/program_beginner_1785109281978.png" alt="Beginner swimming class" loading="lazy" />
+          <img src="assets/images/program_beginner.jpg" alt="Beginner swimming class" loading="lazy" />
           <span class="program-badge">Most Popular</span>
         </div>
         <div class="program-body">
           <div class="program-meta">
             <span class="program-meta-dot"></span>
-            <span>Ages 4 7 years</span>
+            <span>Ages 4 &ndash; 7 years</span>
             <span class="program-meta-dot"></span>
             <span>All Levels Welcome</span>
           </div>
@@ -397,17 +439,17 @@
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ PROGRAM CARD: Kiddies Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── PROGRAM CARD: Kiddies ── -->
       <div class="program-card reveal delay-2">
         <div class="program-image">
-          <!-- EDIT: KIDDIES PROGRAM IMAGE - Replace with your own photo of toddlers in pool. -->
-          <img src="assets/images/program_kiddies_1785109292831.png" alt="Kiddies swimming class" loading="lazy" />
+          <!-- EDIT: KIDDIES PROGRAM IMAGE - Replace with your own photo of toddlers in pool. -->
+          <img src="assets/images/program_kiddies.jpg" alt="Kiddies swimming class" loading="lazy" />
           <span class="program-badge">Age 3+</span>
         </div>
         <div class="program-body">
           <div class="program-meta">
             <span class="program-meta-dot"></span>
-            <span>Ages 3 5 years</span>
+            <span>Ages 3 &ndash; 5 years</span>
             <span class="program-meta-dot"></span>
             <span>Toddler Friendly</span>
           </div>
@@ -419,17 +461,17 @@
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ PROGRAM CARD: Aquaplay Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── PROGRAM CARD: Aquaplay ── -->
       <div class="program-card reveal delay-3">
         <div class="program-image">
-          <!-- EDIT: AQUAPLAY PROGRAM IMAGE - Replace with a fun aqua-play activity photo. -->
-          <img src="assets/images/program_aquaplay_1785109344178.png" alt="Aquaplay class for children" loading="lazy" />
+          <!-- EDIT: AQUAPLAY PROGRAM IMAGE - Replace with a fun aqua-play activity photo. -->
+          <img src="assets/images/program_aquaplay.jpg" alt="Aquaplay class for children" loading="lazy" />
           <span class="program-badge">Fun &amp; Active</span>
         </div>
         <div class="program-body">
           <div class="program-meta">
             <span class="program-meta-dot"></span>
-            <span>Ages 4 10 years</span>
+            <span>Ages 4 &ndash; 10 years</span>
             <span class="program-meta-dot"></span>
             <span>Recreational</span>
           </div>
@@ -441,17 +483,17 @@
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ PROGRAM CARD: Novice Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── PROGRAM CARD: Novice ── -->
       <div class="program-card reveal delay-4">
         <div class="program-image">
-          <!-- EDIT: NOVICE PROGRAM IMAGE - Replace with a photo of intermediate-level swim class. -->
-          <img src="assets/images/program_novice_1785109361520.png" alt="Novice swimming class" loading="lazy" />
+          <!-- EDIT: NOVICE PROGRAM IMAGE - Replace with a photo of intermediate-level swim class. -->
+          <img src="assets/images/program_novice.jpg" alt="Novice swimming class" loading="lazy" />
           <span class="program-badge">Intermediate</span>
         </div>
         <div class="program-body">
           <div class="program-meta">
             <span class="program-meta-dot"></span>
-            <span>Ages 7 12 years</span>
+            <span>Ages 7 &ndash; 12 years</span>
             <span class="program-meta-dot"></span>
             <span>Some Experience</span>
           </div>
@@ -463,11 +505,11 @@
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ PROGRAM CARD: Advanced Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── PROGRAM CARD: Advanced ── -->
       <div class="program-card reveal delay-1">
         <div class="program-image">
-          <!-- EDIT: ADVANCED PROGRAM IMAGE - Replace with a competitive/advanced training photo. -->
-          <img src="assets/images/program_advanced_1785109320427.png" alt="Advanced swimming training" loading="lazy" />
+          <!-- EDIT: ADVANCED PROGRAM IMAGE - Replace with a competitive/advanced training photo. -->
+          <img src="assets/images/program_advance.jpg" alt="Advanced swimming training" loading="lazy" />
           <span class="program-badge">High Performance</span>
         </div>
         <div class="program-body">
@@ -485,11 +527,11 @@
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ PROGRAM CARD: Private Lessons Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── PROGRAM CARD: Private Lessons ── -->
       <div class="program-card reveal delay-2">
         <div class="program-image">
-          <!-- EDIT: PRIVATE LESSONS IMAGE - Replace with a one-on-one lesson photo. -->
-          <img src="assets/images/program_private_1785109332872.png" alt="Private swimming lesson" loading="lazy" />
+          <!-- EDIT: PRIVATE LESSONS IMAGE - Replace with a one-on-one lesson photo. -->
+          <img src="assets/images/program_private.jpg" alt="Private swimming lesson" loading="lazy" />
           <span class="program-badge">1-on-1</span>
         </div>
         <div class="program-body">
@@ -500,34 +542,50 @@
             <span>Personalized</span>
           </div>
           <h3 class="program-title">Private Lessons</h3>
-          <p class="program-desc">One-on-one coaching sessions tailored entirely to your individual goals - whether for fast skill acquisition, stroke correction, or exam preparation.</p>
+          <p class="program-desc">One-on-one coaching sessions tailored entirely to your individual goals &mdash; whether for fast skill acquisition, stroke correction, or exam preparation.</p>
           <div class="program-footer">
             <a href="#contact" class="btn btn-primary btn-sm" id="prog-private-btn">Book Session &rarr;</a>
           </div>
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ PROGRAM CARD: Ladies Swimming (wide card) Ã¢â€â‚¬Ã¢â€â‚¬ -->
-      <div class="program-card program-card-wide reveal delay-3">
-        <div class="program-card-wide-inner">
-          <div class="program-image" style="aspect-ratio: unset;">
-            <!-- EDIT: LADIES PROGRAM IMAGE - Replace with a ladies-only swimming photo.
-                 This card is wider than the others (spans 2 columns). -->
-            <img src="assets/images/program_ladies_1785109302166.png" alt="Ladies swimming class" loading="lazy" />
-            <span class="program-badge">Ladies Only</span>
+      <!-- PROGRAM CARD: Ladies Swimming -->
+      <div class="program-card reveal delay-3">
+        <div class="program-image">
+          <img src="assets/images/program_ladies.jpg" alt="Ladies swimming class" loading="lazy" />
+          <span class="program-badge">Ladies Only</span>
+        </div>
+        <div class="program-body">
+          <div class="program-meta">
+            <span class="program-meta-dot"></span>
+            <span>Women Only</span>
+            <span class="program-meta-dot"></span>
+            <span>All Levels</span>
           </div>
-          <div class="program-body">
-            <div class="program-meta">
-              <span class="program-meta-dot"></span>
-              <span>Women Only</span>
-              <span class="program-meta-dot"></span>
-              <span>All Levels</span>
-            </div>
-            <h3 class="program-title">Ladies Swimming</h3>
-            <p class="program-desc">A dedicated, private ladies-only program taught by our female coaches. Whether you're a complete beginner or looking to improve your fitness, our respectful, encouraging environment makes you feel welcome and comfortable at every session.</p>
-            <div class="program-footer">
-              <a href="#contact" class="btn btn-primary btn-sm" id="prog-ladies-btn">Enroll Now &rarr;</a>
-            </div>
+          <h3 class="program-title">Ladies Swimming</h3>
+          <p class="program-desc">All ladies classes are conducted strictly with female coaches only. Please note that sessions are held in our standard pool facilities (there is no private pool for ladies), providing a supportive, respectful, and comfortable environment for all female learners.</p>
+          <div class="program-footer">
+            <a href="#contact" class="btn btn-primary btn-sm" id="prog-ladies-btn">Enroll Now &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="program-card reveal delay-4">
+        <div class="program-image">
+          <img src="assets/images/program_men.jpg" alt="Men's swimming class" loading="lazy" />
+          <span class="program-badge">Men Only</span>
+        </div>
+        <div class="program-body">
+          <div class="program-meta">
+            <span class="program-meta-dot"></span>
+            <span>Men Only</span>
+            <span class="program-meta-dot"></span>
+            <span>All Levels</span>
+          </div>
+          <h3 class="program-title">Men's Class</h3>
+          <p class="program-desc">Structured adult swimming sessions tailored for men. Focus on water confidence, stroke biomechanics, cardiovascular conditioning, and personal fitness.</p>
+          <div class="program-footer">
+            <a href="#contact" class="btn btn-primary btn-sm" id="prog-mens-btn">Enroll Now &rarr;</a>
           </div>
         </div>
       </div>
@@ -552,26 +610,31 @@
     <div class="timeline">
       <div class="timeline-track" aria-hidden="true"></div>
 
-      <!-- EDIT: TIMELINE STEP ICONS - Each timeline dot contains a small icon image.
+      <!-- EDIT: TIMELINE STEP ICONS - Each timeline dot contains a small icon image.
            Replace each "assets/images/icon-step-*.png" with your own icons (40-48px).
            You can use simple flat icon PNGs or SVGs. -->
 
       <div class="timeline-item reveal delay-1">
         <div class="timeline-dot" aria-hidden="true">
-          <!-- EDIT: Step 1 icon - e.g. a swimmer or water drop icon -->
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" />
+          <!-- Step 1 icon: Water drop / splash -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+          </svg>
         </div>
         <div class="timeline-content">
           <p class="timeline-step">Step 1</p>
           <h3 class="timeline-title">First Splash</h3>
-          <p class="timeline-desc">Your journey begins with getting comfortable in the water. No pressure - just fun, play, and water familiarization at your own pace.</p>
+          <p class="timeline-desc">Your journey begins with getting comfortable in the water. No pressure &mdash; just fun, play, and water familiarization at your own pace.</p>
         </div>
       </div>
 
       <div class="timeline-item reveal delay-2">
         <div class="timeline-dot" aria-hidden="true">
-          <!-- EDIT: Step 2 icon - e.g. a water/confidence icon -->
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" />
+          <!-- Step 2 icon: Water confidence & safety -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
         </div>
         <div class="timeline-content">
           <p class="timeline-step">Step 2</p>
@@ -582,49 +645,37 @@
 
       <div class="timeline-item reveal delay-3">
         <div class="timeline-dot" aria-hidden="true">
-          <!-- EDIT: Step 3 icon - e.g. a floating/balance icon -->
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" />
+          <!-- Step 3 icon: Swimming strokes / skills -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 18c3-2 6 2 9 0s6-2 9 0"/>
+            <path d="M2 14c3-2 6 2 9 0s6-2 9 0"/>
+            <circle cx="16" cy="4" r="2"/>
+            <path d="m15 7-3 3-4-2-4 3"/>
+          </svg>
         </div>
         <div class="timeline-content">
           <p class="timeline-step">Step 3</p>
-          <h3 class="timeline-title">Floating &amp; Balance</h3>
-          <p class="timeline-desc">Mastering floating on your front and back while developing core body position and hydrodynamic balance in the water.</p>
+          <h3 class="timeline-title">Swimming Skill</h3>
+          <p class="timeline-desc">Mastering essential stroke mechanics, rhythmic breathing, floating balance, and coordinated movement to swim smoothly, efficiently, and independently.</p>
         </div>
       </div>
 
       <div class="timeline-item reveal delay-4">
         <div class="timeline-dot" aria-hidden="true">
-          <!-- EDIT: Step 4 icon - e.g. a breathing/wind icon -->
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" />
+          <!-- Step 4 icon: Competition trophy -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+            <path d="M4 22h16"/>
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+          </svg>
         </div>
         <div class="timeline-content">
           <p class="timeline-step">Step 4</p>
-          <h3 class="timeline-title">Breathing Rhythm</h3>
-          <p class="timeline-desc">Developing proper rhythmic breathing technique - the single most critical skill that unlocks sustained, efficient swimming.</p>
-        </div>
-      </div>
-
-      <div class="timeline-item reveal delay-1">
-        <div class="timeline-dot" aria-hidden="true">
-          <!-- EDIT: Step 5 icon - e.g. a stroke/swimmer icon -->
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" />
-        </div>
-        <div class="timeline-content">
-          <p class="timeline-step">Step 5</p>
-          <h3 class="timeline-title">Freestyle &amp; Strokes</h3>
-          <p class="timeline-desc">Building technique in freestyle, breaststroke, backstroke, and butterfly. Stroke mechanics, kick patterns, and arm coordination perfected.</p>
-        </div>
-      </div>
-
-      <div class="timeline-item reveal delay-2">
-        <div class="timeline-dot" aria-hidden="true">
-          <!-- EDIT: Step 6 icon - e.g. a trophy/medal icon -->
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" />
-        </div>
-        <div class="timeline-content">
-          <p class="timeline-step">Step 6</p>
           <h3 class="timeline-title">Advanced &amp; Compete</h3>
-          <p class="timeline-desc">Refining race starts, turns, endurance, and speed. Competition-ready swimmers represent the academy with pride and confidence.</p>
+          <p class="timeline-desc">Refining race starts, turns, endurance, and speed in our 50-metre Olympic-grade pool. Competition-ready swimmers represent the academy with pride and confidence.</p>
         </div>
       </div>
 
@@ -641,101 +692,94 @@
       <p class="section-label">Our Coaches</p>
       <h2 class="section-heading reveal" id="coaches-heading">Meet Our Expert Team</h2>
       <p class="section-subheading reveal delay-1">
-        Our coaches are more than instructors - they are mentors, motivators, and passionate advocates for every swimmer's potential.
+        Our coaches are more than instructors &mdash; they are mentors, motivators, and passionate advocates for every swimmer's potential.
       </p>
     </div>
 
     <div class="coaches-grid">
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ COACH 1 Ã¢â€â‚¬Ã¢â€â‚¬ -->
+            <!-- ── COACH 1 (LEFT): COACH ASRAF ── -->
       <div class="coach-card reveal delay-1">
         <div class="coach-image-wrap">
-          <!-- EDIT: COACH 1 PHOTO - Replace with the actual coach's portrait photo.
-               Ideal: square or near-square photo (1:1 ratio, e.g. 600x600px).
-               Save your photo in assets/images/ and update the filename here. -->
-          <img src="assets/images/coach1_1785109374870.png" alt="Coach Ahmad - Head Swimming Coach" loading="lazy" />
+          <img src="assets/images/coach_asraf.jpg" alt="Coach Asraf — Kiddies &amp; Beginner Coach" loading="lazy" />
           <div class="coach-overlay">
             <div class="coach-certs">
-              <span class="coach-cert-tag">ASCTA Certified</span>
-              <span class="coach-cert-tag">First Aid</span>
-              <span class="coach-cert-tag">Lifeguard</span>
+              <span class="coach-cert-tag">Kiddies Coach</span>
+              <span class="coach-cert-tag">MAS &amp; MAQRA Certified</span>
+              <span class="coach-cert-tag">Water Safety &amp; CPR</span>
             </div>
           </div>
         </div>
         <div class="coach-info">
-          <h3 class="coach-name">Ahmad Khalid</h3>
-          <p class="coach-position">Head Swimming Coach</p>
-          <p class="coach-bio">With 12+ years of competitive swimming and coaching experience, Coach Ahmad has trained over 200 students from beginner through to national competition level. His patient, methodical approach brings out the best in every swimmer.</p>
+          <h3 class="coach-name">Coach Asraf</h3>
+          <p class="coach-position">Kiddies &amp; Beginner Coach</p>
+          <p class="coach-bio">Renowned for his gentle, patient, and highly encouraging approach, Coach Asraf is our dedicated coach for young children and first-time swimmers. He creates a fun, fear-free environment where toddlers and beginners quickly build water confidence, master safe breathing, and develop foundational stroke mechanics with joy and ease.</p>
           <div class="coach-meta">
-            <!-- EDIT: COACH META ICONS - Replace these small icon images with your own.
-                 Recommended: simple star/medal PNG icons, 16-18px. -->
             <span class="coach-meta-item">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="16" height="16" aria-hidden="true" />
-              12 Years Exp.
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--color-accent); flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              Kiddies &amp; Beginners
             </span>
             <span class="coach-meta-item">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="16" height="16" aria-hidden="true" />
-              ASCTA Certified
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--color-accent); flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              MAS &amp; MAQRA Certified
             </span>
           </div>
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ COACH 2 Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── COACH 2 (MIDDLE): COACH DIANA ── -->
       <div class="coach-card reveal delay-2">
         <div class="coach-image-wrap">
-          <!-- EDIT: COACH 2 PHOTO - Replace with the actual coach's portrait photo. -->
-          <img src="assets/images/coach2_1785109386272.png" alt="Coach Sarah - Ladies and Kiddies Specialist" loading="lazy" />
+          <img src="assets/images/coach_diana.jpg" alt="Coach Diana — Ladies &amp; Novice Coach" loading="lazy" />
           <div class="coach-overlay">
             <div class="coach-certs">
-              <span class="coach-cert-tag">RLSS Certified</span>
-              <span class="coach-cert-tag">Early Childhood</span>
-              <span class="coach-cert-tag">First Aid</span>
+              <span class="coach-cert-tag">Ladies Coach</span>
+              <span class="coach-cert-tag">MAS &amp; MAQRA Certified</span>
+              <span class="coach-cert-tag">Novice Coach</span>
             </div>
           </div>
         </div>
         <div class="coach-info">
-          <h3 class="coach-name">Sarah Lim</h3>
-          <p class="coach-position">Ladies &amp; Kiddies Specialist</p>
-          <p class="coach-bio">Coach Sarah specializes in early childhood aquatics and ladies swimming programs. Her warm, encouraging teaching style creates a safe space where both children and women thrive and gain confidence in the water.</p>
+          <h3 class="coach-name">Coach Diana</h3>
+          <p class="coach-position">Ladies &amp; Novice Coach</p>
+          <p class="coach-bio">As our dedicated female coach, Coach Diana conducts our ladies swimming classes exclusively and mentors novice learners. Held in our academy pool facilities (please note there is no private pool), her sessions provide a supportive, respectful, and empowering space where women and beginners master rhythmic breathing, balance, and effortless stroke progression.</p>
           <div class="coach-meta">
             <span class="coach-meta-item">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="16" height="16" aria-hidden="true" />
-              8 Years Exp.
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--color-accent); flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              Ladies &amp; Novice
             </span>
             <span class="coach-meta-item">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="16" height="16" aria-hidden="true" />
-              RLSS Certified
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--color-accent); flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              MAS &amp; MAQRA Certified
             </span>
           </div>
         </div>
       </div>
 
-      <!-- Ã¢â€â‚¬Ã¢â€â‚¬ COACH 3 Ã¢â€â‚¬Ã¢â€â‚¬ -->
+      <!-- ── COACH 3 (RIGHT): COACH SHAHERAN ── -->
       <div class="coach-card reveal delay-3">
         <div class="coach-image-wrap">
-          <!-- EDIT: COACH 3 PHOTO - Replace with the actual coach's portrait photo. -->
-          <img src="assets/images/coach3_1785109401915.png" alt="Coach Raj - Advanced and Competition Coach" loading="lazy" />
+          <img src="assets/images/coach_shaheran.jpg" alt="Coach Shaheran — Advance &amp; Performance Coach" loading="lazy" />
           <div class="coach-overlay">
             <div class="coach-certs">
-              <span class="coach-cert-tag">ISS Certified</span>
-              <span class="coach-cert-tag">Competition Coach</span>
-              <span class="coach-cert-tag">Dryland Trainer</span>
+              <span class="coach-cert-tag">Advance Coach</span>
+              <span class="coach-cert-tag">MAS &amp; MAQRA Certified</span>
+              <span class="coach-cert-tag">Speed &amp; Race Technique</span>
             </div>
           </div>
         </div>
         <div class="coach-info">
-          <h3 class="coach-name">Raj Subramaniam</h3>
-          <p class="coach-position">Advanced &amp; Competition Coach</p>
-          <p class="coach-bio">A former national-level competitive swimmer, Coach Raj brings elite-level insight to our advanced program. He has coached multiple students to regional and national championships over his distinguished 15-year career.</p>
+          <h3 class="coach-name">Coach Shaheran</h3>
+          <p class="coach-position">Advance &amp; Performance Coach</p>
+          <p class="coach-bio">Dedicated to elite swimming mechanics and competitive performance, Coach Shaheran leads our advanced training programs. He focuses on hydrodynamic efficiency, explosive racing starts, sharp flip turns, and endurance conditioning &mdash; empowering competitive swimmers and athletes to shatter personal bests and dominate meet events.</p>
           <div class="coach-meta">
             <span class="coach-meta-item">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="16" height="16" aria-hidden="true" />
-              15 Years Exp.
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--color-accent); flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              Advance &amp; Performance
             </span>
             <span class="coach-meta-item">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="16" height="16" aria-hidden="true" />
-              ISS Certified
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--color-accent); flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              MAS &amp; MAQRA Certified
             </span>
           </div>
         </div>
@@ -758,84 +802,83 @@
       </p>
     </div>
 
-    <!-- EDIT: FACILITIES GALLERY IMAGES - Each facility panel uses a background-image.
+    <!-- EDIT: FACILITIES GALLERY IMAGES - Each facility panel uses a background-image.
          Replace the URL inside url('...') with your own facility photos.
          Ideal: landscape photos, at least 800x600px each.
-         The first panel (class="large") spans 2 columns - use your best/widest photo there. -->
+         The first panel (class="large") spans 2 columns - use your best/widest photo there. -->
     <div class="facilities-grid reveal">
 
-      <!-- EDIT: Facility 1 - Olympic Lap Pool (large, spans 2 columns) -->
+      <!-- EDIT: Facility 1 - 50m 8-Lane Olympic-Grade Pool (large, spans 2 columns) -->
       <div class="facility-item large">
-        <div class="facility-bg" style="background-image: url('assets/images/program_advanced_1785109320427.png');" role="img" aria-label="Olympic lap pool"></div>
+        <div class="facility-bg" style="background-image: url('assets/images/facility_olympic_pool.jpg');" role="img" aria-label="50-metre 8-lane Olympic grade pool"></div>
         <div class="facility-overlay">
           <div class="facility-label">
-            <!-- EDIT: Facility 1 icon - replace with your own icon image -->
             <span class="facility-icon">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
             </span>
             <div>
-              <div class="facility-name">Olympic Lap Pool</div>
-              <div class="facility-desc">25-metre competition-standard pool with 6 marked lanes, starting blocks, and anti-wave lane ropes.</div>
+              <div class="facility-name">Olympic-Grade Pool</div>
+              <div class="facility-desc">50-metre 8-lane Olympic-grade competition pool equipped with official starting blocks and anti-wave lane ropes.</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- EDIT: Facility 2 - Kids Learning Pool -->
+      <!-- EDIT: Facility 2 - Kids Learning Pool (Unheated) -->
       <div class="facility-item">
-        <div class="facility-bg" style="background-image: url('assets/images/program_kiddies_1785109292831.png');" role="img" aria-label="Kids learning pool"></div>
+        <div class="facility-bg" style="background-image: url('assets/images/facility_kids_pool.jpg');" role="img" aria-label="Kids learning pool unheated"></div>
         <div class="facility-overlay">
           <div class="facility-label">
             <span class="facility-icon">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
             </span>
             <div>
               <div class="facility-name">Kids Learning Pool</div>
-              <div class="facility-desc">Heated, shallow pool designed specifically for toddlers and young beginners.</div>
+              <div class="facility-desc">Shallow, unheated learning pool designed specifically for toddlers and young beginners to build water confidence safely.</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- EDIT: Facility 3 - Training Equipment -->
+      <!-- EDIT: Facility 3 - Training Equipment & Aids -->
       <div class="facility-item">
-        <div class="facility-bg" style="background-image: url('assets/images/program_novice_1785109361520.png');" role="img" aria-label="Training equipment"></div>
+        <div class="facility-bg" style="background-image: url('assets/images/facility_training_equipment.jpg');" role="img" aria-label="Training equipment and aids"></div>
         <div class="facility-overlay">
           <div class="facility-label">
             <span class="facility-icon">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h10"/></svg>
             </span>
             <div>
-              <div class="facility-name">Training Equipment</div>
-              <div class="facility-desc">Full range of swim aids, kickboards, pull buoys, fins, and dryland fitness equipment.</div>
+              <div class="facility-name">Training Equipment &amp; Aids</div>
+              <div class="facility-desc">Full range of kickboards and pull buoys provided. (Please note: The company does not provide swim fins; students bring their own).</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- EDIT: Facility 4 - Ladies Zone -->
-      <div class="facility-item">
-        <div class="facility-bg" style="background-image: url('assets/images/program_ladies_1785109302166.png');" role="img" aria-label="Ladies-only pool area"></div>
+      <!-- EDIT: Facility 4 - Ladies Coaching (Female Coach Only) -->
+      <div class="facility-item large">
+        <div class="facility-bg" style="background-image: url('assets/images/facility_ladies.jpg');" role="img" aria-label="Ladies swimming with female coach"></div>
         <div class="facility-overlay">
           <div class="facility-label">
             <span class="facility-icon">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </span>
             <div>
-              <div class="facility-name">Ladies Zone</div>
-              <div class="facility-desc">A dedicated, fully private area exclusively for our ladies swimming program.</div>
+              <div class="facility-name">Ladies Coaching Sessions</div>
+              <div class="facility-desc">Ladies classes are conducted strictly with female coaches only. Please note sessions are held in our main pool facilities (no private pool for ladies).</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- EDIT: Facility 5 - Viewing Gallery -->
-      <div class="facility-item">
-        <div class="facility-bg" style="background-image: url('assets/images/program_private_1785109332872.png');" role="img" aria-label="Viewing and waiting area"></div>
+      <!-- EDIT: Facility 5 - Viewing Gallery -->
+      <div class="facility-item large">
+        <div class="facility-bg" style="background-image: url('assets/images/facility_viewing_gallery.jpg');" role="img" aria-label="Viewing and waiting area"></div>
         <div class="facility-overlay">
           <div class="facility-label">
             <span class="facility-icon">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
             </span>
             <div>
               <div class="facility-name">Viewing Gallery</div>
@@ -845,13 +888,13 @@
         </div>
       </div>
 
-      <!-- EDIT: Facility 6 - Safety Station -->
+      <!-- EDIT: Facility 6 - Safety Station -->
       <div class="facility-item">
-        <div class="facility-bg" style="background-image: url('assets/images/program_aquaplay_1785109344178.png');" role="img" aria-label="Safety equipment"></div>
+        <div class="facility-bg" style="background-image: url('assets/images/facility_safety_station.jpg');" role="img" aria-label="Safety equipment"></div>
         <div class="facility-overlay">
           <div class="facility-label">
             <span class="facility-icon">
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="28" height="28" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
             </span>
             <div>
               <div class="facility-name">Safety Station</div>
@@ -871,14 +914,14 @@
 <section id="achievements" class="achievements section" aria-labelledby="achievements-heading">
   <div class="container">
 
-    <!-- Stats band (numbers animate on scroll - no images needed here) -->
+    <!-- Stats band (numbers animate on scroll - no images needed here) -->
     <div class="stats-band reveal" role="region" aria-label="Academy statistics">
       <div class="stat-item">
         <div class="stat-number" data-target="500">0<span class="stat-plus">+</span></div>
         <div class="stat-label">Students Trained</div>
       </div>
       <div class="stat-item">
-        <div class="stat-number" data-target="7">0</div>
+        <div class="stat-number" data-target="8">0</div>
         <div class="stat-label">Active Programs</div>
       </div>
       <div class="stat-item">
@@ -897,56 +940,61 @@
       <h2 class="section-heading reveal" id="achievements-heading">Our Pride &amp; Milestones</h2>
     </div>
 
-    <!-- EDIT: ACHIEVEMENT CARD ICONS - Replace each icon image below with your own.
+    <!-- EDIT: ACHIEVEMENT CARD ICONS - Replace each icon image below with your own.
          Recommended: 40-50px flat icons (trophy, graduation cap, star, etc.). -->
     <div class="achievements-grid">
+      <!-- 1. Competition Champions -->
       <div class="achievement-card reveal delay-1">
-        <!-- EDIT: Achievement icon 1 - e.g. trophy icon -->
         <span class="achievement-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="48" height="48" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H8c-.55 0-1 .45-1 1v1h10v-1c0-.55-.45-1-1-1h-1c-.55 0-1-.45-1-1v-2.34"/><path d="M18 4H6v7a6 6 0 0 0 12 0V4Z"/></svg>
         </span>
         <h3 class="achievement-title">Competition Champions</h3>
         <p class="achievement-desc">Our students have participated and excelled in regional and inter-school swimming competitions, bringing home medals and podium finishes across multiple categories.</p>
       </div>
+
+      <!-- 2. Olympic-Size Pool (Milestone) -->
       <div class="achievement-card reveal delay-2">
-        <!-- EDIT: Achievement icon 2 - e.g. graduation cap icon -->
         <span class="achievement-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="48" height="48" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+        </span>
+        <h3 class="achievement-title">Olympic-Size Pool</h3>
+        <p class="achievement-desc">A major milestone for our academy &mdash; providing students and athletes with training in a full 50-metre 8-lane Olympic-grade competition pool equipped with official starting blocks and anti-wave lane ropes.</p>
+      </div>
+
+      <!-- 3. Certified Excellence (MAS Swimming & MAQRA) -->
+      <div class="achievement-card reveal delay-3">
+        <span class="achievement-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <h3 class="achievement-title">Certified Excellence</h3>
+        <p class="achievement-desc">Our coaches hold full accreditation with MAS Swimming and are certified by MAQRA, ensuring our coaching programs meet the highest national and international aquatic standards.</p>
+      </div>
+
+      <!-- 4. Graduation Milestones -->
+      <div class="achievement-card reveal delay-4">
+        <span class="achievement-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-.396l-9-5a1 1 0 0 0-.802 0l-9 5a1 1 0 0 0 0 1.748l2.4 1.333v3.473a2 2 0 0 0 1.056 1.761l5 2.778a2 2 0 0 0 1.888 0l5-2.778a2 2 0 0 0 1.056-1.761v-3.473l1.42-.789a1 1 0 0 0 .019-.396Z"/><path d="M6 13.5v3.473l6 3.333 6-3.333V13.5"/></svg>
         </span>
         <h3 class="achievement-title">Graduation Milestones</h3>
-        <p class="achievement-desc">Hundreds of students have graduated through our structured swim levels - each graduation celebrated with certificates and recognition of their hard work and dedication.</p>
+        <p class="achievement-desc">Hundreds of students have graduated through our structured swim levels &mdash; each graduation celebrated with certificates and recognition of their hard work and dedication.</p>
       </div>
-      <div class="achievement-card reveal delay-3">
-        <!-- EDIT: Achievement icon 3 - e.g. star/rating icon -->
+
+      <!-- 5. 5-Star Reviews -->
+      <div class="achievement-card reveal delay-1">
         <span class="achievement-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="48" height="48" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </span>
         <h3 class="achievement-title">5-Star Reviews</h3>
         <p class="achievement-desc">Consistently rated 5 stars by parents and students for coaching quality, safety standards, and the warm, welcoming environment we provide at every session.</p>
       </div>
-      <div class="achievement-card reveal delay-4">
-        <!-- EDIT: Achievement icon 4 - e.g. certificate/scroll icon -->
+
+      <!-- 6. Community Impact -->
+      <div class="achievement-card reveal delay-2">
         <span class="achievement-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="48" height="48" aria-hidden="true" />
-        </span>
-        <h3 class="achievement-title">Certified Excellence</h3>
-        <p class="achievement-desc">Our academy holds full accreditation with recognized swimming governing bodies, ensuring every program meets the highest international standards for aquatic education.</p>
-      </div>
-      <div class="achievement-card reveal delay-1">
-        <!-- EDIT: Achievement icon 5 - e.g. community/heart icon -->
-        <span class="achievement-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="48" height="48" aria-hidden="true" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
         </span>
         <h3 class="achievement-title">Community Impact</h3>
         <p class="achievement-desc">We partner with local schools and organizations to promote water safety education, donating swim lessons to underprivileged children through our community outreach program.</p>
-      </div>
-      <div class="achievement-card reveal delay-2">
-        <!-- EDIT: Achievement icon 6 - e.g. handshake/corporate icon -->
-        <span class="achievement-icon">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="48" height="48" aria-hidden="true" />
-        </span>
-        <h3 class="achievement-title">Corporate Programs</h3>
-        <p class="achievement-desc">We offer tailored corporate swimming programs for companies and organizations, promoting employee wellness and team building through our structured group aquatics sessions.</p>
       </div>
     </div>
   </div>
@@ -1000,7 +1048,7 @@
             <span class="star">&#9733;</span>
           </div>
           <blockquote class="testimonial-quote">
-            The ladies swimming program is wonderful. As a woman who always wanted to learn but felt uncomfortable in mixed classes, this was exactly what I needed. Coach Sarah is amazing - so supportive and professional.
+            The ladies swimming program is wonderful. As a woman who always wanted to learn but felt uncomfortable in mixed classes, this was exactly what I needed. Coach Diana is amazing &mdash; so supportive and professional.
           </blockquote>
           <div class="testimonial-author">
             <div class="testimonial-avatar" aria-hidden="true">A</div>
@@ -1020,7 +1068,7 @@
             <span class="star">&#9733;</span>
           </div>
           <blockquote class="testimonial-quote">
-            Both my sons train here - one in Novice and one in the Advanced program. Coach Raj is outstanding. My older son just competed in the state championships! The quality of coaching here is genuinely world-class.
+            Both my sons train here &mdash; one in Novice and one in the Advanced program. Coach Shaheran is outstanding. My older son just competed in the state championships! The quality of coaching here is genuinely world-class.
           </blockquote>
           <div class="testimonial-author">
             <div class="testimonial-avatar" aria-hidden="true">D</div>
@@ -1060,7 +1108,7 @@
             <span class="star">&#9733;</span>
           </div>
           <blockquote class="testimonial-quote">
-            I took private lessons after decades away from swimming. Coach Ahmad was incredibly understanding and tailored every session to my specific needs. After 8 sessions, I felt completely reborn in the water. Highly recommend!
+            I took private lessons after decades away from swimming. Coach Asraf was incredibly understanding and tailored every session to my specific needs. After 8 sessions, I felt completely reborn in the water. Highly recommend!
           </blockquote>
           <div class="testimonial-author">
             <div class="testimonial-avatar" aria-hidden="true">R</div>
@@ -1121,73 +1169,65 @@
       </p>
     </div>
 
-    <!-- EDIT: GALLERY IMAGES - Replace each background-image URL below with your own photos.
+    <!-- EDIT: GALLERY IMAGES - Replace each background-image URL below with your own photos.
          Each gallery-item is a panel; "tall" panels span 2 rows and "wide" panels span 2 columns.
          Recommended: at least 800x600px photos. Save them in assets/images/. -->
     <div class="gallery-grid reveal">
 
-      <!-- EDIT: Gallery image 1 (tall - spans 2 rows) -->
-      <div class="gallery-item tall">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_advanced_1785109320427.png');" role="img" aria-label="Advanced swimmers training"></div>
-        <div class="gallery-overlay">
-          <span class="gallery-zoom-icon" aria-hidden="true">+</span>
-        </div>
-      </div>
-
-      <!-- EDIT: Gallery image 2 -->
-      <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_kiddies_1785109292831.png');" role="img" aria-label="Kiddies swimming class"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
-      </div>
-
-      <!-- EDIT: Gallery image 3 (wide - spans 2 columns) -->
+      <!-- 1. Starting Block Dive (wide - spans 2 columns) -->
       <div class="gallery-item wide">
-        <div class="gallery-bg" style="background-image: url('assets/images/hero_pool_1785109251929.png');" role="img" aria-label="Kingaqua Academy swimming pool"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+        <div class="gallery-bg" style="background-image: url('assets/images/gallery_starting_block_dive.jpg');" role="img" aria-label="Competitive swimmer diving off starting block at King Aqua Olympic pool"></div>
       </div>
 
-      <!-- EDIT: Gallery image 4 -->
+      <!-- 2. Squad Smiles (tall - spans 2 rows) -->
+      <div class="gallery-item tall">
+        <div class="gallery-bg" style="background-image: url('assets/images/gallery_squad_smiles.jpg');" role="img" aria-label="King Aqua swim team students smiling in lane with training gear"></div>
+      </div>
+
+      <!-- 3. Water Floating & Survival Skills -->
       <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_beginner_1785109281978.png');" role="img" aria-label="Beginner swimming lesson"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+        <div class="gallery-bg" style="background-image: url('assets/images/gallery_floating_lesson.jpg');" role="img" aria-label="Swimmers practicing back float and water survival skills with instructor"></div>
       </div>
 
-      <!-- EDIT: Gallery image 5 -->
+      <!-- 4. Coach High-Five -->
       <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/about_coach_child_1785109263493.png');" role="img" aria-label="Coach teaching a child"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+        <div class="gallery-bg" style="background-image: url('assets/images/gallery_coach_highfive.jpg');" role="img" aria-label="Coach celebrating with a high-five to student after completing swim lap"></div>
       </div>
 
-      <!-- EDIT: Gallery image 6 -->
+      <!-- 5. Kiddies Class -->
       <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_ladies_1785109302166.png');" role="img" aria-label="Ladies swimming class"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+        <div class="gallery-bg" style="background-image: url('assets/images/program_kiddies.jpg');" role="img" aria-label="Toddler and early childhood water confidence training"></div>
       </div>
 
-      <!-- EDIT: Gallery image 7 -->
+      <!-- 6. Beginner Kick Practice -->
       <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_aquaplay_1785109344178.png');" role="img" aria-label="Aquaplay children's class"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+        <div class="gallery-bg" style="background-image: url('assets/images/program_beginner.jpg');" role="img" aria-label="Beginner student mastering kickboard drills and propulsion"></div>
       </div>
 
-      <!-- EDIT: Gallery image 8 -->
+      <!-- 7. Coach Diana Lesson (tall - spans 2 rows) -->
+      <div class="gallery-item tall">
+        <div class="gallery-bg" style="background-image: url('assets/images/gallery_coach_diana_lesson.jpg');" role="img" aria-label="Coach Diana guiding students poolside on rhythmic breathing techniques"></div>
+      </div>
+
+      <!-- 8. Advanced Squad Training (wide - spans 2 columns) -->
+      <div class="gallery-item wide">
+        <div class="gallery-bg" style="background-image: url('assets/images/program_advance.jpg');" role="img" aria-label="Advanced swimmers executing endurance and speed sets"></div>
+      </div>
+
+      <!-- 9. Novice Stroke Development -->
       <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_novice_1785109361520.png');" role="img" aria-label="Novice swimming class"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+        <div class="gallery-bg" style="background-image: url('assets/images/program_novice.jpg');" role="img" aria-label="Novice swimmers building smooth stroke endurance"></div>
       </div>
 
-      <!-- EDIT: Gallery image 9 -->
+      <!-- 10. Private Personalized Coaching -->
       <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_private_1785109332872.png');" role="img" aria-label="Private swimming lesson"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+        <div class="gallery-bg" style="background-image: url('assets/images/program_private.jpg');" role="img" aria-label="Dedicated one-on-one personalized swimming instruction"></div>
       </div>
 
-      <!-- EDIT: Gallery image 10 (Added to fill the empty grid space) -->
-      <div class="gallery-item">
-        <div class="gallery-bg" style="background-image: url('assets/images/program_kiddies_1785109292831.png');" role="img" aria-label="Kiddies swimming lesson"></div>
-        <div class="gallery-overlay"><span class="gallery-zoom-icon" aria-hidden="true">+</span></div>
+      <!-- 11. Men's & Adult Training (wide - spans 2 columns) -->
+      <div class="gallery-item wide">
+        <div class="gallery-bg" style="background-image: url('assets/images/program_men.jpg');" role="img" aria-label="Adult swimmers participating in dedicated training sessions"></div>
       </div>
-
     </div>
   </div>
 </section>
@@ -1207,16 +1247,15 @@
           Everything you need to know about our programs, enrollment process, and what to expect at Kingaqua Academy.
         </p>
 
-        <div class="faq-contact-prompt">
-          <!-- EDIT: FAQ prompt icon - replace with your own chat/message icon image -->
+        <a href="https://wa.me/60195177001" class="faq-contact-prompt" target="_blank" rel="noopener noreferrer" style="text-decoration: none; cursor: pointer;">
           <span class="faq-contact-icon">
-            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="36" height="36" aria-hidden="true" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>
           </span>
           <div class="faq-contact-text">
             <strong>Still have questions?</strong>
-            <span>We're happy to help! WhatsApp us anytime and we'll reply promptly.</span>
+            <span>We're happy to help! WhatsApp us anytime and we'll reply promptly &rarr;</span>
           </div>
-        </div>
+        </a>
       </div>
 
       <!-- FAQ List -->
@@ -1225,7 +1264,7 @@
         <div class="faq-item" role="listitem">
           <button class="faq-question" aria-expanded="false" id="faq-q1" aria-controls="faq-a1">
             What is the minimum age to start swimming lessons?
-            <span class="faq-chevron" aria-hidden="true">&#8964;</span>
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
           </button>
           <div class="faq-answer" id="faq-a1" role="region" aria-labelledby="faq-q1">
             <div class="faq-answer-inner">
@@ -1237,11 +1276,11 @@
         <div class="faq-item" role="listitem">
           <button class="faq-question" aria-expanded="false" id="faq-q2" aria-controls="faq-a2">
             Do beginners need any prior swimming experience?
-            <span class="faq-chevron" aria-hidden="true">&#8964;</span>
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
           </button>
           <div class="faq-answer" id="faq-a2" role="region" aria-labelledby="faq-q2">
             <div class="faq-answer-inner">
-              Absolutely not! Our Beginner program is specifically designed for students with zero swimming experience. Our coaches start from the very basics - water entry, breath control, and floating - ensuring every student builds confidence at their own pace.
+              Absolutely not! Our Beginner program is specifically designed for students with zero swimming experience. Our coaches start from the very basics &mdash; water entry, breath control, and floating &mdash; ensuring every student builds confidence at their own pace.
             </div>
           </div>
         </div>
@@ -1249,11 +1288,11 @@
         <div class="faq-item" role="listitem">
           <button class="faq-question" aria-expanded="false" id="faq-q3" aria-controls="faq-a3">
             What should students bring to class?
-            <span class="faq-chevron" aria-hidden="true">&#8964;</span>
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
           </button>
           <div class="faq-answer" id="faq-a3" role="region" aria-labelledby="faq-q3">
             <div class="faq-answer-inner">
-              Students should bring: a proper swimsuit or swim shorts, swimming goggles, a swim cap (recommended), a towel, and a water bottle. For younger children, please also bring a change of dry clothes. All pool equipment and aids are provided by the academy.
+              Students should bring: a proper swimsuit or swim shorts, swimming goggles, a swim cap (recommended), a towel, and a water bottle. Basic training aids like kickboards and pull buoys are provided. <strong>Important:</strong> The company does not provide swim fins &mdash; students are required to bring their own fins if their training level requires them.
             </div>
           </div>
         </div>
@@ -1261,7 +1300,7 @@
         <div class="faq-item" role="listitem">
           <button class="faq-question" aria-expanded="false" id="faq-q4" aria-controls="faq-a4">
             Can classes be rescheduled if we miss a session?
-            <span class="faq-chevron" aria-hidden="true">&#8964;</span>
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
           </button>
           <div class="faq-answer" id="faq-a4" role="region" aria-labelledby="faq-q4">
             <div class="faq-answer-inner">
@@ -1273,7 +1312,7 @@
         <div class="faq-item" role="listitem">
           <button class="faq-question" aria-expanded="false" id="faq-q5" aria-controls="faq-a5">
             Are private lessons available for adults?
-            <span class="faq-chevron" aria-hidden="true">&#8964;</span>
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
           </button>
           <div class="faq-answer" id="faq-a5" role="region" aria-labelledby="faq-q5">
             <div class="faq-answer-inner">
@@ -1285,7 +1324,7 @@
         <div class="faq-item" role="listitem">
           <button class="faq-question" aria-expanded="false" id="faq-q6" aria-controls="faq-a6">
             How do I register my child?
-            <span class="faq-chevron" aria-hidden="true">&#8964;</span>
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
           </button>
           <div class="faq-answer" id="faq-a6" role="region" aria-labelledby="faq-q6">
             <div class="faq-answer-inner">
@@ -1297,11 +1336,35 @@
         <div class="faq-item" role="listitem">
           <button class="faq-question" aria-expanded="false" id="faq-q7" aria-controls="faq-a7">
             Do you offer corporate or group programs for schools?
-            <span class="faq-chevron" aria-hidden="true">&#8964;</span>
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
           </button>
           <div class="faq-answer" id="faq-a7" role="region" aria-labelledby="faq-q7">
             <div class="faq-answer-inner">
-              Yes! We work with schools, organizations, and companies to design custom group swimming programs. Whether it's water safety education for students, team-building aquatics for corporate groups, or holiday programs - we tailor programs to meet your organization's specific needs and budget.
+              Yes! We work with schools, organizations, and companies to design custom group swimming programs. Whether it's water safety education for students, team-building aquatics for corporate groups, or holiday programs &mdash; we tailor programs to meet your organization's specific needs and budget.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" id="faq-q8" aria-controls="faq-a8">
+            Is there a private pool for ladies, and who coaches the class?
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+          </button>
+          <div class="faq-answer" id="faq-a8" role="region" aria-labelledby="faq-q8">
+            <div class="faq-answer-inner">
+              There is <strong>no private pool for ladies</strong> &mdash; all sessions are conducted in our standard academy pool facilities. However, our ladies swimming classes are conducted <strong>strictly with female coaches only</strong> (led by Coach Diana), ensuring a comfortable, respectful, and supportive learning environment for all women.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" id="faq-q9" aria-controls="faq-a9">
+            What are the pool dimensions and are the pools heated?
+            <span class="faq-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+          </button>
+          <div class="faq-answer" id="faq-a9" role="region" aria-labelledby="faq-q9">
+            <div class="faq-answer-inner">
+              Our main pool is a full <strong>50-metre, 8-lane Olympic-grade competition pool</strong> equipped with starting blocks and anti-wave lane dividers. For early learners, we have a dedicated shallow kids learning pool. Please note that our swimming pools are <strong>unheated</strong>.
             </div>
           </div>
         </div>
@@ -1327,7 +1390,7 @@
         <a href="#contact" class="btn btn-accent btn-lg" id="cta-register-btn">
           Register Today
         </a>
-        <a href="https://wa.me/60123456789" class="btn btn-outline btn-lg" id="cta-whatsapp-btn" target="_blank" rel="noopener noreferrer">
+        <a href="https://wa.me/60195177001" class="btn btn-outline btn-lg" id="cta-whatsapp-btn" target="_blank" rel="noopener noreferrer">
           WhatsApp Us
         </a>
       </div>
@@ -1352,122 +1415,218 @@
           </h2>
         </div>
 
-        <!-- EDIT: CONTACT ICONS - Replace each icon image with your own (24-28px flat icons).
-             Suggested: phone, email, location pin, and clock icons. -->
+        <!-- Contact Info Items with Crisp SVG Icons -->
         <div class="contact-items">
           <div class="contact-item">
             <div class="contact-item-icon">
-              <!-- EDIT: Phone icon -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="24" height="24" aria-hidden="true" />
+              <!-- Phone icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
             </div>
             <div>
-              <div class="contact-item-label">Phone</div>
-              <a href="tel:+60123456789" class="contact-item-value" id="contact-phone">+60 12-345 6789</a>
+              <div class="contact-item-label" id="contact-phone-label">Phone</div>
+              <a href="tel:+60195177001" class="contact-item-value" id="contact-phone">019-517 7001</a>
             </div>
           </div>
+
           <div class="contact-item">
             <div class="contact-item-icon">
-              <!-- EDIT: Email icon -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="24" height="24" aria-hidden="true" />
+              <!-- Email icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
             </div>
             <div>
-              <div class="contact-item-label">Email</div>
-              <a href="mailto:info@kingaquaacademy.com" class="contact-item-value" id="contact-email">info@kingaquaacademy.com</a>
+              <div class="contact-item-label" id="contact-email-label">Email</div>
+              <a href="mailto:kingaquaacademy@gmail.com" class="contact-item-value" id="contact-email">kingaquaacademy@gmail.com</a>
             </div>
           </div>
+
           <div class="contact-item">
             <div class="contact-item-icon">
-              <!-- EDIT: Location/map pin icon -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="24" height="24" aria-hidden="true" />
+              <!-- Location/map pin icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
             </div>
             <div>
-              <div class="contact-item-label">Address</div>
-              <div class="contact-item-value">Kuala Lumpur, Malaysia</div>
+              <div class="contact-item-label" id="contact-office-label">Office Location</div>
+              <div class="contact-item-value" id="contact-office-val">Pura Kencana, Sri Gading</div>
+              <div style="font-size:var(--text-sm); color:var(--color-text-light); margin-top:2px;" id="contact-office-sub">83000 Batu Pahat, Johor, Malaysia</div>
             </div>
           </div>
+
           <div class="contact-item">
             <div class="contact-item-icon">
-              <!-- EDIT: Clock/hours icon -->
-              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="24" height="24" aria-hidden="true" />
+              <!-- Swimmer / water waves icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+              </svg>
             </div>
             <div>
-              <div class="contact-item-label">Operating Hours</div>
-              <div class="contact-item-value">Mon &ndash; Fri: 7am &ndash; 9pm</div>
-              <div class="contact-item-value" style="font-size:var(--text-sm); color:var(--color-text-light)">Sat &ndash; Sun: 7am &ndash; 6pm</div>
+              <div class="contact-item-label" id="contact-venues-label">Training Venues</div>
+              <div class="contact-item-value" id="contact-venues-val">Pura Kencana, UTHM Parit Raja &amp; Pontian</div>
+              <div style="font-size:var(--text-sm); color:var(--color-text-light); margin-top:3px; line-height:1.45;" id="contact-venues-sub">
+                &bull; Pura Kencana (Sri Gading)<br/>
+                &bull; UTHM Parit Raja<br/>
+                &bull; Pontian
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <!-- Clock/hours icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-item-label" id="contact-hours-label">Office Operating Hours</div>
+              <div class="contact-item-value" id="contact-hours-val">8:30 AM &ndash; 12:00 PM</div>
+              <div style="font-size:var(--text-sm); color:var(--color-text-light); margin-top:2px;" id="contact-hours-days">Wed &ndash; Mon: 8:30 AM &ndash; 12:00 PM</div>
+              <div style="font-size:var(--text-xs); color:#dc2626; font-weight:var(--fw-bold); margin-top:4px;" id="contact-hours-offday">Off Day: Tuesday (Closed)</div>
             </div>
           </div>
         </div>
 
-        <a href="https://wa.me/60123456789" class="contact-whatsapp-btn" id="contact-whatsapp-btn" target="_blank" rel="noopener noreferrer" aria-label="Contact us on WhatsApp">
+        <a href="https://wa.me/60195177001" class="contact-whatsapp-btn" id="contact-whatsapp-btn" target="_blank" rel="noopener noreferrer" aria-label="Contact us on WhatsApp">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
           </svg>
           Chat on WhatsApp
         </a>
 
-        <!-- Map Placeholder -->
-        <!-- EDIT: GOOGLE MAP - To embed a real map, replace the entire <div class="contact-map">
-             block below with a Google Maps <iframe> embed code. Get it from:
-             maps.google.com > Share > Embed a map > Copy the <iframe> code.
-             Example:
-             <iframe src="https://www.google.com/maps/embed?pb=!..." width="100%" height="200"
-               style="border:0; border-radius:16px;" allowfullscreen="" loading="lazy"></iframe> -->
-        <div class="contact-map" role="img" aria-label="Location map placeholder">
-          <div class="contact-map-placeholder">
-            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 8v8'/><path d='M8 12h8'/></svg>" alt="" width="40" height="40" class="map-icon" aria-hidden="true" />
-            <strong>Kingaqua Academy</strong>
-            <span style="font-size:var(--text-sm); color:var(--color-text-muted)">Kuala Lumpur, Malaysia</span>
-            <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" id="map-directions-btn" style="margin-top:8px;">Get Directions</a>
+        <!-- Interactive Google Map (Office Location) -->
+        <div class="contact-map" aria-label="KingAqua Academy Office Location Map">
+          <iframe
+            title="KingAqua Academy Office Location Map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.735810817085!2d103.02547017567777!3d1.851285759757472!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d0590052df894b%3A0xee565efdada1cde3!2sKingAqua%20Academy!5e0!3m2!1sen!2sus!4v1792962814829!5m2!1sen!2sus"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
+          <div class="contact-map-overlay">
+            <div class="contact-map-badge">
+              <span class="map-badge-dot" aria-hidden="true"></span>
+              <div>
+                <div class="map-badge-title" id="map-badge-title">KingAqua Academy Office</div>
+                <div class="map-badge-sub" id="map-badge-sub">Pura Kencana, Sri Gading (Batu Pahat)</div>
+              </div>
+            </div>
+            <a href="https://www.google.com/maps/place/KingAqua+Academy/@1.8512858,103.0254702,17z/data=!3m1!4b1!4m6!3m5!1s0x31d0590052df894b:0xee565efdada1cde3!8m2!3d1.8512858!4d103.0280451!16s%2Fg%2F11w7d1_p7b" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" id="map-directions-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              <span>Get Directions to Office</span>
+            </a>
           </div>
         </div>
       </div>
 
       <!-- Contact Form -->
       <div class="contact-form-wrap reveal-right">
-        <h3 class="form-title">Send Us a Message</h3>
-        <form class="form" id="contact-form" novalidate aria-label="Contact form">
+        <h3 class="form-title">Registration &amp; Inquiry</h3>
+        <form class="form" id="contact-form" novalidate aria-label="Contact and registration form">
+          <!-- Parent Name & Phone -->
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="form-name">Your Name *</label>
+              <label class="form-label" for="form-name">Parent / Guardian Name *</label>
               <input type="text" id="form-name" name="name" class="form-input" placeholder="e.g. Ahmad bin Ali" required autocomplete="name" />
             </div>
             <div class="form-group">
               <label class="form-label" for="form-phone">Phone Number *</label>
-              <input type="tel" id="form-phone" name="phone" class="form-input" placeholder="e.g. 012-345 6789" required autocomplete="tel" />
+              <input type="tel" id="form-phone" name="phone" class="form-input" placeholder="e.g. 019-517 7001" required autocomplete="tel" />
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" for="form-email">Email Address</label>
-            <input type="email" id="form-email" name="email" class="form-input" placeholder="your@email.com" autocomplete="email" />
+          <!-- Email & Preferred Venue -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-email">Email Address</label>
+              <input type="email" id="form-email" name="email" class="form-input" placeholder="your@email.com" autocomplete="email" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="form-venue">Preferred Training Venue *</label>
+              <select id="form-venue" name="venue" class="form-select" required>
+                <option value="">Select preferred venue...</option>
+                <option value="Pura Kencana, Sri Gading">Pura Kencana, Sri Gading</option>
+                <option value="UTHM Parit Raja">UTHM Parit Raja</option>
+                <option value="Pontian">Pontian</option>
+                <option value="Flexible / Any Venue">Flexible / Any Venue</option>
+              </select>
+            </div>
           </div>
 
+          <!-- Program of Interest -->
           <div class="form-group">
             <label class="form-label" for="form-program">Program of Interest</label>
             <select id="form-program" name="program" class="form-select">
               <option value="">Select a program...</option>
-              <option value="beginner">Beginner</option>
+              <option value="beginner">Beginner Swimming Class</option>
               <option value="kiddies">Kiddies (Age 3+)</option>
-              <option value="aquaplay">Aquaplay</option>
+              <option value="aquaplay">Aquaplay Water Confidence</option>
               <option value="novice">Novice</option>
-              <option value="advanced">Advanced</option>
-              <option value="private">Private Lessons</option>
-              <option value="ladies">Ladies Swimming</option>
-              <option value="corporate">Corporate / Group</option>
+              <option value="advanced">Advanced &amp; Performance</option>
+              <option value="private">Private Lessons (1-to-1 / Small Group)</option>
+              <option value="ladies">Ladies Only Swimming</option>
+              <option value="mens">Men's Swimming Class</option>
             </select>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" for="form-message">Message</label>
-            <textarea id="form-message" name="message" class="form-textarea" placeholder="Tell us about your child's age, swimming experience, or any questions you have..."></textarea>
+          <!-- Children Registration Details (Dynamic Multi-Child Entry) -->
+          <div class="form-group" style="gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <label class="form-label" style="margin-bottom:0;">Children to Register *</label>
+              <button type="button" id="add-child-btn" style="background:#f0f9ff; border:1px solid #bae6fd; color:#0284c7; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s;">
+                + Add Another Child
+              </button>
+            </div>
+
+            <div id="children-container" style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+              <!-- Child Item 1 -->
+              <div class="child-card" data-index="1" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; position:relative;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span class="child-badge" style="font-size:12px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 8px; border-radius:4px;">Child 1</span>
+                </div>
+                <div class="form-row child-row-grid" style="margin-bottom:8px;">
+                  <div>
+                    <input type="text" class="form-input child-name" placeholder="Child's Full Name *" required />
+                  </div>
+                  <div>
+                    <input type="number" min="1" max="25" class="form-input child-age" placeholder="Age (e.g. 7) *" required />
+                  </div>
+                </div>
+                <div>
+                  <input type="text" class="form-input child-notes" style="font-size:13px;" placeholder="Swimming Experience / Notes (e.g. Beginner, water phobia, asthma...)" />
+                </div>
+              </div>
+            </div>
+            <div style="font-size:11px; color:#64748b; margin-top:2px;">
+              💡 <em>Filling in a child will automatically add a box for the next child!</em>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-lg" id="form-submit-btn" style="width:100%;">
-            Send Message
+          <!-- Other Enquiries / Questions -->
+          <div class="form-group">
+            <label class="form-label" for="form-message">Other Enquiries / Special Requests</label>
+            <textarea id="form-message" name="message" class="form-textarea" style="min-height:75px;" placeholder="Ask us about schedules, preferred days/times (weekend/weekday), fees, or any other questions..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" id="form-submit-btn" style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0;">
+              <path d="M12.031 2c-5.516 0-9.999 4.486-9.999 10.003 0 1.766.461 3.489 1.338 5.008L2 22l5.118-1.341c1.472.803 3.128 1.227 4.913 1.227h.004c5.515 0 9.998-4.486 9.998-10.002C22.033 6.486 17.547 2 12.031 2zm5.822 14.142c-.246.693-1.432 1.326-1.988 1.409-.508.076-1.15.108-1.856-.116-.428-.136-.978-.317-1.682-.621-2.961-1.278-4.894-4.262-5.042-4.459-.148-.197-1.204-1.601-1.204-3.055 0-1.453.763-2.168 1.034-2.464.271-.296.592-.37.789-.37.197 0 .394.002.567.01.182.009.426-.069.666.508.246.591.838 2.045.912 2.193.074.148.123.32.025.517-.099.197-.148.32-.296.493-.148.172-.311.385-.444.517-.148.148-.302.309-.13.604.173.296.766 1.264 1.645 2.047 1.131 1.008 2.084 1.321 2.38 1.469.296.148.468.123.641-.074.173-.197.74-.862.937-1.158.197-.296.394-.246.665-.148.271.099 1.725.813 2.021.961.296.148.493.222.567.345.074.123.074.714-.172 1.407z" />
+            </svg>
+            Send Registration via WhatsApp
           </button>
 
           <p style="font-size:var(--text-xs); color:var(--color-text-muted); text-align:center; margin-top:var(--space-3);">
-            We typically respond within 24 hours. Your information is kept private and secure.
+            Opens directly in WhatsApp with <strong>019-517 7001</strong>. We typically respond within 24 hours.
           </p>
         </form>
       </div>
@@ -1482,31 +1641,97 @@
   <div class="container">
     <div class="footer-grid">
 
-      <!-- Brand -->
+      <!-- Column 1: Brand & Official Accreditation -->
       <div class="footer-brand">
         <div class="footer-logo">
-          <!-- EDIT: FOOTER LOGO - Replace "assets/images/logo-white.png" with a white/light
-               version of your logo for use on the dark footer background.
-               Recommended: PNG with transparent background, ~180x60px. -->
           <img src="assets/images/logo.png" alt="Kingaqua Academy Logo" class="brand-logo footer-brand-logo" />
         </div>
         <p class="footer-desc">
-          Building confident swimmers and nurturing a lifelong love of the water. Certified coaching programs for all ages in a safe, welcoming environment.
+          Johor's premier aquatic sports and lifesaving training academy. Certified swimming programs for all ages in a safe, world-class Olympic standard environment.
         </p>
+        <div style="font-size:var(--text-xs); color:var(--color-accent); line-height:1.7;">
+          <strong>Accredited by:</strong> MAS Swimming (Malaysia Aquatics)<br/>
+          <strong>Certified by:</strong> MAQRA Johor &bull; Partnered with UTHM
+        </div>
         <div class="footer-social" aria-label="Social media links">
-          <!-- Social icons use inline SVGs - no emoji needed -->
           <a href="#" class="footer-social-link" id="social-facebook" aria-label="Kingaqua Academy Facebook">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
           <a href="#" class="footer-social-link" id="social-instagram" aria-label="Kingaqua Academy Instagram">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           </a>
-          <a href="https://wa.me/60123456789" class="footer-social-link" id="social-whatsapp" aria-label="Kingaqua Academy WhatsApp" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.me/60195177001" class="footer-social-link" id="social-whatsapp" aria-label="Kingaqua Academy WhatsApp" target="_blank" rel="noopener noreferrer">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
           </a>
-        <a href="#" class="footer-social-link" id="social-tiktok" aria-label="Kingaqua Academy TikTok">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-        </a>
+          <a href="#" class="footer-social-link" id="social-tiktok" aria-label="Kingaqua Academy TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Column 2: Swimming Programs -->
+      <div>
+        <h4 class="footer-col-title">Programs</h4>
+        <div class="footer-links">
+          <a href="#programs" class="footer-link">Beginner Swimming</a>
+          <a href="#programs" class="footer-link">Kiddies (Age 3+)</a>
+          <a href="#programs" class="footer-link">Aquaplay Water Confidence</a>
+          <a href="#programs" class="footer-link">Novice</a>
+          <a href="#programs" class="footer-link">Advance &amp; Performance</a>
+          <a href="#programs" class="footer-link">Private Lessons</a>
+          <a href="#programs" class="footer-link">Ladies Only Swimming</a>
+          <a href="#programs" class="footer-link">Men's Swimming Class</a>
+        </div>
+      </div>
+
+      <!-- Column 3: Quick Links & Portal -->
+      <div>
+        <h4 class="footer-col-title">Academy</h4>
+        <div class="footer-links">
+          <a href="#about" class="footer-link">About Academy</a>
+          <a href="#coaches" class="footer-link">Our Coaches</a>
+          <a href="#why-us" class="footer-link">Olympic Pool &amp; Specs</a>
+          <a href="#gallery" class="footer-link">Photo Gallery</a>
+          <a href="#faq" class="footer-link">Frequently Asked Questions</a>
+          <a href="#contact" class="footer-link">Contact &amp; Location</a>
+          <a href="/auth/login" class="footer-link" style="color:var(--color-accent); font-weight:var(--fw-semibold);">Portal Sign In &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Column 4: Contact & Location Credentials -->
+      <div>
+        <h4 class="footer-col-title">Official Contact</h4>
+        <div class="footer-links">
+          <a href="tel:+60195177001" class="footer-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            019-517 7001
+          </a>
+          <a href="https://wa.me/60195177001" target="_blank" rel="noopener noreferrer" class="footer-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp: 019-517 7001
+          </a>
+          <a href="mailto:kingaquaacademy@gmail.com" class="footer-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            kingaquaacademy@gmail.com
+          </a>
+          <div class="footer-link" style="cursor:default; line-height:1.4;" id="footer-location-block">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span><strong>Office:</strong> Pura Kencana, Sri Gading<br/><span style="font-size:var(--text-xs); color:rgba(255,255,255,0.65);">Venues: Pura Kencana, UTHM Parit Raja &amp; Pontian</span><br/><span style="font-size:var(--text-xs); color:rgba(255,255,255,0.5);">Office Hours: 8:30 AM &ndash; 12:00 PM (Closed Tue)</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Copyright & Credentials Bar -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        &copy; 2026 Kingaqua Academy. All rights reserved. &bull; MAS Swimming &amp; MAQRA Accredited Aquatic Training Academy.
+      </div>
+      <div class="footer-bottom-links">
+        <a href="/auth/login" class="footer-bottom-link">Portal Login</a>
+        <a href="#about" class="footer-bottom-link">About Us</a>
+        <a href="#contact" class="footer-bottom-link">Contact</a>
       </div>
     </div>
   </div>
@@ -1516,9 +1741,10 @@
 <button class="scroll-top" id="scroll-top-btn" aria-label="Scroll to top of page">&#8679;</button>
 
 <!-- JavaScript Files -->
-<script src="js/main.js"></script>
+<script src="js/i18n.js?v=20261026_6"></script>
+<script src="js/main.js?v=20261026_6"></script>
 <script src="js/animations.js"></script>
-<script src="js/slider.js"></script>
+<script src="js/slider.js?v=20261026_6"></script>
 <script src="js/faq.js"></script>
 
 </body>

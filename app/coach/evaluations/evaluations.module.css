@@ -305,3 +305,18 @@
   color: var(--text-secondary);
   margin: 0;
 }
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  .evalCard {
+    padding: 16px;
+  }
+  .formActions {
+    flex-direction: column-reverse;
+  }
+  .formActions button {
+    width: 100%;
+  }
+}

@@ -148,6 +148,7 @@
 }
 
 @media (max-width: 639px) {
+  .title { font-size: 1.5rem; }
   .tableCard { display: none; }
   .mobileList { display: flex; }
 }

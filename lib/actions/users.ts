@@ -61,3 +61,97 @@ export async function updateUserProfile(
     return { success: false, error: error.message };
   }
 }
+
+export async function createParentUser(
+  data: {
+    display_name: string;
+    email: string;
+    password: string;
+    phone?: string | null;
+    assignedStudentIds?: string[];
+  },
+  revalidatePaths: string[] = []
+) {
+  try {
+    const supabase = await createAdminClient();
+    const cleanEmail = data.email.trim().toLowerCase();
+    const cleanName = data.display_name.trim();
+    const cleanPhone = data.phone?.trim() || null;
+
+    if (!cleanName) throw new Error("Parent name is required.");
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      throw new Error("Enter a valid email address.");
+    }
+    if (!data.password || data.password.length < 6) {
+      throw new Error("Password must be at least 6 characters.");
+    }
+
+    // 1. Create auth user
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email: cleanEmail,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: {
+        role: "parent",
+        display_name: cleanName,
+      },
+    });
+
+    if (authError || !authData?.user) {
+      throw new Error(authError?.message || "Failed to create authentication user.");
+    }
+
+    // 2. Insert into users table
+    const { data: userRow, error: userError } = await supabase
+      .from("users")
+      .insert({
+        auth_id: authData.user.id,
+        role: "parent",
+        display_name: cleanName,
+        phone: cleanPhone,
+        is_active: true,
+      })
+      .select("id, auth_id, display_name, phone, is_active, created_at")
+      .single();
+
+    if (userError || !userRow) {
+      await supabase.auth.admin.deleteUser(authData.user.id);
+      throw new Error(userError?.message || "Failed to create parent profile.");
+    }
+
+    // 3. Assign students if provided
+    let assignedStudents: { id: string; name: string }[] = [];
+    if (data.assignedStudentIds && data.assignedStudentIds.length > 0) {
+      const { data: updatedStudents } = await supabase
+        .from("students")
+        .update({ parent_id: userRow.id })
+        .in("id", data.assignedStudentIds)
+        .select("id, name");
+      if (updatedStudents) {
+        assignedStudents = updatedStudents;
+      }
+    }
+
+    revalidatePaths.forEach((p) => revalidatePath(p));
+    revalidatePath("/staff/parents");
+    revalidatePath("/staff/students");
+    revalidatePath("/superadmin/users");
+
+    return {
+      success: true,
+      parent: {
+        id: userRow.id,
+        auth_id: userRow.auth_id,
+        display_name: userRow.display_name,
+        phone: userRow.phone,
+        is_active: userRow.is_active,
+        created_at: userRow.created_at,
+        email: cleanEmail,
+        students: assignedStudents,
+      },
+    };
+  } catch (error: any) {
+    console.error("Create Parent Error:", error);
+    return { success: false, error: error.message };
+  }
+}

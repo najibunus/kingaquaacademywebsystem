@@ -173,35 +173,247 @@
   const form = document.getElementById('contact-form');
   if (!form) return;
 
+  const childrenContainer = document.getElementById('children-container');
+  const addChildBtn = document.getElementById('add-child-btn');
+
+  // Helper to re-index all child badges and remove buttons
+  function updateChildIndices() {
+    if (!childrenContainer) return;
+    const cards = childrenContainer.querySelectorAll('.child-card');
+    cards.forEach(function (card, index) {
+      const idx = index + 1;
+      card.setAttribute('data-index', idx);
+      const badge = card.querySelector('.child-badge');
+      if (badge) badge.textContent = 'Child ' + idx;
+
+      // Ensure remove button exists for children > 1
+      let removeBtn = card.querySelector('.remove-child-btn');
+      if (idx > 1 && !removeBtn) {
+        removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-child-btn';
+        removeBtn.innerHTML = '&times; Remove';
+        removeBtn.style.cssText =
+          'background:none; border:none; color:#ef4444; font-size:12px; font-weight:700; cursor:pointer; padding:2px 6px;';
+        removeBtn.addEventListener('click', function () {
+          card.remove();
+          updateChildIndices();
+        });
+        const header = card.querySelector('div:first-child');
+        if (header) header.appendChild(removeBtn);
+      } else if (idx === 1 && removeBtn) {
+        removeBtn.remove();
+      }
+    });
+    if (window.KingAquaI18n && typeof window.KingAquaI18n.refreshChildren === 'function') {
+      window.KingAquaI18n.refreshChildren();
+    }
+  }
+
+  // Create and append a new child row
+  function addNewChildRow(autoFocus) {
+    if (!childrenContainer) return null;
+    const currentCount = childrenContainer.querySelectorAll('.child-card').length;
+    if (currentCount >= 8) return null; // maximum reasonable limit
+
+    const nextIndex = currentCount + 1;
+    const card = document.createElement('div');
+    card.className = 'child-card';
+    card.setAttribute('data-index', nextIndex);
+    card.style.cssText =
+      'background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; position:relative;';
+
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span class="child-badge" style="font-size:12px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 8px; border-radius:4px;">Child ${nextIndex}</span>
+        <button type="button" class="remove-child-btn" style="background:none; border:none; color:#ef4444; font-size:12px; font-weight:700; cursor:pointer; padding:2px 6px;">&times; Remove</button>
+      </div>
+      <div class="form-row child-row-grid" style="margin-bottom:8px;">
+        <div>
+          <input type="text" class="form-input child-name" placeholder="Child's Full Name *" required />
+        </div>
+        <div>
+          <input type="number" min="1" max="25" class="form-input child-age" placeholder="Age (e.g. 7) *" required />
+        </div>
+      </div>
+      <div>
+        <input type="text" class="form-input child-notes" style="font-size:13px;" placeholder="Swimming Experience / Notes (e.g. Beginner, water phobia, asthma...)" />
+      </div>
+    `;
+
+    // Hook up remove button
+    const removeBtn = card.querySelector('.remove-child-btn');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function () {
+        card.remove();
+        updateChildIndices();
+      });
+    }
+
+    // Hook up auto-add on typing in the child's name
+    hookChildAutoAdd(card);
+
+    childrenContainer.appendChild(card);
+    updateChildIndices();
+
+    if (autoFocus) {
+      const nameInp = card.querySelector('.child-name');
+      if (nameInp) nameInp.focus();
+    }
+
+    return card;
+  }
+
+  // Hook auto-add logic: when user types in the last child box, automatically add the next child
+  function hookChildAutoAdd(card) {
+    const nameInput = card.querySelector('.child-name');
+    if (!nameInput) return;
+
+    let hasTriggered = false;
+    nameInput.addEventListener('input', function () {
+      if (hasTriggered) return;
+      const cards = childrenContainer.querySelectorAll('.child-card');
+      const isLast = cards[cards.length - 1] === card;
+
+      if (isLast && nameInput.value.trim().length >= 2) {
+        hasTriggered = true;
+        addNewChildRow(false);
+      }
+    });
+  }
+
+  // Hook first child
+  if (childrenContainer) {
+    const firstCard = childrenContainer.querySelector('.child-card');
+    if (firstCard) hookChildAutoAdd(firstCard);
+  }
+
+  // Manual "+ Add Another Child" button
+  if (addChildBtn) {
+    addChildBtn.addEventListener('click', function () {
+      addNewChildRow(true);
+    });
+  }
+
+  // Form Submit Handler
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
     const submitBtn = document.getElementById('form-submit-btn');
-    const name = document.getElementById('form-name').value.trim();
-    const phone = document.getElementById('form-phone').value.trim();
+    const nameInput = document.getElementById('form-name');
+    const phoneInput = document.getElementById('form-phone');
+    const emailInput = document.getElementById('form-email');
+    const venueSelect = document.getElementById('form-venue');
+    const programSelect = document.getElementById('form-program');
+    const messageInput = document.getElementById('form-message');
 
-    // Simple validation
+    const name = nameInput ? nameInput.value.trim() : '';
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    const venue = venueSelect && venueSelect.selectedIndex > 0 ? venueSelect.options[venueSelect.selectedIndex].text : '';
+    const programText = programSelect && programSelect.selectedIndex > 0 ? programSelect.options[programSelect.selectedIndex].text : '';
+    const message = messageInput ? messageInput.value.trim() : '';
+
+    // Validation for Parent
     if (!name || !phone) {
       showFormMessage('Please fill in your name and phone number.', 'error');
+      if (!name && nameInput) nameInput.focus();
+      else if (!phone && phoneInput) phoneInput.focus();
       return;
     }
 
-    // Simulate send
-    submitBtn.textContent = 'Sending...';
+    if (!venue) {
+      showFormMessage('Please select your preferred training venue.', 'error');
+      if (venueSelect) venueSelect.focus();
+      return;
+    }
+
+    // Collect all valid children
+    const childCards = childrenContainer ? childrenContainer.querySelectorAll('.child-card') : [];
+    const childrenList = [];
+    let hasIncompleteChild = false;
+
+    childCards.forEach(function (card) {
+      const cNameInput = card.querySelector('.child-name');
+      const cAgeInput = card.querySelector('.child-age');
+      const cNotesInput = card.querySelector('.child-notes');
+
+      const cName = cNameInput ? cNameInput.value.trim() : '';
+      const cAge = cAgeInput ? cAgeInput.value.trim() : '';
+      const cNotes = cNotesInput ? cNotesInput.value.trim() : '';
+
+      // If user started typing a name or age
+      if (cName || cAge) {
+        if (!cName || !cAge) {
+          hasIncompleteChild = true;
+        } else {
+          childrenList.push({ name: cName, age: cAge, notes: cNotes });
+        }
+      }
+    });
+
+    if (childrenList.length === 0) {
+      showFormMessage('Please enter at least one child (Name & Age) to register.', 'error');
+      const firstChildName = form.querySelector('.child-name');
+      if (firstChildName) firstChildName.focus();
+      return;
+    }
+
+    if (hasIncompleteChild) {
+      showFormMessage('Please provide both the Name and Age for each child you are registering.', 'error');
+      return;
+    }
+
+    // Build children section text
+    const childrenFormatted = childrenList
+      .map(function (c, i) {
+        let line = `${i + 1}. *${c.name}* (Age: ${c.age} years old)`;
+        if (c.notes) {
+          line += `\n   Notes: ${c.notes}`;
+        }
+        return line;
+      })
+      .join('\n');
+
+    // Build professional WhatsApp message
+    const lines = [
+      '🏊‍♂️ *KINGAQUA ACADEMY — REGISTRATION & INQUIRY*',
+      '----------------------------------------',
+      `*Parent / Guardian:* ${name}`,
+      `*Contact Phone:* ${phone}`,
+      email ? `*Email:* ${email}` : '',
+      `*Preferred Venue:* ${venue}`,
+      programText ? `*Program of Interest:* ${programText}` : '',
+      '----------------------------------------',
+      `*👶 Registered Children (${childrenList.length}):*`,
+      childrenFormatted,
+      message ? '----------------------------------------\n*💬 Other Enquiries / Questions:*\n' + message : '',
+      '----------------------------------------',
+      '_Sent via Kingaqua Academy Website (kingaquaacademy.com)_'
+    ].filter(Boolean);
+
+    const fullMessage = lines.join('\n');
+    const waUrl = 'https://wa.me/60195177001?text=' + encodeURIComponent(fullMessage);
+
+    const originalBtnContent = submitBtn.innerHTML;
+    submitBtn.textContent = 'Opening WhatsApp...';
     submitBtn.disabled = true;
 
-    setTimeout(function () {
-      submitBtn.textContent = '✅ Message Sent!';
-      submitBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-      showFormMessage('Thank you! We\'ll be in touch within 24 hours.', 'success');
-      form.reset();
+    showFormMessage(
+      `Opening WhatsApp with details for ${childrenList.length} child/children to 019-517 7001...`,
+      'success'
+    );
 
-      setTimeout(function () {
-        submitBtn.textContent = 'Send Message 🚀';
-        submitBtn.disabled = false;
-        submitBtn.style.background = '';
-      }, 4000);
-    }, 1200);
+    // Open WhatsApp
+    const waWindow = window.open(waUrl, '_blank', 'noopener,noreferrer');
+    if (!waWindow || waWindow.closed || typeof waWindow.closed === 'undefined') {
+      window.location.href = waUrl;
+    }
+
+    setTimeout(function () {
+      submitBtn.innerHTML = originalBtnContent;
+      submitBtn.disabled = false;
+    }, 4000);
   });
 
   function showFormMessage(message, type) {
@@ -214,7 +426,7 @@
         border-radius: 10px;
         font-size: 0.875rem;
         font-weight: 500;
-        margin-top: 4px;
+        margin-top: 8px;
         transition: all 0.3s ease;
       `;
       form.appendChild(msgEl);
@@ -236,7 +448,7 @@
       msgEl.textContent = '';
       msgEl.style.background = '';
       msgEl.style.border = '';
-    }, 5000);
+    }, 6000);
   }
 })();
 

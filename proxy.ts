@@ -9,11 +9,11 @@ import type { UserRole } from "@/types/roles";
  */
 const ROLE_ROUTES: Record<string, UserRole[]> = {
   "/superadmin": ["superadmin"],
-  "/admin":      ["superadmin", "admin"],
-  "/staff":      ["superadmin", "admin", "staff"],
-  "/coach":      ["superadmin", "admin", "staff", "coach"],
-  "/parent":     ["superadmin", "admin", "staff", "parent"],
-  "/api/cron":   [], // protected by CRON_SECRET header — not role-based
+  "/admin": ["superadmin", "admin"],
+  "/staff": ["superadmin", "admin", "staff"],
+  "/coach": ["superadmin", "admin", "staff", "coach"],
+  "/parent": ["superadmin", "admin", "staff", "parent"],
+  "/api/cron": [], // protected by CRON_SECRET header — not role-based
 };
 
 /**
@@ -21,10 +21,10 @@ const ROLE_ROUTES: Record<string, UserRole[]> = {
  */
 const ROLE_HOME: Record<UserRole, string> = {
   superadmin: "/superadmin",
-  admin:      "/admin/dashboard",
-  staff:      "/staff/dashboard",
-  coach:      "/coach/portal",
-  parent:     "/parent/portal",
+  admin: "/admin/dashboard",
+  staff: "/staff/dashboard",
+  coach: "/coach/portal",
+  parent: "/parent/portal",
 };
 
 export async function proxy(request: NextRequest) {
@@ -58,24 +58,36 @@ export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // ── Redirect unauthenticated users to login ───────────────────────────────
-  const isAuthRoute = pathname.startsWith("/auth") || pathname === "/";
-  if (!user && !isAuthRoute) {
+  // Public API routes must always pass through without redirecting logged-in or anonymous users
+  const isPublicApi =
+    pathname.startsWith("/api/receipts") ||
+    pathname.startsWith("/api/cron") ||
+    pathname.startsWith("/api/test-env");
+
+  if (isPublicApi) {
+    return supabaseResponse;
+  }
+
+  const isAuthPage = pathname.startsWith("/auth");
+  const isPublicRoute = isAuthPage || pathname === "/";
+
+  // Redirect unauthenticated users to login
+  if (!user && !isPublicRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/auth/login";
     redirectUrl.searchParams.set("redirectedFrom", pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // ── Redirect authenticated users away from auth pages ────────────────────
-  if (user && isAuthRoute && pathname !== "/") {
+  // Redirect authenticated users away from auth pages (/auth/login, etc.)
+  if (user && isAuthPage) {
     const role = (user.user_metadata?.role as UserRole) ?? "parent";
     return NextResponse.redirect(
       new URL(ROLE_HOME[role] ?? "/parent/portal", request.url)
     );
   }
 
-  // ── Redirect "/" to role home ─────────────────────────────────────────────
+  // Redirect "/" to role home
   if (user && pathname === "/") {
     const role = (user.user_metadata?.role as UserRole) ?? "parent";
     return NextResponse.redirect(
@@ -83,7 +95,7 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  // ── Enforce role-based access control ────────────────────────────────────
+  // Enforce role-based access control
   if (user) {
     const role = (user.user_metadata?.role as UserRole) ?? "parent";
     for (const [prefix, allowedRoles] of Object.entries(ROLE_ROUTES)) {

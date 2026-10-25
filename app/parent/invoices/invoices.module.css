@@ -262,11 +262,14 @@
   gap: var(--space-4);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+  .title { font-size: 1.5rem; }
+  .bankDetails { padding: var(--space-4); }
   .bankGrid { grid-template-columns: 1fr; }
-  .cardTop { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .cardLeft { width: 100%; justify-content: space-between; flex-direction: row-reverse; }
-  .cardRight { align-items: flex-start; text-align: left; }
+  .cardTop { padding: 16px; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .cardFooter { padding: 16px; }
+  .cardLeft { width: 100%; justify-content: flex-start; flex-direction: row; }
+  .cardRight { width: 100%; flex-direction: row; justify-content: space-between; align-items: center; text-align: left; padding-top: 8px; border-top: 1px dashed var(--border-gray); }
   .formActions { flex-direction: column-reverse; }
   .formActions button { width: 100%; }
 }

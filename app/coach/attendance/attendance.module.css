@@ -160,3 +160,26 @@
 .savingText { font-size: 0.75rem; color: var(--text-secondary); margin: 0; }
 .savedText  { font-size: 0.75rem; color: var(--color-success);   font-weight: 600; margin: 0; }
 .errorText  { font-size: 0.75rem; color: var(--color-danger);    font-weight: 600; margin: 0; }
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  .classFilter {
+    width: 100%;
+  }
+  .studentCard {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .statusBtn {
+    text-align: center;
+    padding: 10px 6px;
+  }
+}

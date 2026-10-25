@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useTransition } from "react";
 import { submitPaymentProofAction } from "@/lib/actions/parentPayment";
@@ -164,6 +164,13 @@ interface Props {
 
 export default function ParentInvoicesClient({ unpaid, pending, history, children = [], allInvoices = [] }: Props) {
   const totalActionable = unpaid.length + pending.length;
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyAccount = () => {
+    navigator.clipboard.writeText("551584068475");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
   
   return (
     <div className="animate-fade-in-up" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
@@ -178,33 +185,77 @@ export default function ParentInvoicesClient({ unpaid, pending, history, childre
 
       <div className={styles.bankDetails}>
         <h3 className={styles.bankTitle} style={{ borderBottom: "1px solid var(--border-gray)", paddingBottom: "12px", marginBottom: "16px" }}>Payment Instructions</h3>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "24px", alignItems: "flex-start" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "stretch" }}>
           
-          <div style={{ flex: "1 1 280px", backgroundColor: "white", padding: "20px", borderRadius: "12px", border: "1px solid var(--border-gray)", textAlign: "center" }}>
-            <p style={{ fontWeight: "bold", fontSize: "1.1rem", marginBottom: "12px", color: "var(--ka-black)" }}>DuitNow QR</p>
-            <div style={{ width: "200px", height: "200px", backgroundColor: "var(--bg-light)", border: "2px dashed var(--border-gray)", margin: "0 auto 16px auto", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ color: "var(--text-secondary)", fontWeight: "bold", fontSize: "0.8rem" }}>[ COMPANY QR CODE ]</span>
+          <div style={{ flex: "1 1 240px", maxWidth: "100%", backgroundColor: "white", padding: "18px 16px", borderRadius: "12px", border: "1px solid var(--border-gray)", textAlign: "center", boxSizing: "border-box" }}>
+            <p style={{ fontWeight: "bold", fontSize: "1.05rem", marginBottom: "12px", color: "var(--ka-black)" }}>DuitNow QR</p>
+            <div style={{ width: "100%", maxWidth: "190px", height: "190px", backgroundColor: "#ffffff", border: "1px solid var(--border-gray)", borderRadius: "12px", margin: "0 auto 12px auto", display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", boxSizing: "border-box", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+              <img
+                src="/images/duitnow-qr.png"
+                alt="DuitNow QR - Kencana Aqua Academy"
+                style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+              />
             </div>
-            <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>Scan to pay Kingaqua Academy</p>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0, fontWeight: 500 }}>
+              Scan with any Banking or eWallet app
+            </p>
           </div>
 
-          <div style={{ flex: "1 1 280px", backgroundColor: "white", padding: "20px", borderRadius: "12px", border: "1px solid var(--border-gray)" }}>
-             <p style={{ fontWeight: "bold", fontSize: "1.1rem", marginBottom: "16px", color: "var(--ka-black)" }}>Bank Transfer</p>
-             <div style={{ marginBottom: "16px" }}>
-               <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "4px" }}>Bank Name</p>
-               <p style={{ fontWeight: 600, fontSize: "1rem", margin: 0 }}>Maybank</p>
-             </div>
-             <div style={{ marginBottom: "16px" }}>
-               <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "4px" }}>Account Name</p>
-               <p style={{ fontWeight: 600, fontSize: "1rem", margin: 0 }}>Kingaqua Academy Sdn Bhd</p>
-             </div>
-             <div style={{ marginBottom: "16px" }}>
-               <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "4px" }}>Account Number</p>
-               <p style={{ fontWeight: 600, fontSize: "1.2rem", letterSpacing: "1px", color: "var(--ka-blue)", margin: 0 }}>5123 4567 8900</p>
-             </div>
-             <div style={{ padding: "12px", backgroundColor: "var(--bg-tint)", borderRadius: "8px" }}>
-               <p style={{ fontSize: "0.85rem", color: "var(--ka-blue)", margin: 0 }}><strong>Note:</strong> Please include your child's name in the transfer reference.</p>
-             </div>
+          <div style={{ flex: "1 1 240px", maxWidth: "100%", backgroundColor: "white", padding: "18px 20px", borderRadius: "12px", border: "1px solid var(--border-gray)", boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div>
+              <p style={{ fontWeight: "bold", fontSize: "1.05rem", marginBottom: "16px", color: "var(--ka-black)" }}>Bank Transfer</p>
+              <div style={{ marginBottom: "14px" }}>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Bank Name</p>
+                <p style={{ fontWeight: 700, fontSize: "1.05rem", margin: 0, color: "var(--ka-black)" }}>Maybank</p>
+              </div>
+              <div style={{ marginBottom: "14px" }}>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Account Name</p>
+                <p style={{ fontWeight: 700, fontSize: "1.05rem", margin: 0, color: "var(--ka-black)" }}>KENCANA AQUA ACADEMY</p>
+              </div>
+              <div style={{ marginBottom: "16px" }}>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Account Number</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", marginTop: "4px" }}>
+                  <p style={{ fontWeight: 800, fontSize: "1.25rem", letterSpacing: "1px", color: "var(--ka-blue)", margin: 0, fontFamily: "var(--font-mono, monospace)" }}>
+                    5515 8406 8475
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleCopyAccount}
+                    style={{
+                      background: copied ? "#dcfce7" : "#f1f5f9",
+                      border: copied ? "1px solid #86efac" : "1px solid #cbd5e1",
+                      color: copied ? "#15803d" : "#475569",
+                      padding: "4px 10px",
+                      borderRadius: "6px",
+                      fontSize: "0.75rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      transition: "all 0.2s"
+                    }}
+                  >
+                    {copied ? (
+                      <>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: "10px 12px", backgroundColor: "var(--bg-tint)", borderRadius: "8px", border: "1px solid var(--bg-soft)" }}>
+              <p style={{ fontSize: "0.82rem", color: "var(--ka-blue)", margin: 0, lineHeight: 1.4 }}>
+                <strong>Note:</strong> Please include your child&apos;s name in the transfer reference and upload your receipt below.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -222,7 +273,7 @@ export default function ParentInvoicesClient({ unpaid, pending, history, childre
                 const d = new Date(a.date);
                 const monthKey = d.getFullYear() + "-" + d.getMonth();
                 if (!monthsMap.has(monthKey)) monthsMap.set(monthKey, []);
-                monthsMap.get(monthKey).push(a);
+                monthsMap.get(monthKey)!.push(a);
               });
               blocks = Array.from(monthsMap.values()).map(records => ({ records, isAdvance: true }));
             } else {
@@ -235,10 +286,19 @@ export default function ParentInvoicesClient({ unpaid, pending, history, childre
             return (
               <div key={child.id} className={styles.bankDetails}>
                 <h3 className={styles.bankTitle} style={{ borderBottom: "1px solid var(--border-gray)", paddingBottom: "12px", marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", backgroundColor: "var(--ka-blue)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "1.2rem", color: "white" }}>
-                    {child.name.charAt(0)}
+                  <div style={{ width: "36px", height: "36px", borderRadius: "50%", backgroundColor: "var(--ka-blue)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "1.1rem", color: "white", overflow: "hidden", flexShrink: 0 }}>
+                    {child.avatar_url ? (
+                      <img src={child.avatar_url} alt={child.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ) : child.name.charAt(0)}
                   </div>
-                  {child.name}'s Class Progress
+                  <div>
+                    <div>{child.name}&apos;s Class Progress</div>
+                    {child.classes?.name && (
+                      <div style={{ fontSize: "0.8rem", fontWeight: 500, color: "var(--text-secondary)", marginTop: "2px" }}>
+                        {child.classes.name.split(" (")[0].trim()}
+                      </div>
+                    )}
+                  </div>
                 </h3>
                 
                 {blocks.length === 0 ? (

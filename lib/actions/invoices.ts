@@ -58,6 +58,88 @@ export async function approvePaymentAction(invoiceId: string) {
   return { success: true, waMessageId: waResponse?.messageId };
 }
 
+export async function undoPaymentApprovalAction(invoiceId: string) {
+  const supabase = await createAdminClient();
+
+  // 1. Get the invoice to determine whether it has uploaded receipt proof
+  const { data: invoice, error: fetchErr } = await supabase
+    .from("invoices")
+    .select("id, invoice_number, receipt_url, payment_status")
+    .eq("id", invoiceId)
+    .single();
+
+  if (fetchErr || !invoice) {
+    return { error: "Invoice not found or could not be loaded." };
+  }
+
+  // 2. Determine previous status: if receipt was uploaded, revert to receipt_submitted; else unpaid
+  const previousStatus = invoice.receipt_url ? "receipt_submitted" : "unpaid";
+
+  const { error: updateErr } = await supabase
+    .from("invoices")
+    .update({
+      payment_status: previousStatus,
+      payment_date: null,
+    })
+    .eq("id", invoiceId);
+
+  if (updateErr) {
+    return { error: "Failed to undo payment approval: " + updateErr.message };
+  }
+
+  revalidatePath("/staff/invoices");
+  revalidatePath("/staff/dashboard");
+  revalidatePath("/parent/invoices");
+  revalidatePath("/parent/portal");
+
+  return { success: true, revertedStatus: previousStatus };
+}
+
+export async function attachReceiptProofAction(formData: FormData) {
+  const invoiceId = formData.get("invoice_id") as string;
+  const file = formData.get("receipt_file") as File | null;
+
+  if (!invoiceId || !file || file.size === 0) {
+    return { error: "Please select a valid image or PDF file." };
+  }
+
+  const supabase = await createAdminClient();
+  const ext = file.name.split(".").pop();
+  const fileName = `${invoiceId}-${Date.now()}.${ext}`;
+
+  const { error: uploadErr } = await supabase.storage
+    .from("receipts")
+    .upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+  if (uploadErr) {
+    return { error: "Failed to upload file: " + uploadErr.message };
+  }
+
+  const { data: publicUrlData } = supabase.storage
+    .from("receipts")
+    .getPublicUrl(fileName);
+  const receiptUrl = publicUrlData.publicUrl;
+
+  const { error: updateErr } = await supabase
+    .from("invoices")
+    .update({
+      receipt_url: receiptUrl,
+      payment_status: "receipt_submitted",
+    })
+    .eq("id", invoiceId);
+
+  if (updateErr) {
+    return { error: "Failed to link receipt to invoice: " + updateErr.message };
+  }
+
+  revalidatePath("/staff/invoices");
+  revalidatePath("/staff/dashboard");
+  revalidatePath("/parent/invoices");
+  revalidatePath("/parent/portal");
+
+  return { success: true, receiptUrl };
+}
+
 export async function createCustomInvoiceAction(
   studentId: string,
   parentId: string,

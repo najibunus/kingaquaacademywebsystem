@@ -1,15 +1,15 @@
-﻿"use client";
+"use client";
 
 import { useState, useTransition, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./staff-students.module.css";
 import { createClient } from "@/lib/supabase/client";
-import { updateStudentProfile } from "@/lib/actions/students";
+import { updateStudentProfile, createStudentProfile } from "@/lib/actions/students";
 import ImageCropperModal from "@/components/ui/ImageCropperModal";
 
 interface Student {
   id: string;
-  temp_id: number;
+  temp_id?: number | null;
   name: string;
   session_count: number;
   status: string;
@@ -17,7 +17,10 @@ interface Student {
   gender?: string | null;
   avatar_url?: string | null;
   class_id: string | null;
+  parent_id?: string | null;
   pricing_tier: string;
+  real_ic?: string | null;
+  school_name?: string | null;
   classes: { name: string; type: string } | null;
 }
 
@@ -28,17 +31,40 @@ interface ClassOption {
   locations?: { name: string } | null;
 }
 
+interface ParentOption {
+  id: string;
+  display_name: string;
+  phone?: string | null;
+}
+
 interface Props {
   students: Student[];
   classes: ClassOption[];
+  parents?: ParentOption[];
 }
 
-export default function StaffStudentsClient({ students: initialStudents, classes }: Props) {
+export default function StaffStudentsClient({ students: initialStudents, classes, parents = [] }: Props) {
   const [students, setStudents] = useState<Student[]>(initialStudents);
   const [selectedClass, setSelectedClass] = useState<string>("all");
   
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  // Add Student State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState({
+    name: "",
+    parent_id: "",
+    class_id: "",
+    gender: "",
+    date_of_birth: "",
+    real_ic: "",
+    school_name: "",
+    pricing_tier: "Standard",
+    status: "active",
+  });
+  const [isCreating, setIsCreating] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
   
   const [uploading, setUploading] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
@@ -106,6 +132,49 @@ export default function StaffStudentsClient({ students: initialStudents, classes
     }
   };
 
+  const handleCreateStudent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addForm.name.trim()) {
+      setAddError("Student name is required.");
+      return;
+    }
+
+    setIsCreating(true);
+    setAddError(null);
+
+    const res = await createStudentProfile({
+      name: addForm.name.trim(),
+      parent_id: addForm.parent_id || null,
+      class_id: addForm.class_id || null,
+      gender: addForm.gender || null,
+      date_of_birth: addForm.date_of_birth || null,
+      real_ic: addForm.real_ic.trim() || null,
+      school_name: addForm.school_name.trim() || null,
+      pricing_tier: addForm.pricing_tier || "Standard",
+      status: addForm.status || "active",
+    });
+
+    setIsCreating(false);
+
+    if (res.success && res.student) {
+      setStudents((prev) => [res.student, ...prev]);
+      setShowAddModal(false);
+      setAddForm({
+        name: "",
+        parent_id: "",
+        class_id: "",
+        gender: "",
+        date_of_birth: "",
+        real_ic: "",
+        school_name: "",
+        pricing_tier: "Standard",
+        status: "active",
+      });
+    } else {
+      setAddError(res.error || "Failed to create student.");
+    }
+  };
+
   const saveStudentProfile = async () => {
     if (!editingStudent) return;
     startTransition(async () => {
@@ -115,8 +184,9 @@ export default function StaffStudentsClient({ students: initialStudents, classes
         gender: editingStudent.gender,
         avatar_url: editingStudent.avatar_url,
         pricing_tier: editingStudent.pricing_tier,
-        real_ic: (editingStudent as any).real_ic,
-        school_name: (editingStudent as any).school_name,
+        real_ic: editingStudent.real_ic || null,
+        school_name: editingStudent.school_name || null,
+        parent_id: editingStudent.parent_id || null,
         class_id: editingStudent.class_id
       }, ["/staff/students"]);
 
@@ -153,6 +223,15 @@ export default function StaffStudentsClient({ students: initialStudents, classes
           </p>
         </div>
         <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+          <button
+            className={styles.addBtn}
+            onClick={() => {
+              setShowAddModal(true);
+              setAddError(null);
+            }}
+          >
+            + Add Student
+          </button>
           <input 
             type="text" 
             placeholder="Search by name or ID..." 
@@ -344,9 +423,52 @@ export default function StaffStudentsClient({ students: initialStudents, classes
 
       {/* Edit Student Modal */}
       {mounted && editingStudent && createPortal(
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 99999, padding: "20px" }}>
-          <div style={{ backgroundColor: "white", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto" }}>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "20px" }}>Edit Profile: {editingStudent.name}</h3>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(15, 23, 42, 0.72)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 99999,
+            padding: "20px",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "24px",
+              borderRadius: "12px",
+              width: "100%",
+              maxWidth: "500px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", margin: 0 }}>
+                Edit Profile: {editingStudent.name}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingStudent(null)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.25rem",
+                  cursor: "pointer",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                ✕
+              </button>
+            </div>
             
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               
@@ -380,6 +502,24 @@ export default function StaffStudentsClient({ students: initialStudents, classes
               </div>
 
               <div>
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                  Parent / Guardian
+                </label>
+                <select
+                  style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-gray)" }}
+                  value={editingStudent.parent_id || ""}
+                  onChange={(e) => setEditingStudent({ ...editingStudent, parent_id: e.target.value || null })}
+                >
+                  <option value="">-- No Parent / Unlinked --</option>
+                  {parents.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.display_name} {p.phone ? `(${p.phone})` : ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
                 <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>Date of Birth</label>
                 <input type="date" style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-gray)" }} value={editingStudent.date_of_birth || ""} onChange={e => setEditingStudent({...editingStudent, date_of_birth: e.target.value})} />
               </div>
@@ -391,6 +531,28 @@ export default function StaffStudentsClient({ students: initialStudents, classes
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>Real IC / MyKid</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 150201-01-1234"
+                  style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-gray)" }}
+                  value={editingStudent.real_ic || ""}
+                  onChange={(e) => setEditingStudent({ ...editingStudent, real_ic: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>School Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. SK Pintas Puteh"
+                  style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-gray)" }}
+                  value={editingStudent.school_name || ""}
+                  onChange={(e) => setEditingStudent({ ...editingStudent, school_name: e.target.value })}
+                />
               </div>
 
               <div>
@@ -443,6 +605,305 @@ export default function StaffStudentsClient({ students: initialStudents, classes
               </div>
 
             </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Add Student Modal */}
+      {mounted && showAddModal && createPortal(
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(15, 23, 42, 0.72)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 99999,
+            padding: "20px",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "24px",
+              borderRadius: "12px",
+              width: "100%",
+              maxWidth: "500px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", margin: 0 }}>
+                Add New Student
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.25rem",
+                  cursor: "pointer",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {addError && (
+              <div
+                style={{
+                  backgroundColor: "#fee2e2",
+                  color: "#991b1b",
+                  padding: "10px 14px",
+                  borderRadius: "8px",
+                  fontSize: "0.85rem",
+                  marginBottom: "16px",
+                }}
+              >
+                {addError}
+              </div>
+            )}
+
+            <form onSubmit={handleCreateStudent} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                  Full Name <span style={{ color: "#ef4444" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Adam bin Ali"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-gray)",
+                  }}
+                  value={addForm.name}
+                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                  Parent / Guardian <span style={{ fontWeight: "normal", color: "var(--text-secondary)" }}>(optional)</span>
+                </label>
+                <select
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-gray)",
+                  }}
+                  value={addForm.parent_id}
+                  onChange={(e) => setAddForm({ ...addForm, parent_id: e.target.value })}
+                >
+                  <option value="">-- No Parent / Unlinked --</option>
+                  {parents.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.display_name} {p.phone ? `(${p.phone})` : ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                  Class / Venue <span style={{ fontWeight: "normal", color: "var(--text-secondary)" }}>(optional)</span>
+                </label>
+                <select
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-gray)",
+                  }}
+                  value={addForm.class_id}
+                  onChange={(e) => setAddForm({ ...addForm, class_id: e.target.value })}
+                >
+                  <option value="">-- Unassigned --</option>
+                  {Object.keys(groupedClasses).sort((a, b) => {
+                    const order = ["UTHM", "Pura Kencana", "Pontian"];
+                    const indexA = order.indexOf(a);
+                    const indexB = order.indexOf(b);
+                    return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+                  }).map(loc => (
+                    <optgroup key={loc} label={loc}>
+                      {groupedClasses[loc].map(c => (
+                        <option key={c.id} value={c.id}>{c.name} {c.type === 'ADV01' ? '(ADV01)' : ''}</option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                    Gender
+                  </label>
+                  <select
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-gray)",
+                    }}
+                    value={addForm.gender}
+                    onChange={(e) => setAddForm({ ...addForm, gender: e.target.value })}
+                  >
+                    <option value="">-- Select --</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-gray)",
+                    }}
+                    value={addForm.date_of_birth}
+                    onChange={(e) => setAddForm({ ...addForm, date_of_birth: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                    Real IC / MyKid
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 150201-01-1234"
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-gray)",
+                    }}
+                    value={addForm.real_ic}
+                    onChange={(e) => setAddForm({ ...addForm, real_ic: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                    School Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. SK Pintas Puteh"
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-gray)",
+                    }}
+                    value={addForm.school_name}
+                    onChange={(e) => setAddForm({ ...addForm, school_name: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                    Pricing Tier
+                  </label>
+                  <select
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-gray)",
+                    }}
+                    value={addForm.pricing_tier}
+                    onChange={(e) => setAddForm({ ...addForm, pricing_tier: e.target.value })}
+                  >
+                    <option value="Standard">Standard</option>
+                    <option value="Staff/Students">Staff/Students Promo</option>
+                    <option value="Mommy">Mommy Promo</option>
+                    <option value="1 Person (Private)">1 Person (Private)</option>
+                    <option value="2 People (Private)">2 People (Private)</option>
+                    <option value="3-5 People (Private)">3-5 People (Private)</option>
+                    <option value="Special Needs">Special Needs</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                    Status
+                  </label>
+                  <select
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-gray)",
+                    }}
+                    value={addForm.status}
+                    onChange={(e) => setAddForm({ ...addForm, status: e.target.value })}
+                  >
+                    <option value="active">Active</option>
+                    <option value="on_hold">On Hold</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+                <button
+                  type="submit"
+                  disabled={isCreating}
+                  style={{
+                    flex: 1,
+                    padding: "12px",
+                    backgroundColor: "var(--ka-blue)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                >
+                  {isCreating ? "Creating..." : "Create Student"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  disabled={isCreating}
+                  style={{
+                    padding: "12px",
+                    backgroundColor: "var(--bg-light)",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>,
         document.body

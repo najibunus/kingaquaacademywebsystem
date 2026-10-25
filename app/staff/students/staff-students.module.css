@@ -1,10 +1,31 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: var(--space-6);
   gap: var(--space-4);
   flex-wrap: wrap;
+}
+
+.addBtn {
+  background-color: var(--ka-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(30, 58, 138, 0.2);
+  transition: all 0.15s ease;
+}
+
+.addBtn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 
 .title {

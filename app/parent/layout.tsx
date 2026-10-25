@@ -1,4 +1,5 @@
 import NavLink from "@/components/NavLink";
+import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
 import styles from "./layout.module.css";
 
@@ -8,31 +9,36 @@ export default function ParentLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`${styles.layoutContainer} min-h-screen w-full max-w-[100vw] flex flex-col bg-[#F8FAFC] box-border`}>
+    <div className={styles.layoutContainer}>
       {/* ── Mobile Topbar ── */}
-      <header className={`${styles.mobileTopbar} flex flex-row justify-between items-center w-full px-4 py-3 box-border`}>
-        <div className={styles.brandMobile}>
-          <div className={styles.logoIconMobile}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 14c2-2 4-3 6-2l4 2c2 1 4 1 6-1" />
-              <path d="M6 18c1.5-1 3-1.5 4.5-1l2 1c1.5.5 3 .5 4.5-1" opacity="0.6" />
-            </svg>
-          </div>
-          <span className={styles.brandNameMobile}>Kingaqua</span>
+      <header className={styles.mobileTopbar}>
+        <BrandLogo size={32} textSize="0.95rem" />
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <form action={logoutAction} style={{ margin: 0 }}>
+            <button
+              type="submit"
+              style={{
+                background: "none",
+                border: "1px solid var(--border-gray)",
+                borderRadius: "var(--radius-sm)",
+                padding: "4px 8px",
+                fontSize: "0.75rem",
+                color: "var(--text-secondary)",
+                cursor: "pointer",
+                fontWeight: 500,
+              }}
+            >
+              Sign Out
+            </button>
+          </form>
+          <div className={styles.avatarMobile}>PA</div>
         </div>
-        <div className={`${styles.avatarMobile} h-8 w-8 flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center`}>PA</div>
       </header>
 
       {/* ── Desktop Sidebar ── */}
       <aside className={styles.sidebar}>
         <div className={styles.brandDesktop}>
-          <div className={styles.logoIconMobile}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 14c2-2 4-3 6-2l4 2c2 1 4 1 6-1" />
-              <path d="M6 18c1.5-1 3-1.5 4.5-1l2 1c1.5.5 3 .5 4.5-1" opacity="0.6" />
-            </svg>
-          </div>
-          <span className={styles.brandNameMobile}>Kingaqua</span>
+          <BrandLogo size={36} textSize="1.05rem" />
         </div>
 
         <nav className={styles.navDesktop}>
@@ -99,13 +105,13 @@ export default function ParentLayout({
         </header>
 
         {/* Page Content */}
-        <div className={`${styles.pageContainer} pb-20 w-full max-w-[100vw] overflow-x-hidden px-4 box-border`}>
+        <div className={styles.pageContainer}>
           {children}
         </div>
       </main>
 
       {/* ── Mobile Bottom Nav ── */}
-      <nav className={`${styles.bottomNav} fixed bottom-0 left-0 right-0 w-full max-w-[100vw] box-border z-50 bg-white flex justify-around items-center px-2 md:hidden`}>
+      <nav className={styles.bottomNav}>
         <NavLink href="/parent/portal" exact className={styles.navLinkMobile} activeClassName={styles.navLinkMobileActive}>
           <svg className={styles.navIconMobile} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />

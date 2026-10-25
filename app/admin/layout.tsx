@@ -1,8 +1,7 @@
-import Link from "next/link";
 import NavLink from "@/components/NavLink";
+import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
 import styles from "./layout.module.css";
-
 
 export default function AdminLayout({
   children,
@@ -11,17 +10,11 @@ export default function AdminLayout({
 }) {
   return (
     <div className={styles.layoutContainer}>
-      {/* ── Sidebar ── */}
+      {/* ── Sidebar (Desktop) ── */}
       <aside className={styles.sidebar}>
         {/* Brand Area */}
         <div className={styles.brand}>
-          <div className={styles.logoIcon}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 14c2-2 4-3 6-2l4 2c2 1 4 1 6-1" />
-              <path d="M6 18c1.5-1 3-1.5 4.5-1l2 1c1.5.5 3 .5 4.5-1" opacity="0.6" />
-            </svg>
-          </div>
-          <span className={styles.brandName}>Kingaqua</span>
+          <BrandLogo size={36} textSize="1.05rem" />
         </div>
 
         {/* Navigation */}
@@ -61,7 +54,6 @@ export default function AdminLayout({
             </svg>
             Import CSV
           </NavLink>
-
 
           <NavLink href="/admin/finances" exact className={styles.navLink} activeClassName={styles.navLinkActive}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -118,7 +110,9 @@ export default function AdminLayout({
       <main className={styles.mainContent}>
         {/* Topbar */}
         <header className={styles.topbar}>
-          <h2 className={styles.topbarTitle}>Admin Dashboard</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+            <BrandLogo size={30} textSize="0.95rem" />
+          </div>
           <div className={styles.userProfile}>
             <button className={styles.notificationBtn}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -129,9 +123,42 @@ export default function AdminLayout({
             </button>
             <div className={styles.divider}></div>
             <span className={styles.userEmail}>admin@kingaqua.test</span>
+            <form action={logoutAction} className={styles.mobileLogoutForm}>
+              <button type="submit" className={styles.mobileLogoutBtn}>
+                Sign Out
+              </button>
+            </form>
             <div className={styles.avatar}>AD</div>
           </div>
         </header>
+
+        {/* Mobile Navigation Strip */}
+        <nav className={styles.mobileNav}>
+          <NavLink href="/admin/dashboard" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Dashboard
+          </NavLink>
+          <NavLink href="/admin/students" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Students
+          </NavLink>
+          <NavLink href="/admin/students/list" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            All Students
+          </NavLink>
+          <NavLink href="/admin/students/import" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Import CSV
+          </NavLink>
+          <NavLink href="/admin/finances" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Finances
+          </NavLink>
+          <NavLink href="/admin/classes" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Classes
+          </NavLink>
+          <NavLink href="/admin/pricing" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Pricing
+          </NavLink>
+          <NavLink href="/admin/staff" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Staff &amp; Coaches
+          </NavLink>
+        </nav>
 
         {/* Page Content */}
         <div className={styles.pageContainer}>

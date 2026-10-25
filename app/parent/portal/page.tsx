@@ -1,4 +1,4 @@
-﻿import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import ParentPortalClient from "./ParentPortalClient";
 
 export default async function ParentPortalPage() {
@@ -25,10 +25,10 @@ export default async function ParentPortalPage() {
     .select("id, invoice_number, payment_status, created_at, type, payment_date, student_id")
     .eq("parent_id", parentId);
 
-  console.log("Portal parentId:", parentId, "Children:", children, "Error:", childrenError?.message, childrenError?.details, childrenError?.hint); return (
+  return (
     <ParentPortalClient 
       unpaidInvoices={(allInvoices as any) || []} 
-      children={children || []} 
+      children={(children as any) || []} 
     />
   );
 }

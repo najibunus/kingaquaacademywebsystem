@@ -2,15 +2,26 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 .title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.875rem;
+  font-size: 1.5rem;
   color: var(--ka-black);
   margin-bottom: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .header {
+    margin-bottom: var(--space-8);
+  }
+  .title {
+    font-size: 1.875rem;
+  }
 }
 
 .subtitle {
@@ -20,6 +31,7 @@
 
 .actionButtons {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
 }
 

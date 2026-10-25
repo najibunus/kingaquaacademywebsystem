@@ -115,7 +115,7 @@ export default async function StaffDashboardPage() {
                   </tr>
                 ) : (
                   receiptsToVerify.map((inv) => {
-                    const student = inv.students as { name: string } | null;
+                    const student = inv.students as any;
                     return (
                       <tr key={inv.id} className={styles.tableRow}>
                         <td>

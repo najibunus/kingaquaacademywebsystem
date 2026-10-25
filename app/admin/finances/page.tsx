@@ -50,7 +50,7 @@ export default async function AdminFinancesPage({ searchParams }: PageProps) {
     return {
       ...inv,
       amount: (items ?? []).reduce((s, i) => s + i.quantity * i.unit_price, 0),
-      student: inv.students as { name: string } | null,
+      student: inv.students as any,
     };
   });
 

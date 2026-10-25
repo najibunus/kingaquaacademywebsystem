@@ -1,4 +1,5 @@
 import NavLink from "@/components/NavLink";
+import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
 import styles from "./layout.module.css";
 
@@ -9,17 +10,11 @@ export default function SuperadminLayout({
 }) {
   return (
     <div className={styles.layoutContainer}>
-      {/* ── Sidebar ── */}
+      {/* ── Sidebar (Desktop) ── */}
       <aside className={styles.sidebar}>
         {/* Brand Area */}
         <div className={styles.brand}>
-          <div className={styles.logoIcon}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 14c2-2 4-3 6-2l4 2c2 1 4 1 6-1" />
-              <path d="M6 18c1.5-1 3-1.5 4.5-1l2 1c1.5.5 3 .5 4.5-1" opacity="0.6" />
-            </svg>
-          </div>
-          <span className={styles.brandName}>Kingaqua</span>
+          <BrandLogo size={36} textSize="1.05rem" textColor="#ffffff" />
         </div>
 
         {/* Navigation */}
@@ -33,6 +28,13 @@ export default function SuperadminLayout({
               <path d="M3 9h18" />
             </svg>
             System Health
+          </NavLink>
+          <NavLink href="/superadmin/users" exact className={styles.navLink} activeClassName={styles.navLinkActive}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+            </svg>
+            User Management
           </NavLink>
           <NavLink href="/superadmin/payments" exact className={styles.navLink} activeClassName={styles.navLinkActive}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -81,12 +83,38 @@ export default function SuperadminLayout({
       <main className={styles.mainContent}>
         {/* Topbar */}
         <header className={styles.topbar}>
-          <h2 className={styles.topbarTitle}>Superadmin Controls</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+            <BrandLogo size={30} textSize="0.95rem" />
+          </div>
           <div className={styles.userProfile}>
             <span className={styles.userEmail}>superadmin@kingaqua.test</span>
-            <div className={styles.avatar}></div>
+            <form action={logoutAction} className={styles.mobileLogoutForm}>
+              <button type="submit" className={styles.mobileLogoutBtn}>
+                Sign Out
+              </button>
+            </form>
+            <div className={styles.avatar}>SA</div>
           </div>
         </header>
+
+        {/* Mobile Navigation Strip */}
+        <nav className={styles.mobileNav}>
+          <NavLink href="/superadmin" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            System Health
+          </NavLink>
+          <NavLink href="/superadmin/users" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            User Management
+          </NavLink>
+          <NavLink href="/superadmin/payments" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Payment Gateways
+          </NavLink>
+          <NavLink href="/superadmin/audit" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Audit Logs
+          </NavLink>
+          <NavLink href="/superadmin/admins" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Admin Access
+          </NavLink>
+        </nav>
 
         {/* Page Content */}
         <div className={styles.pageContainer}>
