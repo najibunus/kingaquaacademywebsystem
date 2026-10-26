@@ -93,3 +93,29 @@ export async function createStudentProfile(
   }
 }
 
+export async function deleteStudentProfile(
+  studentId: string,
+  revalidatePaths: string[] = []
+) {
+  try {
+    const supabase = await createAdminClient();
+
+    const { error } = await supabase.from("students").delete().eq("id", studentId);
+    if (error) throw error;
+
+    revalidatePaths.forEach((p) => revalidatePath(p));
+    revalidatePath("/staff/students");
+    revalidatePath("/staff/parents");
+    revalidatePath("/staff/attendance");
+    revalidatePath("/admin/students");
+    revalidatePath("/superadmin/users");
+    revalidatePath("/parent/portal");
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Delete Student Error:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+

@@ -4,7 +4,7 @@ import { useState, useTransition, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./staff-students.module.css";
 import { createClient } from "@/lib/supabase/client";
-import { updateStudentProfile, createStudentProfile } from "@/lib/actions/students";
+import { updateStudentProfile, createStudentProfile, deleteStudentProfile } from "@/lib/actions/students";
 import ImageCropperModal from "@/components/ui/ImageCropperModal";
 
 interface Student {
@@ -48,6 +48,7 @@ export default function StaffStudentsClient({ students: initialStudents, classes
   const [selectedClass, setSelectedClass] = useState<string>("all");
   
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   // Add Student State
@@ -204,6 +205,26 @@ export default function StaffStudentsClient({ students: initialStudents, classes
         alert("Failed to update profile: " + res.error);
       }
     });
+  };
+
+  const handleDeleteStudent = async () => {
+    if (!editingStudent) return;
+    const confirmDelete = window.confirm(
+      `Are you sure you want to permanently delete student "${editingStudent.name}"? This action cannot be undone.`
+    );
+    if (!confirmDelete) return;
+
+    const targetId = editingStudent.id;
+    setDeletingId(targetId);
+    const res = await deleteStudentProfile(targetId, ["/staff/students"]);
+    setDeletingId(null);
+
+    if (res.success) {
+      setStudents(prev => prev.filter(s => s.id !== targetId));
+      setEditingStudent(null);
+    } else {
+      alert("Failed to delete student: " + res.error);
+    }
   };
 
   const groupedClasses = classes.reduce((acc, cls) => {
@@ -587,18 +608,26 @@ export default function StaffStudentsClient({ students: initialStudents, classes
                 </select>
               </div>
 
-              <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
+              <div style={{ display: "flex", gap: "10px", marginTop: "16px", flexWrap: "wrap" }}>
                 <button 
                   onClick={saveStudentProfile}
-                  disabled={isPending || uploading}
+                  disabled={isPending || uploading || Boolean(deletingId)}
                   style={{ flex: 1, padding: "12px", backgroundColor: "var(--ka-blue)", color: "white", border: "none", borderRadius: "8px", fontWeight: "bold", cursor: "pointer" }}
                 >
                   {isPending ? "Saving..." : "Save Profile"}
                 </button>
                 <button 
+                  type="button"
+                  onClick={handleDeleteStudent}
+                  disabled={isPending || uploading || Boolean(deletingId)}
+                  style={{ padding: "12px 16px", backgroundColor: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", borderRadius: "8px", fontWeight: "bold", cursor: "pointer" }}
+                >
+                  {deletingId === editingStudent.id ? "Deleting..." : "Delete Student"}
+                </button>
+                <button 
                   onClick={() => setEditingStudent(null)}
-                  disabled={isPending || uploading}
-                  style={{ padding: "12px", backgroundColor: "var(--bg-light)", border: "none", borderRadius: "8px", fontWeight: "bold", cursor: "pointer" }}
+                  disabled={isPending || uploading || Boolean(deletingId)}
+                  style={{ padding: "12px 16px", backgroundColor: "var(--bg-light)", border: "none", borderRadius: "8px", fontWeight: "bold", cursor: "pointer" }}
                 >
                   Cancel
                 </button>

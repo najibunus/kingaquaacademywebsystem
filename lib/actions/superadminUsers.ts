@@ -98,6 +98,13 @@ function done(): ActionResult {
   revalidatePath("/superadmin/users");
   revalidatePath("/superadmin");
   revalidatePath("/superadmin/admins");
+  revalidatePath("/staff/students");
+  revalidatePath("/staff/parents");
+  revalidatePath("/staff/attendance");
+  revalidatePath("/admin/students");
+  revalidatePath("/admin/students/list");
+  revalidatePath("/parent/portal");
+  revalidatePath("/parent/invoices");
   return { success: true };
 }
 
@@ -246,13 +253,16 @@ export async function deleteUserAccount(userId: string): Promise<ActionResult> {
     const caller = await requireSuperadmin();
     const { admin, target } = await loadTarget(userId, caller.id);
 
-    // Parents own children — detach them first so students are never lost.
+    // Parents own children — delete associated children so orphaned records do not linger.
     if (target.role === "parent") {
-      const { error: detachError } = await admin
+      const { error: childDelError } = await admin
         .from("students")
-        .update({ parent_id: null })
+        .delete()
         .eq("parent_id", userId);
-      if (detachError) throw detachError;
+      if (childDelError) {
+        // Fallback: if student delete failed due to linked records, detach instead
+        await admin.from("students").update({ parent_id: null }).eq("parent_id", userId);
+      }
     }
 
     const { error } = await admin.from("users").delete().eq("id", userId);
