@@ -94,6 +94,7 @@ export async function createParentUser(
       user_metadata: {
         role: "parent",
         display_name: cleanName,
+        phone: cleanPhone,
       },
     });
 
@@ -101,22 +102,37 @@ export async function createParentUser(
       throw new Error(authError?.message || "Failed to create authentication user.");
     }
 
-    // 2. Insert into users table
-    const { data: userRow, error: userError } = await supabase
+    // 2. Upsert into users table (handles DB trigger gracefully)
+    let userRow: any = null;
+    const { data: upsertedRow, error: userError } = await supabase
       .from("users")
-      .insert({
-        auth_id: authData.user.id,
-        role: "parent",
-        display_name: cleanName,
-        phone: cleanPhone,
-        is_active: true,
-      })
+      .upsert(
+        {
+          auth_id: authData.user.id,
+          role: "parent",
+          display_name: cleanName,
+          phone: cleanPhone,
+          is_active: true,
+        },
+        { onConflict: "auth_id" }
+      )
       .select("id, auth_id, display_name, phone, is_active, created_at")
       .single();
 
-    if (userError || !userRow) {
-      await supabase.auth.admin.deleteUser(authData.user.id);
-      throw new Error(userError?.message || "Failed to create parent profile.");
+    if (userError || !upsertedRow) {
+      const { data: existingRow, error: fetchErr } = await supabase
+        .from("users")
+        .select("id, auth_id, display_name, phone, is_active, created_at")
+        .eq("auth_id", authData.user.id)
+        .single();
+
+      if (fetchErr || !existingRow) {
+        await supabase.auth.admin.deleteUser(authData.user.id);
+        throw new Error(userError?.message || "Failed to create parent profile.");
+      }
+      userRow = existingRow;
+    } else {
+      userRow = upsertedRow;
     }
 
     // 3. Assign students if provided

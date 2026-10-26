@@ -313,6 +313,7 @@ export async function createUserAccount(payload: {
       user_metadata: {
         role: payload.role,
         display_name: cleanName,
+        phone: cleanPhone || null,
       },
     });
 
@@ -320,21 +321,37 @@ export async function createUserAccount(payload: {
       throw new Error(authErr?.message || "Failed to create user in authentication system.");
     }
 
-    const { data: profile, error: profErr } = await admin
+    // Use upsert on auth_id so it handles both manual insert and DB trigger seamlessly
+    let profile: any = null;
+    const { data: upserted, error: profErr } = await admin
       .from("users")
-      .insert({
-        auth_id: authData.user.id,
-        role: payload.role,
-        display_name: cleanName,
-        phone: cleanPhone || null,
-        is_active: true,
-      })
+      .upsert(
+        {
+          auth_id: authData.user.id,
+          role: payload.role,
+          display_name: cleanName,
+          phone: cleanPhone || null,
+          is_active: true,
+        },
+        { onConflict: "auth_id" }
+      )
       .select("id, auth_id, role, display_name, phone, is_active, created_at")
       .single();
 
-    if (profErr || !profile) {
-      await admin.auth.admin.deleteUser(authData.user.id);
-      throw new Error(profErr?.message || "Failed to create user database profile.");
+    if (profErr || !upserted) {
+      const { data: existing, error: fetchErr } = await admin
+        .from("users")
+        .select("id, auth_id, role, display_name, phone, is_active, created_at")
+        .eq("auth_id", authData.user.id)
+        .single();
+
+      if (fetchErr || !existing) {
+        await admin.auth.admin.deleteUser(authData.user.id);
+        throw new Error(profErr?.message || "Failed to create user database profile.");
+      }
+      profile = existing;
+    } else {
+      profile = upserted;
     }
 
     await audit(admin, `user.create:${payload.role}`, profile.id);
