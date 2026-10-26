@@ -1,13 +1,44 @@
 import NavLink from "@/components/NavLink";
 import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
+import { createClient } from "@/lib/supabase/server";
 import styles from "./layout.module.css";
 
-export default function ParentLayout({
+export default async function ParentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const email = user?.email ?? "";
+  
+  let displayName = user?.user_metadata?.display_name || "";
+  let avatarUrl: string | null = null;
+
+  if (user?.id) {
+    const { data: profile } = await supabase
+      .from("users")
+      .select("display_name, avatar_url")
+      .eq("auth_id", user.id)
+      .maybeSingle();
+
+    if (profile?.display_name) displayName = profile.display_name;
+    if (profile?.avatar_url) avatarUrl = profile.avatar_url;
+  }
+
+  if (!displayName) {
+    displayName = email ? email.split("@")[0] : "Parent";
+  }
+
+  const initials = displayName
+    .split(" ")
+    .map((w: string) => w[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "PA";
+
   return (
     <div className={styles.layoutContainer}>
       {/* ── Mobile Topbar ── */}
@@ -99,8 +130,14 @@ export default function ParentLayout({
         <header className={styles.desktopTopbar}>
           <h2 className={styles.topbarTitle}>Parent Portal</h2>
           <div className={styles.userProfile}>
-            <span className={styles.userEmail}>parent@kingaqua.test</span>
-            <div className={styles.avatarMobile} style={{width: "36px", height: "36px"}}>PA</div>
+            <span className={styles.userEmail} title={email}>{email || displayName}</span>
+            <div className={styles.avatarMobile} style={{width: "36px", height: "36px", overflow: "hidden"}}>
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                initials
+              )}
+            </div>
           </div>
         </header>
 

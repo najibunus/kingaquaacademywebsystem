@@ -1,13 +1,44 @@
 import NavLink from "@/components/NavLink";
 import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
+import { createClient } from "@/lib/supabase/server";
 import styles from "./layout.module.css";
 
-export default function SuperadminLayout({
+export default async function SuperadminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const email = user?.email ?? "";
+  
+  let displayName = user?.user_metadata?.display_name || "";
+  let avatarUrl: string | null = null;
+
+  if (user?.id) {
+    const { data: profile } = await supabase
+      .from("users")
+      .select("display_name, avatar_url")
+      .eq("auth_id", user.id)
+      .maybeSingle();
+
+    if (profile?.display_name) displayName = profile.display_name;
+    if (profile?.avatar_url) avatarUrl = profile.avatar_url;
+  }
+
+  if (!displayName) {
+    displayName = email ? email.split("@")[0] : "Superadmin";
+  }
+
+  const initials = displayName
+    .split(" ")
+    .map((w: string) => w[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "SA";
+
   return (
     <div className={styles.layoutContainer}>
       {/* ── Sidebar (Desktop) ── */}
@@ -87,13 +118,19 @@ export default function SuperadminLayout({
             <BrandLogo size={30} textSize="0.95rem" />
           </div>
           <div className={styles.userProfile}>
-            <span className={styles.userEmail}>superadmin@kingaqua.test</span>
+            <span className={styles.userEmail} title={email}>{email || displayName}</span>
             <form action={logoutAction} className={styles.mobileLogoutForm}>
               <button type="submit" className={styles.mobileLogoutBtn}>
                 Sign Out
               </button>
             </form>
-            <div className={styles.avatar}>SA</div>
+            <div className={styles.avatar} style={{ overflow: "hidden" }}>
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                initials
+              )}
+            </div>
           </div>
         </header>
 

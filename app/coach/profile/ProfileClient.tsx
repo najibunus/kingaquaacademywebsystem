@@ -275,7 +275,7 @@ export default function ProfileClient({ userProfile }: { userProfile: any }) {
             <label style={{ fontWeight: 600, fontSize: "0.9rem" }}>Email Address</label>
             <input 
               type="text" 
-              value={userProfile.email || "coach@kingaqua.test"} 
+              value={userProfile.email || ""} 
               disabled
               style={{
                 padding: "12px", 

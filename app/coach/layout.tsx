@@ -11,7 +11,7 @@ export default async function CoachLayout({
 }) {
   const authClient = await createClient();
   const { data: { user } } = await authClient.auth.getUser();
-  const email = user?.email ?? "coach@kingaqua.test";
+  const email = user?.email ?? "";
 
   const supabase = await createAdminClient();
   const { data: userRow } = await supabase
