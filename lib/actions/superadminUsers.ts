@@ -4,7 +4,7 @@ import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export type ManagedRole = "admin" | "staff" | "coach" | "parent";
-export const MANAGED_ROLES: ManagedRole[] = ["admin", "staff", "coach", "parent"];
+const MANAGED_ROLES: ManagedRole[] = ["admin", "staff", "coach", "parent"];
 
 export type SheetUserDTO = {
   id: string;
