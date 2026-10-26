@@ -1563,19 +1563,33 @@
             </div>
           </div>
 
-          <!-- Program of Interest -->
+          <!-- Class / Program of Interest -->
           <div class="form-group">
-            <label class="form-label" for="form-program">Program of Interest</label>
-            <select id="form-program" name="program" class="form-select">
-              <option value="">Select a program...</option>
-              <option value="beginner">Beginner Swimming Class</option>
-              <option value="kiddies">Kiddies (Age 3+)</option>
-              <option value="aquaplay">Aquaplay Water Confidence</option>
-              <option value="novice">Novice</option>
-              <option value="advanced">Advanced &amp; Performance</option>
-              <option value="private">Private Lessons (1-to-1 / Small Group)</option>
-              <option value="ladies">Ladies Only Swimming</option>
-              <option value="mens">Men's Swimming Class</option>
+            <label class="form-label" for="form-program">Class / Program of Interest *</label>
+            <select id="form-program" name="program" class="form-select" required>
+              <option value="">Select a class...</option>
+              <optgroup label="UTHM Parit Raja">
+                <option value="UTHM BEGINNER (BEG01)">UTHM BEGINNER (BEG01)</option>
+                <option value="UTHM KIDDIES (KID01)">UTHM KIDDIES (KID01)</option>
+                <option value="UTHM NOVICE (NV01)">UTHM NOVICE (NV01)</option>
+                <option value="UTHM ADVANCE (ADV01)">UTHM ADVANCE (ADV01)</option>
+                <option value="UTHM LADIES (LDS01)">UTHM LADIES (LDS01)</option>
+                <option value="UTHM MEN (MEN01)">UTHM MEN (MEN01)</option>
+                <option value="UTHM PRIVATE (PRV01)">UTHM PRIVATE (PRV01)</option>
+              </optgroup>
+              <optgroup label="Pura Kencana, Sri Gading">
+                <option value="PURA BEGINNER (BEG02)">PURA BEGINNER (BEG02)</option>
+                <option value="PURA KIDDIES (KID02)">PURA KIDDIES (KID02)</option>
+                <option value="AQUAPLAY (AQP02)">AQUAPLAY (AQP02)</option>
+                <option value="PURA PRIVATE (PRV02)">PURA PRIVATE (PRV02)</option>
+              </optgroup>
+              <optgroup label="Pontian">
+                <option value="PONTIAN BEGINNER (BEG03)">PONTIAN BEGINNER (BEG03)</option>
+                <option value="PONTIAN PRIVATE (PRV03)">PONTIAN PRIVATE (PRV03)</option>
+              </optgroup>
+              <optgroup label="Other">
+                <option value="Other Enquiries / Special Requests">Other Enquiries / Special Requests</option>
+              </optgroup>
             </select>
           </div>
 

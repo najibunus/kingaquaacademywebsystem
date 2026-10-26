@@ -295,6 +295,30 @@
     });
   }
 
+  // Connect program card "Enroll Now" buttons to form dropdown
+  const progBtnMap = {
+    'prog-beginner-btn': 'UTHM BEGINNER (BEG01)',
+    'prog-kiddies-btn': 'UTHM KIDDIES (KID01)',
+    'prog-aquaplay-btn': 'AQUAPLAY (AQP02)',
+    'prog-novice-btn': 'UTHM NOVICE (NV01)',
+    'prog-advanced-btn': 'UTHM ADVANCE (ADV01)',
+    'prog-private-btn': 'UTHM PRIVATE (PRV01)',
+    'prog-ladies-btn': 'UTHM LADIES (LDS01)',
+    'prog-mens-btn': 'UTHM MEN (MEN01)',
+  };
+
+  Object.keys(progBtnMap).forEach(function (btnId) {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      btn.addEventListener('click', function () {
+        const programSelect = document.getElementById('form-program');
+        if (programSelect) {
+          programSelect.value = progBtnMap[btnId];
+        }
+      });
+    }
+  });
+
   // Form Submit Handler
   form.addEventListener('submit', function (e) {
     e.preventDefault();
