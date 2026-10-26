@@ -87,15 +87,46 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
         </div>
       </div>
 
-      {submittable && (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", marginTop: "12px", paddingTop: "12px", borderTop: "1px solid #f1f5f9", flexWrap: "wrap" }}>
+        <a
+          href={`/api/receipts/${invoice.id}/pdf`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-secondary"
+          style={{
+            fontSize: "0.8rem",
+            padding: "6px 14px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            textDecoration: "none",
+            color: "var(--ka-black)",
+            backgroundColor: "#f8fafc",
+            border: "1px solid var(--border-gray)",
+            borderRadius: "6px",
+            fontWeight: 600,
+          }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg>
+          {invoice.payment_status === "confirmed_paid" ? "Download Official Receipt (PDF)" : "View / Print Invoice (PDF)"}
+        </a>
+
+        {submittable && !open && (
+          <button className="btn btn-primary" onClick={() => setOpen(true)} style={{ fontSize: "0.8rem", padding: "6px 14px" }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: 6}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Submit Payment Proof
+          </button>
+        )}
+      </div>
+
+      {submittable && open && (
         <div className={styles.cardFooter}>
-          {!open ? (
-            <button className="btn btn-primary" onClick={() => setOpen(true)}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: 6}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              Submit Payment Proof
-            </button>
-          ) : (
-            <form className={styles.uploadForm} onSubmit={handleSubmit}>
+          <form className={styles.uploadForm} onSubmit={handleSubmit}>
               <div className={styles.formField}>
                 <label className={styles.formLabel}>Payment Method</label>
                 <select
@@ -135,7 +166,6 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
                 </button>
               </div>
             </form>
-          )}
         </div>
       )}
 

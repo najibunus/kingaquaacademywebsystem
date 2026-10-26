@@ -27,6 +27,7 @@ export interface ReceiptPdfProps {
   title: string;
   amount: number;
   items: ReceiptPdfItem[];
+  isPaid?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -220,13 +221,15 @@ export function ReceiptPdfDocument(props: ReceiptPdfProps) {
                 <View>
                   <Text style={styles.brandTitle}>KINGAQUA ACADEMY</Text>
                   <Text style={styles.brandSubtitle}>
-                    OFFICIAL PAYMENT RECEIPT • US LETTER LANDSCAPE FORMAT
+                    {props.isPaid !== false ? "OFFICIAL PAYMENT RECEIPT • US LETTER LANDSCAPE FORMAT" : "OFFICIAL INVOICE • US LETTER LANDSCAPE FORMAT"}
                   </Text>
                 </View>
               </View>
 
               <View style={{ alignItems: "flex-end" }}>
-                <Text style={styles.badge}>PAID &amp; VERIFIED ✓</Text>
+                <Text style={props.isPaid !== false ? styles.badge : [styles.badge, { backgroundColor: "#FEF2F2", borderColor: "#FCA5A5", color: "#991B1B" }]}>
+                  {props.isPaid !== false ? "PAID & VERIFIED ✓" : "UNPAID INVOICE"}
+                </Text>
                 <Text
                   style={{
                     fontSize: 8,
@@ -243,13 +246,13 @@ export function ReceiptPdfDocument(props: ReceiptPdfProps) {
             {/* Meta Information Grid (4 Columns) */}
             <View style={styles.metaGrid}>
               <View style={styles.metaCol}>
-                <Text style={styles.metaLabel}>Receipt ID</Text>
+                <Text style={styles.metaLabel}>{props.isPaid !== false ? "Receipt ID" : "Invoice No"}</Text>
                 <Text style={styles.metaValue}>{props.receiptId}</Text>
                 <Text style={styles.metaSub}>Ref: {props.invoiceNumber}</Text>
               </View>
 
               <View style={styles.metaCol}>
-                <Text style={styles.metaLabel}>Payment Date</Text>
+                <Text style={styles.metaLabel}>{props.isPaid !== false ? "Payment Date" : "Date Issued"}</Text>
                 <Text style={styles.metaValue}>{props.date}</Text>
                 <Text style={styles.metaSub}>Method: Bank Transfer / Online</Text>
               </View>

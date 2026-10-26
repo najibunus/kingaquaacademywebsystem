@@ -787,12 +787,23 @@ export default function SalesInvoiceForm({
               Cancel
             </button>
           )}
+          {existingInvoice && (
+            <a
+              href={`/api/receipts/${existingInvoice.id}/pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.btn} ${styles.btnOutline}`}
+              style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              📄 Official PDF
+            </a>
+          )}
           <button
             type="button"
             className={`${styles.btn} ${styles.btnOutline}`}
             onClick={() => window.print()}
           >
-            Print
+            Print Form
           </button>
           <button
             type="button"

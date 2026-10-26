@@ -84,6 +84,7 @@ export async function GET(
         quantity: i.quantity || 1,
         unit_price: i.unit_price || 0,
       })),
+      isPaid: inv.payment_status === "confirmed_paid",
     });
 
     const pdfBuffer = await renderToBuffer(doc);

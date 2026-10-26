@@ -154,6 +154,7 @@ export async function createCustomInvoiceAction(
   // Due date: 14 days from now
   const dueDate = new Date();
   dueDate.setDate(dueDate.getDate() + 14);
+  const dueDateStr = dueDate.toISOString().split("T")[0];
 
   // 1. Create the invoice
   const { data: invData, error: invErr } = await supabase
@@ -163,8 +164,8 @@ export async function createCustomInvoiceAction(
       parent_id: parentId,
       type: "manual",
       payment_status: "unpaid",
-      due_date: dueDate.toISOString(),
-      student_id: studentId, // Using the new student_id field or linking via items
+      due_date: dueDateStr,
+      student_id: studentId || null,
     })
     .select("id")
     .single();
@@ -184,13 +185,14 @@ export async function createCustomInvoiceAction(
     });
 
   if (itemErr) {
-    // Note: in a real production system we'd use a transaction or rollback
     return { error: "Invoice created, but failed to attach line item." };
   }
 
   revalidatePath("/staff/invoices");
   revalidatePath("/staff/dashboard");
-  return { success: true };
+  revalidatePath("/parent/invoices");
+  revalidatePath("/parent/portal");
+  return { success: true, invoiceId: invData.id };
 }
 
 export async function deleteInvoiceAction(invoiceId: string, attendanceIds: string[] = [], studentId?: string) {

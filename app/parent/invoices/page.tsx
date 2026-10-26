@@ -52,8 +52,8 @@ export default async function ParentInvoicesPage() {
     const items = inv.invoice_items as { description?: string, quantity: number; unit_price: number }[] | null;
     const title = items?.[0]?.description ?? (inv.type === "auto_4session" ? "4-Session Package" : inv.type === "auto_monthly" ? "Monthly Fee" : "Manual Fee");
     
-    // Default to the single student name
-    let displayName = student?.name ?? "Unknown Student";
+    // Default to the single student name, or list siblings, or general invoice
+    let displayName = student?.name ?? (siblingList.length > 0 ? siblingList.map(s => s.name).join(" & ") : "Family Invoice");
     
     // If this is a group bill, gather all siblings in the same class to show they are all covered
     if (title.includes("- Group")) {

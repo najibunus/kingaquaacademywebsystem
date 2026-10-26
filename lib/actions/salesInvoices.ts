@@ -48,8 +48,12 @@ async function requireStaff(): Promise<{ displayName: string } | { error: string
 }
 
 function revalidateSales() {
+  revalidatePath("/staff/invoices");
   revalidatePath("/staff/invoices/sales");
   revalidatePath("/staff/invoices/sales/new");
+  revalidatePath("/staff/dashboard");
+  revalidatePath("/parent/invoices");
+  revalidatePath("/parent/portal");
 }
 
 // ── Customers ──────────────────────────────────────────────────────
@@ -283,6 +287,70 @@ export async function saveSalesInvoiceAction(
       : [invoice, ...invoices];
     await saveInvoices(nextRows);
 
+    // ── Synchronize with public.invoices table if customer is a registered parent ──
+    try {
+      let parentUserId: string | null = null;
+      if (input.customerId?.startsWith("parent:")) {
+        parentUserId = input.customerId.replace("parent:", "");
+      } else if (input.customerId) {
+        const admin = await createAdminClient();
+        const { data: pUser } = await admin
+          .from("users")
+          .select("id")
+          .eq("id", input.customerId)
+          .eq("role", "parent")
+          .maybeSingle();
+        if (pUser) parentUserId = pUser.id;
+      }
+
+      if (parentUserId) {
+        const admin = await createAdminClient();
+        const { data: std } = await admin
+          .from("students")
+          .select("id")
+          .eq("parent_id", parentUserId)
+          .limit(1)
+          .maybeSingle();
+
+        const dueDateStr = invoice.dueDate
+          ? invoice.dueDate.split("T")[0]
+          : new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0];
+
+        // Upsert into public.invoices
+        await admin.from("invoices").upsert(
+          {
+            id: invoice.id,
+            invoice_number: invoice.number,
+            parent_id: parentUserId,
+            student_id: std?.id ?? null,
+            type: "manual",
+            status: "pending",
+            payment_status: invoice.status === "paid" ? "confirmed_paid" : "unpaid",
+            due_date: dueDateStr,
+            created_at: invoice.createdAt,
+            payment_date: invoice.status === "paid" ? invoice.updatedAt : null,
+          },
+          { onConflict: "id" }
+        );
+
+        // Replace invoice items
+        await admin.from("invoice_items").delete().eq("invoice_id", invoice.id);
+        const billable = invoice.lines.filter((l) => l.kind !== "title");
+        if (billable.length > 0) {
+          await admin.from("invoice_items").insert(
+            billable.map((l) => ({
+              invoice_id: invoice.id,
+              description: l.description,
+              quantity: Math.max(1, l.unit || 1),
+              unit_price: round2(l.price || 0),
+            }))
+          );
+        }
+      }
+    } catch (syncErr) {
+      console.error("Warning: Failed to sync sales invoice to public.invoices:", syncErr);
+    }
+
     revalidateSales();
     revalidatePath(`/staff/invoices/sales/${invoice.id}`);
     return { invoice };
@@ -337,6 +405,13 @@ export async function deleteSalesInvoiceAction(invoiceId: string): Promise<{ suc
     }
 
     await saveInvoices(invoices.filter((i) => i.id !== invoiceId));
+
+    try {
+      const admin = await createAdminClient();
+      await admin.from("invoice_items").delete().eq("invoice_id", invoiceId);
+      await admin.from("invoices").delete().eq("id", invoiceId);
+    } catch {}
+
     revalidateSales();
     return { success: true };
   } catch (e: any) {
