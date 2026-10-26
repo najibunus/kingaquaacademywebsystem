@@ -40,19 +40,46 @@ export default function StaffParentsClient({ initialParents, allStudents }: Prop
     setParents(initialParents);
   }, [initialParents]);
 
-  // Pagination & Search
+  // Pagination & Search & Filter
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [childrenFilter, setChildrenFilter] = useState<"all" | "no_children" | "has_children">("all");
+
+  const counts = useMemo(() => {
+    let noChildren = 0;
+    let hasChildren = 0;
+    parents.forEach((p) => {
+      if (!p.students || p.students.length === 0) {
+        noChildren++;
+      } else {
+        hasChildren++;
+      }
+    });
+    return {
+      all: parents.length,
+      noChildren,
+      hasChildren,
+    };
+  }, [parents]);
 
   const filteredParents = useMemo(() => {
     return parents.filter(p => {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.toLowerCase().trim();
       const matchName = p.display_name?.toLowerCase().includes(q) || false;
       const matchPhone = p.phone?.toLowerCase().includes(q) || false;
       const matchEmail = p.email?.toLowerCase().includes(q) || false;
-      return matchName || matchPhone || matchEmail;
+      const matchSearch = !q || matchName || matchPhone || matchEmail;
+      if (!matchSearch) return false;
+
+      if (childrenFilter === "no_children") {
+        return !p.students || p.students.length === 0;
+      }
+      if (childrenFilter === "has_children") {
+        return p.students && p.students.length > 0;
+      }
+      return true;
     });
-  }, [parents, searchQuery]);
+  }, [parents, searchQuery, childrenFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredParents.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
@@ -226,15 +253,41 @@ export default function StaffParentsClient({ initialParents, allStudents }: Prop
 
       {/* Toolbar */}
       <div className={styles.toolbar}>
-        <span className={styles.toolbarLabel}>Search</span>
-        <input
-          type="text"
-          placeholder="Name, phone, or email..."
-          className={styles.toolbarInput}
-          value={searchQuery}
-          onChange={e => { setSearchQuery(e.target.value); setPage(1); }}
-          style={{ width: "250px" }}
-        />
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span className={styles.toolbarLabel}>Search</span>
+          <input
+            type="text"
+            placeholder="Name, phone, or email..."
+            className={styles.toolbarInput}
+            value={searchQuery}
+            onChange={e => { setSearchQuery(e.target.value); setPage(1); }}
+            style={{ width: "240px" }}
+          />
+        </div>
+
+        <div className={styles.toolbarSep} />
+
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span className={styles.toolbarLabel}>Children</span>
+          <select
+            className={styles.toolbarSelect}
+            value={childrenFilter}
+            onChange={e => {
+              setChildrenFilter(e.target.value as "all" | "no_children" | "has_children");
+              setPage(1);
+            }}
+          >
+            <option value="all">All Parents ({counts.all})</option>
+            <option value="no_children">Without Children Assigned ({counts.noChildren})</option>
+            <option value="has_children">With Children Assigned ({counts.hasChildren})</option>
+          </select>
+        </div>
+
+        {childrenFilter === "no_children" && (
+          <span className={`${styles.pillBadge} ${styles.pillBadgeWarn}`}>
+            ⚠️ Showing parents without children ({filteredParents.length})
+          </span>
+        )}
       </div>
 
       {filteredParents.length === 0 ? (

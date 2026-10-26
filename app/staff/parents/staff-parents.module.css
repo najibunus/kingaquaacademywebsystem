@@ -210,6 +210,53 @@
   background: var(--ka-white);
 }
 
+.toolbarSelect {
+  padding: 8px 12px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: var(--ka-black);
+  background: var(--ka-white);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.toolbarSelect:focus {
+  border-color: var(--ka-blue);
+}
+
+.toolbarSep {
+  width: 1px;
+  height: 24px;
+  background: var(--border-gray);
+  flex-shrink: 0;
+}
+
+.pillBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pillBadgeWarn {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.pillBadgeInfo {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+
 /* PAGINATION */
 .pagination {
   display: flex;
