@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { submitPaymentProofAction } from "@/lib/actions/parentPayment";
 import styles from "./invoices.module.css";
 
@@ -37,6 +38,11 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
   const [file, setFile] = useState<File | null>(null);
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<{ error?: string; success?: boolean } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const total = invoice.items.reduce((s, i) => s + i.quantity * i.unit_price, 0);
   const badge = statusLabel(invoice.payment_status);
@@ -56,6 +62,7 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
       const res = await submitPaymentProofAction(fd);
       if (res.success) {
         setOpen(false);
+        setFile(null);
         setResult({ success: true });
       } else {
         setResult({ error: res.error });
@@ -87,25 +94,12 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", marginTop: "12px", paddingTop: "12px", borderTop: "1px solid #f1f5f9", flexWrap: "wrap" }}>
+      <div className={styles.cardActions}>
         <a
           href={`/api/receipts/${invoice.id}/pdf`}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn btn-secondary"
-          style={{
-            fontSize: "0.8rem",
-            padding: "6px 14px",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            textDecoration: "none",
-            color: "var(--ka-black)",
-            backgroundColor: "#f8fafc",
-            border: "1px solid var(--border-gray)",
-            borderRadius: "6px",
-            fontWeight: 600,
-          }}
+          className={styles.btnPdf}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -116,17 +110,59 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
           {invoice.payment_status === "confirmed_paid" ? "Download Official Receipt (PDF)" : "View / Print Invoice (PDF)"}
         </a>
 
-        {submittable && !open && (
-          <button className="btn btn-primary" onClick={() => setOpen(true)} style={{ fontSize: "0.8rem", padding: "6px 14px" }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: 6}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        {submittable && (
+          <button
+            type="button"
+            className={styles.btnPay}
+            onClick={() => setOpen(true)}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
             Submit Payment Proof
           </button>
         )}
       </div>
 
-      {submittable && open && (
-        <div className={styles.cardFooter}>
-          <form className={styles.uploadForm} onSubmit={handleSubmit}>
+      {submittable && open && mounted && createPortal(
+        <div
+          className={styles.modalOverlay}
+          onClick={() => { setOpen(false); setResult(null); }}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`modal-title-${invoice.id}`}
+          >
+            <div className={styles.modalHeader}>
+              <div>
+                <h3 id={`modal-title-${invoice.id}`} className={styles.modalTitle}>
+                  Submit Payment Proof
+                </h3>
+                <p className={styles.modalSubtitle}>
+                  {invoice.invoice_number} &bull; {invoice.student_name}
+                </p>
+              </div>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => { setOpen(false); setResult(null); }}
+                aria-label="Close modal"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className={styles.modalAmountBanner}>
+              <span>Total Payable Amount</span>
+              <strong>RM {total.toFixed(2)}</strong>
+            </div>
+
+            <form className={styles.modalForm} onSubmit={handleSubmit}>
               <div className={styles.formField}>
                 <label className={styles.formLabel}>Payment Method</label>
                 <select
@@ -140,33 +176,64 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
                   <option value="other">Other</option>
                 </select>
               </div>
+
               <div className={styles.formField}>
                 <label className={styles.formLabel}>Upload Receipt (Image / PDF)</label>
-                <input
-                  className={styles.formInput}
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg, application/pdf"
-                  onChange={e => setFile(e.target.files?.[0] || null)}
-                  required
-                  style={{ padding: "10px" }}
-                />
-                <p className={styles.formHint}>Please attach the screenshot or PDF of your successful transaction.</p>
+                <label className={styles.fileDropzone}>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg, application/pdf"
+                    onChange={e => setFile(e.target.files?.[0] || null)}
+                    required
+                    style={{ display: "none" }}
+                  />
+                  <div className={styles.fileDropzoneContent}>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" style={{ color: "#2596be" }}>
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    {file ? (
+                      <div>
+                        <div style={{ fontWeight: 600, color: "#0f172a", fontSize: "0.9rem" }}>{file.name}</div>
+                        <div style={{ color: "#64748b", fontSize: "0.75rem", marginTop: "2px" }}>{(file.size / 1024).toFixed(1)} KB &bull; Click to change</div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div style={{ fontWeight: 600, color: "#1e293b", fontSize: "0.88rem" }}>Tap or click to select receipt</div>
+                        <div style={{ color: "#94a3b8", fontSize: "0.78rem", marginTop: "2px" }}>PNG, JPG or PDF (max 5MB)</div>
+                      </div>
+                    )}
+                  </div>
+                </label>
+                <p className={styles.formHint}>Please attach the screenshot or PDF of your completed transaction.</p>
               </div>
 
               {result?.error && (
                 <div className={styles.errorMsg}>{result.error}</div>
               )}
 
-              <div className={styles.formActions}>
-                <button type="button" className="btn btn-secondary" onClick={() => { setOpen(false); setResult(null); }}>
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.btnCancel}
+                  onClick={() => { setOpen(false); setResult(null); }}
+                  disabled={isPending}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={isPending || !file}>
-                  {isPending ? "Uploading..." : "Confirm Submission"}
+                <button
+                  type="submit"
+                  className={styles.btnSubmit}
+                  disabled={isPending || !file}
+                >
+                  {isPending ? "Uploading..." : "Confirm & Submit"}
                 </button>
               </div>
             </form>
-        </div>
+          </div>
+        </div>,
+        document.body
       )}
 
       {invoice.payment_status === "receipt_submitted" && (
