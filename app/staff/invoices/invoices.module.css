@@ -331,3 +331,69 @@
 .pageBtn:disabled { opacity: 0.45; cursor: not-allowed; }
 .pageInfo { font-size: 0.85rem; color: var(--text-secondary); padding: 0 8px; }
 
+/* ── SALES INVOICE & GENERAL TABLES ── */
+.salesCard {
+  background: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 28px;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  min-width: 1020px;
+}
+
+.table thead {
+  background: var(--bg-light);
+}
+
+.table th {
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border-gray);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--bg-light);
+  color: var(--ka-black);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.empty {
+  text-align: center;
+  padding: 36px 16px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+

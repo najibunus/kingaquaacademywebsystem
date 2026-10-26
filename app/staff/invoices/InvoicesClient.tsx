@@ -1577,26 +1577,45 @@ export default function InvoicesClient({
             alignItems: "center",
             justifyContent: "space-between",
             gap: "12px",
-            marginTop: "8px",
-            marginBottom: "8px",
+            marginTop: "16px",
+            marginBottom: "12px",
           }}
         >
-          <h2 className={styles.sectionTitle} style={{ margin: 0 }}>
-            Sales Invoices ({filteredSalesInvoices.length})
-          </h2>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <h2 className={styles.sectionTitle} style={{ margin: 0 }}>
+              Sales Invoices
+            </h2>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                padding: "2px 8px",
+                borderRadius: "999px",
+                backgroundColor: "#e0f2fe",
+                color: "#0369a1",
+              }}
+            >
+              {filteredSalesInvoices.length}
+            </span>
+          </div>
           {!showSalesForm && (
             <button
               type="button"
               onClick={handleOpenNewSalesInvoice}
               style={{
-                padding: "5px 12px",
-                fontSize: "0.78rem",
-                fontWeight: 700,
-                borderRadius: "6px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 14px",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                borderRadius: "8px",
                 border: "1px solid #2596be",
-                backgroundColor: "#f0f9ff",
-                color: "#0284c7",
+                backgroundColor: "#2596be",
+                color: "#ffffff",
                 cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(37,150,190,0.15)",
+                transition: "all 0.15s ease",
               }}
             >
               + New Sales Invoice
@@ -1604,186 +1623,278 @@ export default function InvoicesClient({
           )}
         </div>
 
-        <div className={styles.tableWrap} style={{ marginBottom: "28px" }}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Invoice No</th>
-                <th>Date</th>
-                <th>Due Date</th>
-                <th>Customer</th>
-                <th>Items</th>
-                <th>Total (MYR)</th>
-                <th>Paid (MYR)</th>
-                <th>Balance (MYR)</th>
-                <th>Status</th>
-                <th>By</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSalesInvoices.length === 0 ? (
+        <div className={styles.salesCard}>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
                 <tr>
-                  <td colSpan={11} className={styles.empty}>
-                    No sales invoices yet. Click{" "}
-                    <button
-                      type="button"
-                      onClick={handleOpenNewSalesInvoice}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#2596be",
-                        fontWeight: 700,
-                        cursor: "pointer",
-                        textDecoration: "underline",
-                        padding: 0,
-                      }}
-                    >
-                      + New Sales Invoice
-                    </button>{" "}
-                    to create one.
-                  </td>
+                  <th style={{ width: "125px" }}>Invoice No</th>
+                  <th style={{ width: "105px" }}>Date</th>
+                  <th style={{ width: "105px" }}>Due Date</th>
+                  <th>Customer</th>
+                  <th style={{ width: "85px", textAlign: "center" }}>Items</th>
+                  <th style={{ width: "115px", textAlign: "right" }}>Total (MYR)</th>
+                  <th style={{ width: "105px", textAlign: "right" }}>Paid (MYR)</th>
+                  <th style={{ width: "115px", textAlign: "right" }}>Balance (MYR)</th>
+                  <th style={{ width: "95px", textAlign: "center" }}>Status</th>
+                  <th style={{ width: "130px" }}>By</th>
+                  <th style={{ width: "185px", textAlign: "right" }}>Actions</th>
                 </tr>
-              ) : (
-                filteredSalesInvoices.map((sInv) => {
-                  const itemCount = sInv.lines.filter((l) => l.kind !== "title").length;
-                  const statusColor =
-                    sInv.status === "paid"
-                      ? { bg: "#dcfce7", text: "#166534", border: "#86efac", label: "PAID" }
-                      : sInv.status === "partial"
-                      ? { bg: "#fef9c3", text: "#854d0e", border: "#fde047", label: "PARTIAL" }
-                      : { bg: "#fee2e2", text: "#991b1b", border: "#fca5a5", label: "UNPAID" };
-
-                  return (
-                    <tr key={sInv.id}>
-                      <td style={{ fontWeight: 700, color: "#0f172a" }}>
-                        {sInv.number}
-                        {sInv.ref ? (
-                          <div style={{ fontSize: "0.72rem", color: "#64748b", fontWeight: 400 }}>
-                            Ref: {sInv.ref}
-                          </div>
-                        ) : null}
-                      </td>
-                      <td>
-                        {sInv.date
-                          ? new Date(sInv.date).toLocaleDateString("en-GB")
-                          : "-"}
-                      </td>
-                      <td>
-                        {sInv.dueDate
-                          ? new Date(sInv.dueDate).toLocaleDateString("en-GB")
-                          : "-"}
-                      </td>
-                      <td>
-                        <div style={{ fontWeight: 600 }}>{sInv.customerName}</div>
-                        {sInv.customerPhone ? (
-                          <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
-                            {sInv.customerPhone}
-                          </div>
-                        ) : null}
-                      </td>
-                      <td>{itemCount} item{itemCount === 1 ? "" : "s"}</td>
-                      <td style={{ fontWeight: 700 }}>
-                        RM {sInv.total.toFixed(2)}
-                      </td>
-                      <td style={{ color: "#15803d", fontWeight: 600 }}>
-                        RM {sInv.paid.toFixed(2)}
-                      </td>
-                      <td
+              </thead>
+              <tbody>
+                {filteredSalesInvoices.length === 0 ? (
+                  <tr>
+                    <td colSpan={11} className={styles.empty}>
+                      No sales invoices yet. Click{" "}
+                      <button
+                        type="button"
+                        onClick={handleOpenNewSalesInvoice}
                         style={{
+                          background: "none",
+                          border: "none",
+                          color: "#2596be",
                           fontWeight: 700,
-                          color: sInv.balance > 0 ? "#b91c1c" : "#15803d",
+                          cursor: "pointer",
+                          textDecoration: "underline",
+                          padding: 0,
                         }}
                       >
-                        RM {sInv.balance.toFixed(2)}
-                      </td>
-                      <td>
-                        <span
+                        + New Sales Invoice
+                      </button>{" "}
+                      to create one.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredSalesInvoices.map((sInv) => {
+                    const itemCount = sInv.lines.filter((l) => l.kind !== "title").length;
+                    const statusColor =
+                      sInv.status === "paid"
+                        ? { bg: "#dcfce7", text: "#166534", border: "#86efac", label: "PAID" }
+                        : sInv.status === "partial"
+                        ? { bg: "#fef9c3", text: "#854d0e", border: "#fde047", label: "PARTIAL" }
+                        : { bg: "#fee2e2", text: "#991b1b", border: "#fca5a5", label: "UNPAID" };
+
+                    return (
+                      <tr key={sInv.id}>
+                        <td style={{ whiteSpace: "nowrap" }}>
+                          <span
+                            style={{
+                              fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                              fontWeight: 700,
+                              fontSize: "0.84rem",
+                              color: "#0f172a",
+                              letterSpacing: "0.02em",
+                            }}
+                          >
+                            {sInv.number}
+                          </span>
+                          {sInv.ref ? (
+                            <div style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 400, marginTop: "2px" }}>
+                              Ref: {sInv.ref}
+                            </div>
+                          ) : null}
+                        </td>
+                        <td style={{ whiteSpace: "nowrap", fontSize: "0.82rem", color: "#334155" }}>
+                          {sInv.date
+                            ? new Date(sInv.date).toLocaleDateString("en-GB")
+                            : "—"}
+                        </td>
+                        <td
                           style={{
-                            display: "inline-block",
-                            padding: "2px 8px",
-                            borderRadius: "999px",
-                            fontSize: "0.7rem",
-                            fontWeight: 700,
-                            backgroundColor: statusColor.bg,
-                            color: statusColor.text,
-                            border: `1px solid ${statusColor.border}`,
+                            whiteSpace: "nowrap",
+                            fontSize: "0.82rem",
+                            color:
+                              sInv.dueDate && new Date(sInv.dueDate) < new Date() && sInv.balance > 0
+                                ? "#dc2626"
+                                : "#64748b",
                           }}
                         >
-                          {statusColor.label}
-                        </span>
-                      </td>
-                      <td style={{ fontSize: "0.78rem", color: "#475569" }}>
-                        {sInv.by}
-                      </td>
-                      <td>
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                          <button
-                            type="button"
-                            onClick={() => handleEditSalesInvoice(sInv)}
+                          {sInv.dueDate
+                            ? new Date(sInv.dueDate).toLocaleDateString("en-GB")
+                            : "—"}
+                        </td>
+                        <td>
+                          <div
                             style={{
-                              padding: "4px 10px",
-                              fontSize: "0.75rem",
                               fontWeight: 600,
-                              borderRadius: "6px",
-                              border: "1px solid #cbd5e1",
-                              backgroundColor: "#ffffff",
                               color: "#0f172a",
-                              cursor: "pointer",
+                              textTransform: "capitalize",
+                              fontSize: "0.88rem",
                             }}
                           >
-                            View / Edit
-                          </button>
-                          <a
-                            href={`/api/receipts/${sInv.id}/pdf`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            {sInv.customerName}
+                          </div>
+                          {sInv.customerPhone ? (
+                            <div style={{ fontSize: "0.72rem", color: "#64748b", marginTop: "1px" }}>
+                              {sInv.customerPhone}
+                            </div>
+                          ) : null}
+                        </td>
+                        <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>
+                          <span
                             style={{
-                              padding: "4px 10px",
+                              display: "inline-block",
+                              padding: "2px 8px",
+                              borderRadius: "6px",
                               fontSize: "0.75rem",
                               fontWeight: 600,
-                              borderRadius: "6px",
-                              border: "1px solid #0284c7",
-                              backgroundColor: "#f0f9ff",
-                              color: "#0284c7",
-                              textDecoration: "none",
-                              display: "inline-flex",
+                              backgroundColor: "#f1f5f9",
+                              color: "#475569",
+                            }}
+                          >
+                            {itemCount} {itemCount === 1 ? "item" : "items"}
+                          </span>
+                        </td>
+                        <td
+                          style={{
+                            textAlign: "right",
+                            whiteSpace: "nowrap",
+                            fontWeight: 700,
+                            fontVariantNumeric: "tabular-nums",
+                            color: "#0f172a",
+                          }}
+                        >
+                          RM {sInv.total.toFixed(2)}
+                        </td>
+                        <td
+                          style={{
+                            textAlign: "right",
+                            whiteSpace: "nowrap",
+                            fontWeight: 600,
+                            fontVariantNumeric: "tabular-nums",
+                            color: "#16a34a",
+                          }}
+                        >
+                          RM {sInv.paid.toFixed(2)}
+                        </td>
+                        <td
+                          style={{
+                            textAlign: "right",
+                            whiteSpace: "nowrap",
+                            fontWeight: 700,
+                            fontVariantNumeric: "tabular-nums",
+                            color: sInv.balance > 0 ? "#dc2626" : "#16a34a",
+                          }}
+                        >
+                          RM {sInv.balance.toFixed(2)}
+                        </td>
+                        <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>
+                          <span
+                            style={{
+                              display: "inline-block",
+                              padding: "3px 9px",
+                              borderRadius: "999px",
+                              fontSize: "0.7rem",
+                              fontWeight: 700,
+                              letterSpacing: "0.04em",
+                              backgroundColor: statusColor.bg,
+                              color: statusColor.text,
+                              border: `1px solid ${statusColor.border}`,
+                            }}
+                          >
+                            {statusColor.label}
+                          </span>
+                        </td>
+                        <td style={{ fontSize: "0.78rem", color: "#475569", whiteSpace: "nowrap" }}>
+                          {sInv.by || "—"}
+                        </td>
+                        <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                          <div
+                            style={{
+                              display: "flex",
                               alignItems: "center",
-                              gap: "4px",
+                              justifyContent: "flex-end",
+                              gap: "6px",
                             }}
                           >
-                            📄 PDF
-                          </a>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleDeleteSalesInvoice(sInv.id, sInv.number)
-                            }
-                            disabled={deletingSalesId === sInv.id}
-                            style={{
-                              padding: "4px 8px",
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
-                              borderRadius: "6px",
-                              border: "1px solid #fecaca",
-                              backgroundColor: "#fef2f2",
-                              color: "#dc2626",
-                              cursor:
-                                deletingSalesId === sInv.id
-                                  ? "not-allowed"
-                                  : "pointer",
-                            }}
-                          >
-                            {deletingSalesId === sInv.id ? "..." : "Delete"}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                            <button
+                              type="button"
+                              onClick={() => handleEditSalesInvoice(sInv)}
+                              style={{
+                                padding: "4px 9px",
+                                fontSize: "0.75rem",
+                                fontWeight: 600,
+                                borderRadius: "6px",
+                                border: "1px solid #cbd5e1",
+                                backgroundColor: "#ffffff",
+                                color: "#1e293b",
+                                cursor: "pointer",
+                                transition: "all 0.15s ease",
+                              }}
+                            >
+                              View / Edit
+                            </button>
+                            <a
+                              href={`/api/receipts/${sInv.id}/pdf`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                padding: "4px 9px",
+                                fontSize: "0.75rem",
+                                fontWeight: 600,
+                                borderRadius: "6px",
+                                border: "1px solid #bae6fd",
+                                backgroundColor: "#f0f9ff",
+                                color: "#0284c7",
+                                textDecoration: "none",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                transition: "all 0.15s ease",
+                              }}
+                            >
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                              >
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                              </svg>
+                              PDF
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleDeleteSalesInvoice(sInv.id, sInv.number)
+                              }
+                              disabled={deletingSalesId === sInv.id}
+                              style={{
+                                padding: "4px 8px",
+                                fontSize: "0.75rem",
+                                fontWeight: 600,
+                                borderRadius: "6px",
+                                border: "1px solid #fecaca",
+                                backgroundColor: "#fef2f2",
+                                color: "#dc2626",
+                                cursor:
+                                  deletingSalesId === sInv.id
+                                    ? "not-allowed"
+                                    : "pointer",
+                                opacity: deletingSalesId === sInv.id ? 0.5 : 1,
+                                transition: "all 0.15s ease",
+                              }}
+                            >
+                              {deletingSalesId === sInv.id ? "..." : "Delete"}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* SECTION 1: Requires Verification */}

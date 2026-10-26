@@ -76,8 +76,13 @@ export default function SalesInvoiceForm({
   const [date, setDate] = useState(
     existingInvoice?.date ?? new Date().toISOString().slice(0, 10)
   );
-  const [paymentTerm, setPaymentTerm] = useState(existingInvoice?.paymentTerm ?? "-");
-  const [dueDate, setDueDate] = useState(existingInvoice?.dueDate ?? "");
+  const [paymentTerm, setPaymentTerm] = useState(
+    existingInvoice?.paymentTerm ?? "Net 14 Days"
+  );
+  const [dueDate, setDueDate] = useState(
+    existingInvoice?.dueDate ??
+      new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10)
+  );
   const [billingInfo, setBillingInfo] = useState(existingInvoice?.billingInfo ?? "");
   const [shippingInfo, setShippingInfo] = useState(existingInvoice?.shippingInfo ?? "");
   const [ref, setRef] = useState(existingInvoice?.ref ?? "");
