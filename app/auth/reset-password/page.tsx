@@ -4,7 +4,7 @@ import ResetPasswordClient from "./ResetPasswordClient";
 
 export const metadata: Metadata = {
   title: "Reset Password | KingAqua Academy",
-  description: "Request password assistance or contact administration via WhatsApp.",
+  description: "Request password assistance or contact superadmin via WhatsApp.",
 };
 
 export default function ResetPasswordPage() {

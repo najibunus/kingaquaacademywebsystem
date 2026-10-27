@@ -9,7 +9,7 @@ import styles from "./resetPassword.module.css";
 import { requestPasswordResetAction } from "@/lib/actions/auth";
 
 const BANNER_IMAGE = "/images/login-banner-v2.png";
-const ADMIN_WHATSAPP_PHONE = "60195177001"; // 019-517 7001
+const SUPERADMIN_WHATSAPP_PHONE = "60195177001"; // 019-517 7001
 
 export default function ResetPasswordClient() {
   const searchParams = useSearchParams();
@@ -34,14 +34,14 @@ export default function ResetPasswordClient() {
   // Dynamic WhatsApp prefill message based on what user has entered
   const trimmedEmail = email.trim();
   const trimmedName = name.trim();
-  let waMessage = "Hello KingAqua Academy Admin, I forgot my portal account password. Could you please assist me with resetting it?";
+  let waMessage = "Hello KingAqua Academy Superadmin, I forgot my portal account password. Could you please assist me with resetting it?";
   if (trimmedEmail && trimmedName) {
-    waMessage = `Hello KingAqua Academy Admin, I would like to request a password reset for my account (${trimmedEmail}, Name: ${trimmedName}). Could you please assist me?`;
+    waMessage = `Hello KingAqua Academy Superadmin, I would like to request a password reset for my account (${trimmedEmail}, Name: ${trimmedName}). Could you please assist me?`;
   } else if (trimmedEmail) {
-    waMessage = `Hello KingAqua Academy Admin, I would like to request a password reset for my account (${trimmedEmail}). Could you please assist me?`;
+    waMessage = `Hello KingAqua Academy Superadmin, I would like to request a password reset for my account (${trimmedEmail}). Could you please assist me?`;
   }
 
-  const whatsappHref = `https://wa.me/${ADMIN_WHATSAPP_PHONE}?text=${encodeURIComponent(waMessage)}`;
+  const whatsappHref = `https://wa.me/${SUPERADMIN_WHATSAPP_PHONE}?text=${encodeURIComponent(waMessage)}`;
 
   return (
     <div className={styles.resetWrapper}>
@@ -96,23 +96,23 @@ export default function ResetPasswordClient() {
           <div className={styles.heading}>
             <h1 className={styles.title}>Reset Password</h1>
             <p className={styles.subtitle}>
-              Choose how you would like to reach our administration team to update your credentials.
+              Choose how you would like to reach our superadmin to update your credentials.
             </p>
           </div>
 
-          {/* Option 1: Direct WhatsApp to Admin */}
+          {/* Option 1: Direct WhatsApp to Superadmin */}
           <div className={styles.whatsappBox}>
             <div className={styles.whatsappHeader}>
               <h2 className={styles.whatsappTitle}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z" />
                 </svg>
-                Chat Admin via WhatsApp
+                Chat Superadmin via WhatsApp
               </h2>
               <span className={styles.whatsappBadge}>Instant Resolution</span>
             </div>
             <p className={styles.whatsappDesc}>
-              Chat directly with our administrative support (019-517 7001) on WhatsApp to verify and reset your password immediately.
+              Chat directly with our superadmin (019-517 7001) on WhatsApp to verify and reset your password immediately.
             </p>
             <a
               href={whatsappHref}
@@ -130,11 +130,11 @@ export default function ResetPasswordClient() {
           {/* Divider */}
           <div className={styles.dividerRow}>
             <span className={styles.dividerLine} />
-            <span className={styles.dividerText}>Or Notify Admin in System</span>
+            <span className={styles.dividerText}>Or Notify Superadmin in System</span>
             <span className={styles.dividerLine} />
           </div>
 
-          {/* Option 2: Notify Admin Form */}
+          {/* Option 2: Notify Superadmin Form */}
           {state?.success ? (
             <div className={styles.successBox}>
               <h3 className={styles.successTitle}>
@@ -142,13 +142,13 @@ export default function ResetPasswordClient() {
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                   <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
-                Request Sent to Admin!
+                Request Sent to Superadmin!
               </h3>
               <p className={styles.successText}>
                 {state.message}
               </p>
               <p className={styles.successText} style={{ marginTop: "4px", fontSize: "0.8rem", color: "#15803d" }}>
-                Our team has logged your ticket. If you need immediate assistance, feel free to also reach us via the WhatsApp button above.
+                Our superadmin team has logged your ticket. If you need immediate assistance, feel free to also reach us via the WhatsApp button above.
               </p>
             </div>
           ) : (
@@ -257,7 +257,7 @@ export default function ResetPasswordClient() {
                   id="reset-note"
                   name="note"
                   className={styles.textareaInput}
-                  placeholder="Any extra details to help admin identify your account..."
+                  placeholder="Any extra details to help superadmin identify your account..."
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   disabled={pending}
@@ -274,7 +274,7 @@ export default function ResetPasswordClient() {
                 {pending ? (
                   <>
                     <span className="spinner" />
-                    <span>Notifying Admin...</span>
+                    <span>Notifying Superadmin...</span>
                   </>
                 ) : (
                   <>
@@ -282,7 +282,7 @@ export default function ResetPasswordClient() {
                       <line x1="22" y1="2" x2="11" y2="13" />
                       <polygon points="22 2 15 22 11 13 2 9 22 2" />
                     </svg>
-                    <span>Notify Admin for Password Reset</span>
+                    <span>Notify Superadmin for Password Reset</span>
                   </>
                 )}
               </button>

@@ -147,24 +147,24 @@ export async function requestPasswordResetAction(
         phone: phone || null,
         user_role: matchedRole,
         note: note || null,
-        status: "pending_admin_action",
+        status: "pending_superadmin_action",
         requested_at: new Date().toISOString(),
       },
     });
 
-    // 2. Create a task in tasks table for staff & admin dashboard
+    // 2. Create a task in tasks table for superadmin & admin dashboard
     try {
-      const { data: adminUsers } = await admin
+      const { data: superadminUsers } = await admin
         .from("users")
         .select("id")
-        .in("role", ["superadmin", "admin"])
+        .eq("role", "superadmin")
         .limit(1);
 
-      const creatorId = adminUsers?.[0]?.id || matchedUserId;
+      const creatorId = superadminUsers?.[0]?.id || matchedUserId;
       if (creatorId) {
         await admin.from("tasks").insert({
           title: `Password Reset: ${matchedName || email}`,
-          description: `User requested a password reset.\nEmail: ${email}\nName: ${matchedName || "Not provided"}\nPhone: ${phone || "Not provided"}\nRole: ${matchedRole}${note ? `\nNote: ${note}` : ""}`,
+          description: `User requested a password reset from Superadmin.\nEmail: ${email}\nName: ${matchedName || "Not provided"}\nPhone: ${phone || "Not provided"}\nRole: ${matchedRole}${note ? `\nNote: ${note}` : ""}`,
           created_by: creatorId,
           status: "pending",
           is_pinned: true,
@@ -181,12 +181,12 @@ export async function requestPasswordResetAction(
 
     return {
       success: true,
-      message: "Your password reset request has been sent to our administration team! An admin will review and update your credentials shortly. You can also chat directly with an admin via WhatsApp.",
+      message: "Your password reset request has been sent to our superadmin! A superadmin will review and update your credentials shortly. You can also chat directly with our superadmin via WhatsApp.",
     };
   } catch (err: any) {
     console.error("Password reset action error:", err);
     return {
-      error: err.message || "Failed to notify admin. Please use the WhatsApp option to contact admin directly.",
+      error: err.message || "Failed to notify superadmin. Please use the WhatsApp option to contact superadmin directly.",
     };
   }
 }
