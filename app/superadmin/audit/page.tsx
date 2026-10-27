@@ -6,7 +6,7 @@ export default async function SuperadminAuditPage() {
 
   const { data: logs, error } = await supabase
     .from("audit_logs")
-    .select("id, actor_role, action, entity_type, entity_id, ip_address, created_at")
+    .select("id, actor_role, action, entity_type, entity_id, ip_address, created_at, new_data")
     .order("created_at", { ascending: false })
     .limit(50);
 
@@ -43,7 +43,23 @@ export default async function SuperadminAuditPage() {
                   <tr key={log.id} className={styles.tableRow}>
                     <td className={styles.muted}>{new Date(log.created_at).toLocaleString("en-MY")}</td>
                     <td className={styles.bold}>{log.actor_role}</td>
-                    <td><span className="badge badge-secondary">{log.action}</span></td>
+                    <td>
+                      {log.action === "user.password_reset_request" ? (
+                        <div>
+                          <span className="badge" style={{ backgroundColor: "#f59e0b", color: "#ffffff", fontWeight: 700 }}>
+                            Password Reset Request
+                          </span>
+                          {log.new_data?.email && (
+                            <div style={{ fontSize: "0.78rem", color: "#64748b", marginTop: "3px" }}>
+                              <strong>{log.new_data.email}</strong> {log.new_data.name ? `(${log.new_data.name})` : ""}
+                              {log.new_data.phone ? ` • ${log.new_data.phone}` : ""}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="badge badge-secondary">{log.action}</span>
+                      )}
+                    </td>
                     <td className={styles.muted}>{log.entity_type}</td>
                     <td className={styles.mono}>{log.ip_address ?? "—"}</td>
                   </tr>

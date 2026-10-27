@@ -1,28 +1,33 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
+import ResetPasswordClient from "./ResetPasswordClient";
 
 export const metadata: Metadata = {
-  title: "Reset Password",
+  title: "Reset Password | KingAqua Academy",
+  description: "Request password assistance or contact administration via WhatsApp.",
 };
 
 export default function ResetPasswordPage() {
   return (
-    <div
-      style={{
-        minHeight: "100dvh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "var(--gradient-hero)",
-      }}
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: "100dvh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(150deg, #0b2944 0%, #154267 52%, #0284c7 100%)",
+            color: "#ffffff",
+            fontSize: "1rem",
+            fontWeight: 600,
+          }}
+        >
+          Loading password assistance...
+        </div>
+      }
     >
-      <div className="card" style={{ maxWidth: 400, width: "100%" }}>
-        <h1 className="page-title" style={{ fontSize: "var(--text-2xl)" }}>
-          Reset Password
-        </h1>
-        <p className="text-secondary" style={{ marginTop: "var(--space-2)" }}>
-          Password reset flow connects in Phase 1.
-        </p>
-      </div>
-    </div>
+      <ResetPasswordClient />
+    </Suspense>
   );
 }

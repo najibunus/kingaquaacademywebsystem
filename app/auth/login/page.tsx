@@ -11,6 +11,7 @@ const BANNER_IMAGE = "/images/login-banner-v2.png";
 export default function LoginPage() {
   const [state, action, pending] = useActionState(loginAction, undefined);
   const [showPassword, setShowPassword] = useState(false);
+  const [typedEmail, setTypedEmail] = useState("");
 
   return (
     <div className={styles.loginWrapper}>
@@ -105,6 +106,8 @@ export default function LoginPage() {
                   required
                   autoComplete="email"
                   disabled={pending}
+                  value={typedEmail}
+                  onChange={(e) => setTypedEmail(e.target.value)}
                 />
               </div>
               {state?.fieldErrors?.email && (
@@ -118,7 +121,10 @@ export default function LoginPage() {
                 <label htmlFor="login-password" className={styles.fieldLabel}>
                   Password
                 </label>
-                <a href="/auth/reset-password" className={styles.forgotLink}>
+                <a
+                  href={typedEmail.trim() ? `/auth/reset-password?email=${encodeURIComponent(typedEmail.trim())}` : "/auth/reset-password"}
+                  className={styles.forgotLink}
+                >
                   Forgot password?
                 </a>
               </div>

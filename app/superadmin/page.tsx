@@ -15,7 +15,7 @@ export default async function SuperadminPage() {
     supabase.from("classes").select("*", { count: "exact", head: true }),
     supabase
       .from("audit_logs")
-      .select("id, actor_role, action, entity_type, ip_address, created_at")
+      .select("id, actor_role, action, entity_type, ip_address, created_at, new_data")
       .order("created_at", { ascending: false })
       .limit(5)
   ]);
@@ -87,9 +87,22 @@ export default async function SuperadminPage() {
                     <td className="text-secondary">{new Date(log.created_at).toLocaleString("en-MY")}</td>
                     <td style={{fontWeight: 500}}>{log.actor_role}</td>
                     <td>
-                      <span className={`badge ${log.action.includes('delete') ? 'badge-danger' : 'badge-secondary'}`}>
-                        {log.action}
-                      </span>
+                      {log.action === "user.password_reset_request" ? (
+                        <div>
+                          <span className="badge" style={{ backgroundColor: "#f59e0b", color: "#ffffff", fontWeight: 700 }}>
+                            Password Reset Request
+                          </span>
+                          {log.new_data?.email && (
+                            <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: "2px" }}>
+                              {log.new_data.email}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <span className={`badge ${log.action.includes('delete') ? 'badge-danger' : 'badge-secondary'}`}>
+                          {log.action}
+                        </span>
+                      )}
                     </td>
                     <td className="text-secondary">{log.entity_type}</td>
                     <td className={styles.fontMono}>{log.ip_address ?? "—"}</td>
