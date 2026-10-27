@@ -19,6 +19,7 @@ interface Tournament {
   id: string;
   name: string;
   date: string;
+  venue?: string | null;
   tournament_results: TournamentResult[];
 }
 
@@ -58,6 +59,7 @@ export default function ParentGamesClient({ tournaments }: { tournaments: Tourna
                   <h2 className={styles.gameName}>{game.name}</h2>
                   <p className={styles.gameDate}>
                     {new Date(game.date).toLocaleDateString("en-MY", { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {game.venue ? ` • ${game.venue}` : ""}
                   </p>
                 </div>
               </div>

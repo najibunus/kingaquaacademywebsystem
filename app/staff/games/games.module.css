@@ -108,3 +108,247 @@
   padding: 4px 10px;
   border-radius: 100px;
 }
+
+/* ── Competition Cards List ── */
+.competitionsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.compCard {
+  background: var(--ka-white);
+  border: 1px solid var(--border-gray);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.15s ease;
+}
+
+.compCardActive {
+  border-color: var(--ka-blue);
+  box-shadow: 0 0 0 2px rgba(37, 150, 190, 0.2);
+}
+
+.compTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.compInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.compIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: var(--bg-tint);
+  color: var(--ka-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.compName {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ka-black);
+  margin: 0 0 4px 0;
+}
+
+.compMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.compMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badgeResults {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--bg-light);
+  color: var(--ka-black);
+  border: 1px solid var(--border-gray);
+}
+
+.badgeActive {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border-color: #bae6fd;
+}
+
+.compActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btnAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border-gray);
+  background-color: var(--ka-white);
+  color: var(--ka-black);
+  transition: all 0.15s ease;
+}
+
+.btnAction:hover {
+  background-color: var(--bg-light);
+}
+
+.btnActionPrimary {
+  background-color: var(--ka-blue);
+  color: white;
+  border-color: var(--ka-blue);
+}
+
+.btnActionPrimary:hover {
+  background-color: #1d7a9b;
+  border-color: #1d7a9b;
+}
+
+.btnActionDanger {
+  color: #dc2626;
+  border-color: #fecaca;
+  background-color: #fff;
+}
+
+.btnActionDanger:hover {
+  background-color: #fef2f2;
+  border-color: #f87171;
+}
+
+/* ── Results Accordion ── */
+.compResultsWrap {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-gray);
+}
+
+.resultsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.resultsTable th {
+  text-align: left;
+  padding: 8px 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.resultsTable td {
+  padding: 10px;
+  border-bottom: 1px solid var(--bg-light);
+}
+
+.resultsTable tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Modal Dialog ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.modalContent {
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  box-sizing: border-box;
+  animation: modalEnter 0.2s ease-out;
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modalTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.modalClose {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.modalClose:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+
+.modalBody {
+  padding: 20px 24px;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}

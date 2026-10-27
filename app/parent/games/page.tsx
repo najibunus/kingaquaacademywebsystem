@@ -7,7 +7,7 @@ export default async function ParentGamesPage() {
   // Fetch all tournaments and all their results, joining the student names
   const { data: tournaments } = await (supabase.from("tournaments" as any)
     .select(`
-      id, name, date,
+      id, name, date, venue,
       tournament_results (
         id, stroke, distance, time_record, created_at,
         students ( id, name )

@@ -4,9 +4,15 @@ import StaffGamesClient from "./StaffGamesClient";
 export default async function StaffGamesPage() {
   const supabase = await createAdminClient();
 
-  // Fetch all tournaments
+  // Fetch all tournaments with their results and student relations
   const { data: tournaments } = await (supabase.from("tournaments" as any)
-    .select("*")
+    .select(`
+      id, name, date, venue, created_at,
+      tournament_results (
+        id, stroke, distance, time_record, created_at,
+        students ( id, name )
+      )
+    ` as any)
     .order("date", { ascending: false }));
 
   // Fetch all classes
