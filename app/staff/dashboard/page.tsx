@@ -1,21 +1,36 @@
 import styles from "./dashboard.module.css";
-import { createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import StaffTodoListClient, { StaffTask } from "@/components/tasks/StaffTodoListClient";
+
+export const dynamic = "force-dynamic";
 
 export default async function StaffDashboardPage() {
   const supabase = await createAdminClient();
 
+  // Resolve current staff user profile
+  const authClient = await createClient();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
+
+  let staffUserId: string | null = null;
+  if (user?.id) {
+    const { data: userProfile } = await supabase
+      .from("users")
+      .select("id")
+      .eq("auth_id", user.id)
+      .maybeSingle();
+    staffUserId = userProfile?.id ?? null;
+  }
+
+  // Fetch metrics & data
   const [
-    { count: taskCount },
     { count: receiptCount },
     { count: classCount },
     { data: receiptsToVerify },
-    { data: pendingTasks },
+    rawTasks,
   ] = await Promise.all([
-    supabase
-      .from("tasks")
-      .select("*", { count: "exact", head: true })
-      .in("status", ["pending", "in_progress"]),
     supabase
       .from("invoices")
       .select("*", { count: "exact", head: true })
@@ -30,13 +45,24 @@ export default async function StaffDashboardPage() {
       .eq("payment_status", "receipt_submitted")
       .order("created_at", { ascending: false })
       .limit(5),
-    supabase
-      .from("tasks")
-      .select("id, title, status, due_date")
-      .in("status", ["pending", "in_progress"])
-      .order("due_date", { ascending: true })
-      .limit(5),
+    (async () => {
+      let query = supabase
+        .from("tasks")
+        .select("id, title, description, status, is_pinned, due_date, created_at, assigned_to, created_by")
+        .order("is_pinned", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(40);
+
+      if (staffUserId) {
+        query = query.or(`assigned_to.is.null,assigned_to.eq.${staffUserId}`);
+      }
+      const { data } = await query;
+      return data ?? [];
+    })(),
   ]);
+
+  const tasks = (rawTasks as unknown as StaffTask[]) ?? [];
+  const pendingTaskCount = tasks.filter((t) => t.status !== "done").length;
 
   return (
     <div className="animate-fade-in-up">
@@ -52,12 +78,12 @@ export default async function StaffDashboardPage() {
       </div>
 
       <div className={styles.metricsGrid}>
-        {/* Metric 1 */}
+        {/* Metric 1: My Pending Tasks */}
         <div className="card">
           <h3 className={styles.metricLabel}>My Pending Tasks</h3>
           <div className={styles.metricValue}>
-            <span className={`${styles.metricNumber} ${(taskCount ?? 0) > 0 ? styles.metricNumberDanger : ""}`}>
-              {taskCount ?? 0}
+            <span className={`${styles.metricNumber} ${pendingTaskCount > 0 ? styles.metricNumberDanger : ""}`}>
+              {pendingTaskCount}
             </span>
           </div>
           <p className={styles.trendTextNeutral}>
@@ -65,7 +91,7 @@ export default async function StaffDashboardPage() {
           </p>
         </div>
 
-        {/* Metric 2 */}
+        {/* Metric 2: Receipts to Verify */}
         <div className="card">
           <h3 className={styles.metricLabel}>Receipts to Verify</h3>
           <div className={styles.metricValue}>
@@ -78,7 +104,7 @@ export default async function StaffDashboardPage() {
           </p>
         </div>
 
-        {/* Metric 3 */}
+        {/* Metric 3: Active Classes */}
         <div className="card">
           <h3 className={styles.metricLabel}>Active Classes</h3>
           <div className={styles.metricValue}>
@@ -139,35 +165,8 @@ export default async function StaffDashboardPage() {
         </div>
 
         {/* Right Column: Staff Tasks */}
-        <div className={`card ${styles.taskBoardCard}`}>
-          <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}>My To-Do List</h3>
-            <button className="btn btn-ghost" style={{padding: "0.25rem", color: "var(--ka-blue)"}}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            </button>
-          </div>
-          
-          <div className={styles.taskList}>
-            {!pendingTasks || pendingTasks.length === 0 ? (
-              <p className={styles.emptyText}>You have no pending tasks. Great job!</p>
-            ) : (
-              pendingTasks.map((task) => (
-                <div key={task.id} className={styles.taskItem}>
-                  <div className={styles.taskHeader}>
-                    <p className={styles.taskTitle}>{task.title}</p>
-                    <span className={`${styles.priorityDot} ${styles.priorityMedium}`}></span>
-                  </div>
-                  <div className={styles.taskFooter}>
-                    <p className={styles.taskDue}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                      {task.due_date ? new Date(task.due_date).toLocaleDateString("en-MY") : "No due date"}
-                    </p>
-                    <button className="btn btn-ghost" style={{padding: "0.25rem 0.5rem", fontSize: "0.75rem"}}>Done</button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+        <div>
+          <StaffTodoListClient initialTasks={tasks} currentUserId={staffUserId} />
         </div>
       </div>
     </div>
