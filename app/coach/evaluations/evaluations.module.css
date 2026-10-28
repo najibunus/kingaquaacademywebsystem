@@ -1,215 +1,362 @@
+/* ═══════════════════════════════════════════════════════════════════
+   EVALUATIONS MODULE CSS — COACH & STAFF EVALUATION STUDIO
+   ═══════════════════════════════════════════════════════════════════ */
+
 .header {
-  margin-bottom: var(--space-6);
-}
-
-.title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.875rem;
-  color: var(--ka-black);
-  margin-bottom: var(--space-1);
-}
-
-.subtitle {
-  color: var(--text-secondary);
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-/* ── Two-panel layout ── */
-.contentGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-6);
-  align-items: start;
-}
-
-@media (max-width: 900px) {
-  .contentGrid { grid-template-columns: 1fr; }
-}
-
-.formPanel, .historyPanel {}
-
-.panelTitle {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--ka-black);
+  display: flex;
+  justifyContent: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
-.emptyText {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  line-height: 1.6;
+.title {
+  font-family: var(--font-display, inherit);
+  font-weight: 800;
+  font-size: 1.85rem;
+  color: var(--ka-black, #0f172a);
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
 }
 
-/* ── Student picker grid ── */
+.subtitle {
+  color: var(--text-secondary, #64748b);
+  margin: 0;
+  font-size: 0.92rem;
+  max-width: 760px;
+  line-height: 1.5;
+}
+
+/* ── Content Grid Layout: Left Builder (Wide) & Right Badges (380px) ── */
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.historyPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* ── Evaluation Card Containers ── */
+.evalCard {
+  background-color: var(--ka-white, #ffffff);
+  border: 1px solid var(--border-gray, #e2e8f0);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.panelTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--ka-black, #0f172a);
+  margin: 0 0 16px 0;
+  letter-spacing: -0.01em;
+}
+
+.emptyText {
+  color: var(--text-secondary, #64748b);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Selected Student Profile Banner ── */
+.selectedStudentBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  flex-wrap: wrap;
+}
+
+.selectedStudentInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1 1 280px;
+}
+
+.studentInitialLg {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ka-blue, #0284c7), #1d4ed8);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+.selectedName {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  word-break: break-word;
+}
+
+.selectedClass {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin: 3px 0 0 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.selectedStudentActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.changeStudentBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.changeStudentBtn:hover {
+  border-color: var(--ka-blue, #0284c7);
+  color: var(--ka-blue, #0284c7);
+  background: var(--bg-tint, #f0f9ff);
+}
+
+.openReportCardBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #6d1b2d, #8b1a1a);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(109, 27, 45, 0.25);
+  transition: all 0.15s ease;
+}
+
+.openReportCardBtn:hover {
+  opacity: 0.94;
+  transform: translateY(-1px);
+}
+
+/* ── Student Picker Grid (Step 1 Selection) ── */
 .studentGrid {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 8px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .studentPickerBtn {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 12px;
   width: 100%;
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border-gray);
-  border-radius: var(--radius-md);
-  background: var(--bg-light);
+  padding: 10px 14px;
+  border: 1px solid var(--border-gray, #e2e8f0);
+  border-radius: 10px;
+  background: #ffffff;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: all 0.15s ease;
 }
 
 .studentPickerBtn:hover {
-  border-color: var(--ka-blue);
-  background: var(--bg-tint);
+  border-color: var(--ka-blue, #0284c7);
+  background: var(--bg-tint, #f0f9ff);
+  transform: translateX(2px);
 }
 
-.studentInitial, .evalInitial {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-tint);
-  color: var(--ka-blue);
-  font-weight: 700;
-  font-size: 1.1rem;
+.studentInitial {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--bg-tint, #f0f9ff);
+  color: var(--ka-blue, #0284c7);
+  font-weight: 800;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  border: 1.5px solid rgba(2, 132, 199, 0.2);
 }
 
 .studentPickerName {
-  font-weight: 600;
-  color: var(--ka-black);
+  font-weight: 700;
+  color: var(--ka-black, #0f172a);
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  text-transform: uppercase;
 }
 
 .studentPickerClass {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  font-size: 0.78rem;
+  color: var(--text-secondary, #64748b);
+  margin: 2px 0 0 0;
+}
+
+/* ── Step 2 Badge Selector Grid ── */
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .badgeGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .badgeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.badgeCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 6px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-gray, #e2e8f0);
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: center;
+  outline: none;
+}
+
+.badgeCard:hover {
+  border-color: #94a3b8;
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.badgeCardAcquired {
+  border: 2.5px solid #6d1b2d !important;
+  background: #fffbeb !important;
+  box-shadow: 0 4px 14px rgba(109, 27, 45, 0.18) !important;
+  transform: translateY(-2px);
+}
+
+.badgeLevelNum {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   margin: 0;
 }
 
-/* ── Eval Form ── */
-.evalCard {
-  background-color: var(--ka-white);
-  border: 1px solid var(--border-gray);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
+.badgeAnimal {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #6d1b2d;
+  margin: 0;
 }
 
-.evalForm {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.formField {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.formLabel {
+/* ── Field Labels & Inputs ── */
+.fieldLabel {
+  display: block;
   font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--ka-black);
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px 0;
 }
 
-.optional { font-weight: 400; color: var(--text-secondary); font-size: 0.85rem; }
-.required { color: var(--color-danger); }
-
-/* ── Star Picker ── */
-.starPicker {
+.fieldGroup {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  flex-direction: column;
+  gap: 6px;
 }
 
-.star {
-  font-size: 2rem;
-  background: none;
-  border: none;
-  color: #d1d5db;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-  transition: color 0.1s, transform 0.1s;
-}
-
-.star:hover, .starFilled {
-  color: #f59e0b;
-}
-
-.star:hover {
-  transform: scale(1.15);
-}
-
-.starLabel {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #92400e;
-  margin-left: var(--space-2);
-}
-
-/* ── Skill Tag grid ── */
-.tagGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.tagBtn {
-  padding: 8px 16px;
-  border: 1px solid var(--border-gray);
-  border-radius: var(--radius-full);
-  background: var(--bg-light);
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.tagBtn:hover { border-color: var(--ka-blue); color: var(--ka-blue); }
-
-.tagBtnActive {
-  background-color: var(--ka-blue);
-  border-color: var(--ka-blue);
-  color: var(--ka-white);
-}
-
-/* ── Textarea ── */
 .textarea {
-  padding: 16px;
-  border: 1px solid var(--border-gray);
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
+  padding: 14px 16px;
+  border: 1px solid var(--border-gray, #cbd5e1);
+  border-radius: 10px;
+  font-size: 0.92rem;
   line-height: 1.5;
   resize: vertical;
   width: 100%;
   box-sizing: border-box;
-  color: var(--ka-black);
-  background-color: var(--ka-white);
+  color: var(--ka-black, #0f172a);
+  background-color: var(--ka-white, #ffffff);
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   font-family: inherit;
 }
 
-.textarea:focus { border-color: var(--ka-blue); }
+.textarea:focus {
+  border-color: var(--ka-blue, #0284c7);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
 
-.charCount {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  text-align: right;
-  margin: 0;
+/* ── Form Actions ── */
+.formActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
 }
 
 /* ── Messages ── */
@@ -217,106 +364,86 @@
   background: #fef2f2;
   color: #dc2626;
   border: 1px solid #fecaca;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  border-radius: 8px;
   font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .successMsg {
   background: #f0fdf4;
   color: #166534;
   border: 1px solid #bbf7d0;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  border-radius: 8px;
   font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.formActions {
-  display: flex;
-  gap: var(--space-3);
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-
-/* ── History Panel ── */
+/* ── Right Panel Active Badges List ── */
 .evalList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 12px;
   max-height: 680px;
   overflow-y: auto;
+  padding-right: 4px;
 }
 
 .evalItem {
-  border-bottom: 1px solid var(--border-gray);
-  padding-bottom: var(--space-4);
+  background: #ffffff;
+  border: 1px solid var(--border-gray, #e2e8f0);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.15s ease;
 }
 
-.evalItem:last-child { border-bottom: none; padding-bottom: 0; }
-
-.evalTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-2);
+.evalItem:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.evalStudent {
+.evalItemHeader {
   display: flex;
+  justifyContent: space-between;
   align-items: center;
-  gap: var(--space-3);
+  gap: 10px;
 }
 
 .evalStudentName {
-  font-weight: 600;
-  color: var(--ka-black);
+  font-weight: 800;
+  color: var(--ka-black, #0f172a);
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
+  text-transform: uppercase;
 }
 
-.evalTag {
+.evalSkillBadge {
   display: inline-block;
-  padding: 1px 8px;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-tint);
-  color: var(--ka-blue);
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: 2px;
-}
-
-.evalStars {
-  color: #f59e0b;
-  font-size: 1.1rem;
-  letter-spacing: -1px;
-  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background-color: #dbeafe;
+  color: #1e40af;
+  margin-top: 3px;
 }
 
 .evalComment {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin: 0 0 var(--space-1);
+  font-size: 0.82rem;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.45;
+  margin: 8px 0 0 0;
   font-style: italic;
+  background: #f8fafc;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border-left: 3px solid var(--ka-blue, #0284c7);
 }
 
 .evalDate {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  font-size: 0.74rem;
+  color: #94a3b8;
   margin: 0;
-}
-
-@media (max-width: 640px) {
-  .title {
-    font-size: 1.5rem;
-  }
-  .evalCard {
-    padding: 16px;
-  }
-  .formActions {
-    flex-direction: column-reverse;
-  }
-  .formActions button {
-    width: 100%;
-  }
 }

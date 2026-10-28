@@ -305,17 +305,9 @@ export default function EvaluationsClient({
         {isStaffMode && selectedStudent && (
           <button
             type="button"
-            className="btn btn-primary"
+            className={styles.openReportCardBtn}
             onClick={() => setShowReportCardModal(true)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#6d1b2d",
-              borderColor: "#6d1b2d",
-              fontWeight: 700,
-              padding: "10px 18px",
-            }}
+            style={{ padding: "11px 20px", fontSize: "0.88rem" }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -332,184 +324,192 @@ export default function EvaluationsClient({
         <div className={styles.formPanel}>
           {/* STEP 1: STUDENT SELECTION */}
           <div className={styles.evalCard}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
-              <h2 className={styles.panelTitle} style={{ margin: 0 }}>
-                {selectedStudent
-                  ? `Student: ${selectedStudent.name}`
-                  : "Step 1 — Select a Student"}
-              </h2>
-              {selectedStudent && (
-                <button
-                  type="button"
-                  className={styles.changeStudentBtn}
-                  onClick={() => {
-                    setSelectedStudent(null);
-                    setEditingEvalId(null);
-                    setFeedback(null);
-                  }}
-                >
-                  Change Student
-                </button>
-              )}
-            </div>
-
             {!selectedStudent ? (
-              students.length === 0 ? (
-                <p className={styles.emptyText}>No active students found.</p>
-              ) : (
-                <>
-                  <div style={{ display: "flex", gap: "10px", marginBottom: "14px", flexWrap: "wrap" }}>
-                    <input
-                      type="text"
-                      placeholder="Search by student name..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+              <>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+                  <h2 className={styles.panelTitle} style={{ margin: 0 }}>
+                    Step 1 — Select a Student to Evaluate
+                  </h2>
+                </div>
+
+                <div style={{ display: "flex", gap: "10px", marginBottom: "14px", flexWrap: "wrap" }}>
+                  <input
+                    type="text"
+                    placeholder="Search by student name..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{
+                      flex: "1 1 220px",
+                      padding: "10px 14px",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-gray)",
+                      fontFamily: "inherit",
+                      textTransform: "uppercase",
+                    }}
+                  />
+                  {classes.length > 0 && (
+                    <select
+                      value={classFilter}
+                      onChange={(e) => setClassFilter(e.target.value)}
                       style={{
-                        flex: "1 1 220px",
                         padding: "10px 14px",
                         borderRadius: "8px",
                         border: "1px solid var(--border-gray)",
                         fontFamily: "inherit",
+                        backgroundColor: "#fff",
                       }}
-                    />
-                    {classes.length > 0 && (
-                      <select
-                        value={classFilter}
-                        onChange={(e) => setClassFilter(e.target.value)}
-                        style={{
-                          padding: "10px 14px",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border-gray)",
-                          fontFamily: "inherit",
-                          backgroundColor: "#fff",
-                        }}
-                      >
-                        <option value="all">All Classes ({students.length})</option>
-                        {classes.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-
-                  <div className={styles.studentGrid}>
-                    {filteredStudents.length > 0 ? (
-                      filteredStudents.map((s) => {
-                        const sEval = pastEvals.find((ev) => ev.student_id === s.id);
-                        const sParsed = sEval ? parseEvaluationRecord(sEval) : null;
-                        const sLvl = sParsed
-                          ? EVALUATION_LEVELS.find((l) => l.level === sParsed.acquiredLevel)
-                          : null;
-
-                        return (
-                          <button
-                            key={s.id}
-                            type="button"
-                            className={styles.studentPickerBtn}
-                            onClick={() => startNewEvaluationForStudent(s)}
-                          >
-                            <div className={styles.studentInitial}>
-                              {s.name.charAt(0)}
-                            </div>
-                            <div style={{ minWidth: 0 }}>
-                              <p className={styles.studentPickerName}>{s.name.toUpperCase()}</p>
-                              <p className={styles.studentPickerClass}>
-                                {s.class_name ?? "Assigned Class"}
-                              </p>
-                              {sLvl ? (
-                                <span
-                                  style={{
-                                    display: "inline-block",
-                                    marginTop: "4px",
-                                    fontSize: "0.68rem",
-                                    fontWeight: 700,
-                                    padding: "2px 6px",
-                                    borderRadius: "4px",
-                                    backgroundColor: "#dbeafe",
-                                    color: "#1e40af",
-                                  }}
-                                >
-                                  Badge: {sLvl.shortTitle}
-                                </span>
-                              ) : (
-                                <span
-                                  style={{
-                                    display: "inline-block",
-                                    marginTop: "4px",
-                                    fontSize: "0.68rem",
-                                    color: "#94a3b8",
-                                  }}
-                                >
-                                  No badge yet
-                                </span>
-                              )}
-                            </div>
-                          </button>
-                        );
-                      })
-                    ) : (
-                      <p className={styles.emptyText} style={{ gridColumn: "1 / -1" }}>
-                        No students matched your search.
-                      </p>
-                    )}
-                  </div>
-                </>
-              )
-            ) : (
-              <div className={styles.selectedStudentBanner} style={{ marginTop: "12px" }}>
-                <div className={styles.studentInitialLg}>
-                  {selectedStudent.name.charAt(0)}
+                    >
+                      <option value="all">All Classes ({students.length})</option>
+                      {classes.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p className={styles.selectedName}>{selectedStudent.name.toUpperCase()}</p>
-                  <p className={styles.selectedClass}>
-                    {selectedStudent.class_name ?? "Active Student"}
-                    {editingEvalId ? " • Active Saved Evaluation" : " • New Evaluation"}
-                  </p>
+
+                <div className={styles.studentGrid}>
+                  {filteredStudents.length > 0 ? (
+                    filteredStudents.map((s) => {
+                      const sEval = pastEvals.find((ev) => ev.student_id === s.id);
+                      const sParsed = sEval ? parseEvaluationRecord(sEval) : null;
+                      const sLvl = sParsed
+                        ? EVALUATION_LEVELS.find((l) => l.level === sParsed.acquiredLevel)
+                        : null;
+
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          className={styles.studentPickerBtn}
+                          onClick={() => startNewEvaluationForStudent(s)}
+                        >
+                          <div className={styles.studentInitial}>
+                            {s.name.charAt(0)}
+                          </div>
+                          <div style={{ minWidth: 0, flex: 1 }}>
+                            <p className={styles.studentPickerName}>{s.name.toUpperCase()}</p>
+                            <p className={styles.studentPickerClass}>
+                              {s.class_name ?? "Assigned Class"}
+                            </p>
+                          </div>
+                          {sLvl ? (
+                            <span
+                              style={{
+                                fontSize: "0.72rem",
+                                fontWeight: 700,
+                                padding: "3px 8px",
+                                borderRadius: "6px",
+                                backgroundColor: "#dbeafe",
+                                color: "#1e40af",
+                              }}
+                            >
+                              ★ {sLvl.shortTitle}
+                            </span>
+                          ) : (
+                            <span
+                              style={{
+                                fontSize: "0.72rem",
+                                color: "#94a3b8",
+                              }}
+                            >
+                              No badge yet
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <p className={styles.emptyText} style={{ textAlign: "center", padding: "20px" }}>
+                      No students matched your search.
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                  <h2 className={styles.panelTitle} style={{ margin: 0 }}>
+                    Step 1 — Selected Student
+                  </h2>
+                  <button
+                    type="button"
+                    className={styles.changeStudentBtn}
+                    onClick={() => {
+                      setSelectedStudent(null);
+                      setEditingEvalId(null);
+                      setFeedback(null);
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+                    Change Student
+                  </button>
+                </div>
+
+                <div className={styles.selectedStudentBanner}>
+                  <div className={styles.selectedStudentInfo}>
+                    <div className={styles.studentInitialLg}>
+                      {selectedStudent.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className={styles.selectedName}>{selectedStudent.name.toUpperCase()}</p>
+                      <div className={styles.selectedClass}>
+                        <span style={{ backgroundColor: "#e2e8f0", color: "#334155", padding: "2px 8px", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700 }}>
+                          {selectedStudent.class_name ?? "Active Student"}
+                        </span>
+                        <span>•</span>
+                        <span style={{ color: editingEvalId ? "#0284c7" : "#16a34a", fontWeight: 700 }}>
+                          {editingEvalId ? "Active Saved Evaluation" : "New Evaluation"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.selectedStudentActions}>
+                    {isStaffMode && (
+                      <button
+                        type="button"
+                        className={styles.openReportCardBtn}
+                        onClick={() => setShowReportCardModal(true)}
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
+                        Open Report Card
+                      </button>
+                    )}
+                  </div>
+
                   {(() => {
                     const prevEval = pastEvals.find((ev) => ev.student_id === selectedStudent.id);
                     if (!prevEval) return null;
                     const prevParsed = parseEvaluationRecord(prevEval);
                     if (prevParsed.acquiredLevel === acquiredLevel) return null;
                     return (
-                      <p
+                      <div
                         style={{
-                          margin: "6px 0 0 0",
-                          fontSize: "0.78rem",
+                          width: "100%",
+                          marginTop: "8px",
+                          fontSize: "0.8rem",
                           color: "#b45309",
                           backgroundColor: "#fef3c7",
-                          padding: "4px 8px",
-                          borderRadius: "6px",
+                          padding: "8px 12px",
+                          borderRadius: "8px",
                           border: "1px solid #fde68a",
                           fontWeight: 700,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
                         }}
                       >
-                        ⚠️ Level Advancement: Saving this will advance {selectedStudent.name} to Level {acquiredLevel} and replace their previous Level {prevParsed.acquiredLevel} badge on the Report Card.
-                      </p>
+                        <span>⚠️</span>
+                        <span>
+                          Level Advancement: Saving this will advance {selectedStudent.name.toUpperCase()} to Level {acquiredLevel} and replace their previous Level {prevParsed.acquiredLevel} badge on the Report Card.
+                        </span>
+                      </div>
                     );
                   })()}
                 </div>
-                {isStaffMode && (
-                  <button
-                    type="button"
-                    onClick={() => setShowReportCardModal(true)}
-                    style={{
-                      padding: "8px 14px",
-                      borderRadius: "8px",
-                      backgroundColor: "#6d1b2d",
-                      color: "#fff",
-                      border: "none",
-                      fontWeight: 700,
-                      fontSize: "0.82rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Open Report Card
-                  </button>
-                )}
-              </div>
+              </>
             )}
           </div>
 
@@ -519,22 +519,17 @@ export default function EvaluationsClient({
               {/* STEP 2: SELECT ACQUIRED BADGE (Only acquired badge is highlighted!) */}
               <div style={{ marginBottom: "22px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
-                  <label className={styles.fieldLabel} style={{ margin: 0, fontSize: "1rem" }}>
-                    Step 2 — Select Acquired Badge Level
-                  </label>
-                  <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)", fontWeight: 500 }}>
-                    Only the selected badge will be highlighted in color on the Report Card
-                  </span>
+                  <div>
+                    <label className={styles.fieldLabel}>
+                      Step 2 — Select Acquired Badge Level
+                    </label>
+                    <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+                      Click the badge the student has acquired. Only this badge will be highlighted in vibrant color on their Report Card.
+                    </p>
+                  </div>
                 </div>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))",
-                    gap: "12px",
-                    marginTop: "12px",
-                  }}
-                >
+                <div className={styles.badgeGrid}>
                   {EVALUATION_LEVELS.map((lvl) => {
                     const isAcquired = acquiredLevel === lvl.level;
                     return (
@@ -542,46 +537,17 @@ export default function EvaluationsClient({
                         key={lvl.level}
                         type="button"
                         onClick={() => handleSelectBadgeLevel(lvl.level)}
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          gap: "8px",
-                          padding: "14px 10px",
-                          borderRadius: "12px",
-                          border: isAcquired
-                            ? "2.5px solid #6d1b2d"
-                            : "1.5px solid var(--border-gray)",
-                          backgroundColor: isAcquired ? "#fffbeb" : "#f8fafc",
-                          cursor: "pointer",
-                          transition: "all 0.18s ease",
-                        }}
+                        className={`${styles.badgeCard} ${isAcquired ? styles.badgeCardAcquired : ""}`}
                       >
                         <KingAquaBadgeEmblem
                           levelData={lvl}
                           isAcquired={isAcquired}
                           customBadgeUrl={customBadges[lvl.level]}
-                          size={68}
+                          size={64}
                         />
-                        <div style={{ textAlign: "center" }}>
-                          <div
-                            style={{
-                              fontSize: "0.75rem",
-                              fontWeight: 800,
-                              color: isAcquired ? "#6d1b2d" : "#64748b",
-                            }}
-                          >
-                            LEVEL {lvl.level}
-                          </div>
-                          <div
-                            style={{
-                              fontSize: "0.85rem",
-                              fontWeight: 800,
-                              color: isAcquired ? "#0f172a" : "#94a3b8",
-                            }}
-                          >
-                            {lvl.animal}
-                          </div>
+                        <div>
+                          <p className={styles.badgeLevelNum}>LEVEL {lvl.level}</p>
+                          <p className={styles.badgeAnimal}>{lvl.animal}</p>
                         </div>
                         <span
                           style={{
@@ -593,7 +559,7 @@ export default function EvaluationsClient({
                             color: isAcquired ? "#ffffff" : "#64748b",
                           }}
                         >
-                          {isAcquired ? "★ Acquired Badge" : "Unacquired"}
+                          {isAcquired ? "★ Acquired" : "Unacquired"}
                         </span>
                       </button>
                     );
@@ -1007,7 +973,14 @@ export default function EvaluationsClient({
                   </div>
 
                   {activeBadgesList.length === 0 ? (
-                    <p className={styles.emptyText}>No evaluations submitted yet.</p>
+                    <div style={{ textAlign: "center", padding: "40px 16px", color: "#64748b" }}>
+                      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.5" style={{ margin: "0 auto 12px auto", display: "block" }}>
+                        <circle cx="12" cy="8" r="7" />
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                      </svg>
+                      <p style={{ fontWeight: 700, margin: "0 0 4px 0", color: "#334155", fontSize: "0.92rem" }}>No Active Evaluations Yet</p>
+                      <p style={{ fontSize: "0.82rem", margin: 0, lineHeight: 1.5 }}>Select a student on the left, score criteria, and save their badge to generate their official report card.</p>
+                    </div>
                   ) : (
                     <div className={styles.evalList}>
                       {activeBadgesList.map((ev) => {
