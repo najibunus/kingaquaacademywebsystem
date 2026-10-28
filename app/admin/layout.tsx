@@ -1,7 +1,8 @@
 import NavLink from "@/components/NavLink";
 import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
+import AdminNotificationDropdown from "@/components/notifications/AdminNotificationDropdown";
 import styles from "./layout.module.css";
 
 export default async function AdminLayout({
@@ -10,6 +11,8 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
+  const adminDb = await createAdminClient();
+
   const { data: { user } } = await supabase.auth.getUser();
   const email = user?.email ?? "";
   
@@ -38,6 +41,36 @@ export default async function AdminLayout({
     .slice(0, 2)
     .join("")
     .toUpperCase() || "AD";
+
+  // Fetch real-time operational notifications
+  const [
+    { data: rawReceipts },
+    { data: rawTasks },
+    { count: unpaidCount },
+    { data: rawStudents },
+  ] = await Promise.all([
+    adminDb
+      .from("invoices")
+      .select("id, invoice_number, payment_status, created_at, students(name)")
+      .eq("payment_status", "receipt_submitted")
+      .order("created_at", { ascending: false })
+      .limit(5),
+    adminDb
+      .from("tasks")
+      .select("id, title, due_date, status, created_at, assigned_user:assigned_to(display_name)")
+      .in("status", ["pending", "in_progress"])
+      .order("due_date", { ascending: true })
+      .limit(5),
+    adminDb
+      .from("invoices")
+      .select("*", { count: "exact", head: true })
+      .eq("payment_status", "unpaid"),
+    adminDb
+      .from("students")
+      .select("id, name, created_at")
+      .order("created_at", { ascending: false })
+      .limit(3),
+  ]);
 
   return (
     <div className={styles.layoutContainer}>
@@ -145,13 +178,12 @@ export default async function AdminLayout({
             <BrandLogo size={30} textSize="0.95rem" />
           </div>
           <div className={styles.userProfile}>
-            <button className={styles.notificationBtn}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <span className={styles.notificationBadge}></span>
-            </button>
+            <AdminNotificationDropdown
+              receiptInvoices={(rawReceipts as any) ?? []}
+              pendingTasks={(rawTasks as any) ?? []}
+              unpaidCount={unpaidCount ?? 0}
+              recentStudents={(rawStudents as any) ?? []}
+            />
             <div className={styles.divider}></div>
             <span className={styles.userEmail} title={email}>{email || displayName}</span>
             <form action={logoutAction} className={styles.mobileLogoutForm}>
