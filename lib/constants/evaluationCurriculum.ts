@@ -151,6 +151,7 @@ export interface StructuredEvaluationPayload {
   acquiredLevel: number; // 1 to 6
   scores: Record<string, number>; // e.g., { "L3_1": 4, "L3_2": 4, ... }
   notes: string;
+  customCriteriaText?: Record<string, string>; // e.g., { "L1_1": "Personalized text for this student" }
 }
 
 const DELIMITER = "|||";
@@ -164,6 +165,7 @@ export function encodeEvaluationSkillTag(payload: StructuredEvaluationPayload): 
   const jsonPart = JSON.stringify({
     acquiredLevel: payload.acquiredLevel,
     scores: payload.scores,
+    customCriteriaText: payload.customCriteriaText || {},
   });
   return `${levelObj.title}${DELIMITER}${jsonPart}`;
 }
@@ -182,6 +184,7 @@ export function parseEvaluationRecord(ev: {
   displayLabel: string;
   acquiredLevel: number;
   scores: Record<string, number>;
+  customCriteriaText: Record<string, string>;
   notes: string;
   isStructured: boolean;
 } {
@@ -194,10 +197,15 @@ export function parseEvaluationRecord(ev: {
       const parsed = JSON.parse(jsonStr);
       const level = Number(parsed.acquiredLevel) || 1;
       const scores = parsed.scores && typeof parsed.scores === "object" ? parsed.scores : {};
+      const customCriteriaText =
+        parsed.customCriteriaText && typeof parsed.customCriteriaText === "object"
+          ? parsed.customCriteriaText
+          : {};
       return {
         displayLabel: label || `Level ${level}`,
         acquiredLevel: level,
         scores,
+        customCriteriaText,
         notes: rawComments,
         isStructured: true,
       };
@@ -224,6 +232,7 @@ export function parseEvaluationRecord(ev: {
     displayLabel: rawTag || "Level 1 — King Aqua Turtle",
     acquiredLevel,
     scores: defaultScores,
+    customCriteriaText: {},
     notes: rawComments,
     isStructured: false,
   };

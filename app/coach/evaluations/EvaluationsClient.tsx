@@ -64,6 +64,7 @@ export default function EvaluationsClient({
   // Evaluation Form State matching the physical Report Card
   const [acquiredLevel, setAcquiredLevel] = useState<number>(1);
   const [scores, setScores] = useState<Record<string, number>>({});
+  const [customCriteriaText, setCustomCriteriaText] = useState<Record<string, string>>({});
   const [notes, setNotes] = useState("");
   const [showAllLevelsInForm, setShowAllLevelsInForm] = useState(false);
 
@@ -138,17 +139,41 @@ export default function EvaluationsClient({
     setScores(next);
   }
 
+  function handleCriteriaTextChange(criterionId: string, val: string) {
+    setCustomCriteriaText((prev) => ({
+      ...prev,
+      [criterionId]: val,
+    }));
+  }
+
+  function handleResetCriterionText(criterionId: string) {
+    setCustomCriteriaText((prev) => {
+      const next = { ...prev };
+      delete next[criterionId];
+      return next;
+    });
+  }
+
   function startNewEvaluationForStudent(student: EvalStudent) {
     setSelectedStudent(student);
-    setEditingEvalId(null);
-    setAcquiredLevel(1);
-    const initialScores: Record<string, number> = {};
-    EVALUATION_LEVELS[0].criteria.forEach((c) => {
-      initialScores[c.id] = 4;
-    });
-    setScores(initialScores);
-    setNotes("");
     setFeedback(null);
+
+    // Rule: A student only gets ONE badge.
+    // Check if this student already has an evaluation recorded:
+    const existingEval = pastEvals.find((ev) => ev.student_id === student.id);
+    if (existingEval) {
+      loadPastEvaluation(existingEval);
+    } else {
+      setEditingEvalId(null);
+      setAcquiredLevel(1);
+      const initialScores: Record<string, number> = {};
+      EVALUATION_LEVELS[0].criteria.forEach((c) => {
+        initialScores[c.id] = 4;
+      });
+      setScores(initialScores);
+      setCustomCriteriaText({});
+      setNotes("");
+    }
   }
 
   function loadPastEvaluation(ev: PastEvalItem) {
@@ -163,6 +188,7 @@ export default function EvaluationsClient({
     setEditingEvalId(ev.id);
     setAcquiredLevel(parsed.acquiredLevel);
     setScores(parsed.scores);
+    setCustomCriteriaText(parsed.customCriteriaText || {});
     setNotes(parsed.notes);
     setFeedback(null);
   }
@@ -222,6 +248,7 @@ export default function EvaluationsClient({
         classId: selectedStudent.class_id,
         acquiredLevel,
         scores,
+        customCriteriaText,
         notes,
       });
 
@@ -231,7 +258,7 @@ export default function EvaluationsClient({
         setFeedback({
           success: editingEvalId
             ? "Evaluation updated successfully!"
-            : "Evaluation saved! Parents can now view this assessment.",
+            : "Evaluation saved! (Any previous level evaluation for this student was replaced with their new badge).",
         });
       }
     });
@@ -369,24 +396,59 @@ export default function EvaluationsClient({
 
                   <div className={styles.studentGrid}>
                     {filteredStudents.length > 0 ? (
-                      filteredStudents.map((s) => (
-                        <button
-                          key={s.id}
-                          type="button"
-                          className={styles.studentPickerBtn}
-                          onClick={() => startNewEvaluationForStudent(s)}
-                        >
-                          <div className={styles.studentInitial}>
-                            {s.name.charAt(0)}
-                          </div>
-                          <div style={{ minWidth: 0 }}>
-                            <p className={styles.studentPickerName}>{s.name}</p>
-                            <p className={styles.studentPickerClass}>
-                              {s.class_name ?? "Assigned Class"}
-                            </p>
-                          </div>
-                        </button>
-                      ))
+                      filteredStudents.map((s) => {
+                        const sEval = pastEvals.find((ev) => ev.student_id === s.id);
+                        const sParsed = sEval ? parseEvaluationRecord(sEval) : null;
+                        const sLvl = sParsed
+                          ? EVALUATION_LEVELS.find((l) => l.level === sParsed.acquiredLevel)
+                          : null;
+
+                        return (
+                          <button
+                            key={s.id}
+                            type="button"
+                            className={styles.studentPickerBtn}
+                            onClick={() => startNewEvaluationForStudent(s)}
+                          >
+                            <div className={styles.studentInitial}>
+                              {s.name.charAt(0)}
+                            </div>
+                            <div style={{ minWidth: 0 }}>
+                              <p className={styles.studentPickerName}>{s.name}</p>
+                              <p className={styles.studentPickerClass}>
+                                {s.class_name ?? "Assigned Class"}
+                              </p>
+                              {sLvl ? (
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    marginTop: "4px",
+                                    fontSize: "0.68rem",
+                                    fontWeight: 700,
+                                    padding: "2px 6px",
+                                    borderRadius: "4px",
+                                    backgroundColor: "#dbeafe",
+                                    color: "#1e40af",
+                                  }}
+                                >
+                                  Badge: {sLvl.shortTitle}
+                                </span>
+                              ) : (
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    marginTop: "4px",
+                                    fontSize: "0.68rem",
+                                    color: "#94a3b8",
+                                  }}
+                                >
+                                  No badge yet
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })
                     ) : (
                       <p className={styles.emptyText} style={{ gridColumn: "1 / -1" }}>
                         No students matched your search.
@@ -404,8 +466,30 @@ export default function EvaluationsClient({
                   <p className={styles.selectedName}>{selectedStudent.name}</p>
                   <p className={styles.selectedClass}>
                     {selectedStudent.class_name ?? "Active Student"}
-                    {editingEvalId ? " • Editing Saved Evaluation" : " • New Evaluation"}
+                    {editingEvalId ? " • Active Saved Evaluation" : " • New Evaluation"}
                   </p>
+                  {(() => {
+                    const prevEval = pastEvals.find((ev) => ev.student_id === selectedStudent.id);
+                    if (!prevEval) return null;
+                    const prevParsed = parseEvaluationRecord(prevEval);
+                    if (prevParsed.acquiredLevel === acquiredLevel) return null;
+                    return (
+                      <p
+                        style={{
+                          margin: "6px 0 0 0",
+                          fontSize: "0.78rem",
+                          color: "#b45309",
+                          backgroundColor: "#fef3c7",
+                          padding: "4px 8px",
+                          borderRadius: "6px",
+                          border: "1px solid #fde68a",
+                          fontWeight: 700,
+                        }}
+                      >
+                        ⚠️ Level Advancement: Saving this will advance {selectedStudent.name} to Level {acquiredLevel} and replace their previous Level {prevParsed.acquiredLevel} badge on the Report Card.
+                      </p>
+                    );
+                  })()}
                 </div>
                 {isStaffMode && (
                   <button
@@ -658,6 +742,15 @@ export default function EvaluationsClient({
                         {/* Criteria Rows */}
                         {lvl.criteria.map((c) => {
                           const currentVal = scores[c.id] || 0;
+                          const isCustomized =
+                            customCriteriaText[c.id] !== undefined &&
+                            customCriteriaText[c.id].trim() !== "" &&
+                            customCriteriaText[c.id] !== c.text;
+                          const currentText =
+                            customCriteriaText[c.id] !== undefined
+                              ? customCriteriaText[c.id]
+                              : c.text;
+
                           return (
                             <div
                               key={c.id}
@@ -666,18 +759,76 @@ export default function EvaluationsClient({
                                 gridTemplateColumns: "1fr 190px",
                                 borderBottom: "1px solid #e2e8f0",
                                 alignItems: "center",
-                                backgroundColor: "#ffffff",
+                                backgroundColor: isCustomized ? "#f0fdf4" : "#ffffff",
                               }}
                             >
-                              <div
-                                style={{
-                                  padding: "10px 14px",
-                                  fontSize: "0.88rem",
-                                  fontWeight: 600,
-                                  color: "#1e293b",
-                                }}
-                              >
-                                {c.number}. {c.text}
+                              <div style={{ padding: "8px 12px" }}>
+                                <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                                  <span
+                                    style={{
+                                      fontSize: "0.85rem",
+                                      fontWeight: 800,
+                                      color: "#475569",
+                                      marginTop: "5px",
+                                      flexShrink: 0,
+                                    }}
+                                  >
+                                    {c.number}.
+                                  </span>
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <input
+                                      type="text"
+                                      value={currentText}
+                                      onChange={(e) => handleCriteriaTextChange(c.id, e.target.value)}
+                                      placeholder={c.text}
+                                      style={{
+                                        width: "100%",
+                                        fontSize: "0.85rem",
+                                        fontWeight: isCustomized ? 700 : 500,
+                                        color: isCustomized ? "#15803d" : "#1e293b",
+                                        backgroundColor: isCustomized ? "#f0fdf4" : "#f8fafc",
+                                        border: isCustomized ? "1.5px solid #22c55e" : "1px solid #cbd5e1",
+                                        borderRadius: "6px",
+                                        padding: "6px 10px",
+                                        boxSizing: "border-box",
+                                        outline: "none",
+                                      }}
+                                    />
+                                    {isCustomized ? (
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          justifyContent: "space-between",
+                                          alignItems: "center",
+                                          marginTop: "3px",
+                                        }}
+                                      >
+                                        <span style={{ fontSize: "0.72rem", color: "#16a34a", fontWeight: 600 }}>
+                                          ✓ Custom text for {selectedStudent.name} (Default: &quot;{c.text}&quot;)
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleResetCriterionText(c.id)}
+                                          style={{
+                                            fontSize: "0.7rem",
+                                            padding: "2px 6px",
+                                            borderRadius: "4px",
+                                            border: "1px solid #cbd5e1",
+                                            backgroundColor: "#fff",
+                                            color: "#64748b",
+                                            cursor: "pointer",
+                                          }}
+                                        >
+                                          ↺ Reset
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: "2px" }}>
+                                        (Click to customize text for this student — original remains default)
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                               <div
                                 style={{
@@ -838,24 +989,38 @@ export default function EvaluationsClient({
         {/* ════════════ RIGHT PANEL: PAST EVALUATIONS ════════════ */}
         <div className={styles.historyPanel}>
           <div className={styles.evalCard}>
-            <h2 className={styles.panelTitle}>
-              Submitted Evaluations ({pastEvals.length})
-            </h2>
-            {pastEvals.length === 0 ? (
-              <p className={styles.emptyText}>No evaluations submitted yet.</p>
-            ) : (
-              <div className={styles.evalList}>
-                {pastEvals.map((ev) => {
-                  const parsed = parseEvaluationRecord(ev);
-                  const lvlObj =
-                    EVALUATION_LEVELS.find(
-                      (l) => l.level === parsed.acquiredLevel
-                    ) || EVALUATION_LEVELS[0];
-                  const scoredCount = Object.values(parsed.scores).filter(
-                    (v) => v > 0
-                  ).length;
+            {(() => {
+              // Ensure 1 active badge per student
+              const activeBadgesList = pastEvals.filter(
+                (ev, idx, arr) => arr.findIndex((t) => t.student_id === ev.student_id) === idx
+              );
 
-                  return (
+              return (
+                <>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "8px" }}>
+                    <h2 className={styles.panelTitle} style={{ margin: 0 }}>
+                      Active Student Badges ({activeBadgesList.length})
+                    </h2>
+                    <span style={{ fontSize: "0.74rem", color: "#64748b" }}>
+                      1 badge per student
+                    </span>
+                  </div>
+
+                  {activeBadgesList.length === 0 ? (
+                    <p className={styles.emptyText}>No evaluations submitted yet.</p>
+                  ) : (
+                    <div className={styles.evalList}>
+                      {activeBadgesList.map((ev) => {
+                        const parsed = parseEvaluationRecord(ev);
+                        const lvlObj =
+                          EVALUATION_LEVELS.find(
+                            (l) => l.level === parsed.acquiredLevel
+                          ) || EVALUATION_LEVELS[0];
+                        const scoredCount = Object.values(parsed.scores).filter(
+                          (v) => v > 0
+                        ).length;
+
+                        return (
                     <div key={ev.id} className={styles.evalItem}>
                       <div className={styles.evalItemHeader}>
                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -964,8 +1129,11 @@ export default function EvaluationsClient({
                 })}
               </div>
             )}
-          </div>
-        </div>
+          </>
+        );
+      })()}
+    </div>
+  </div>
       </div>
 
       {/* ════════════ STAFF REPORT CARD GENERATOR & WALLPAPER STUDIO MODAL ════════════ */}
@@ -1254,6 +1422,7 @@ export default function EvaluationsClient({
               studentName={selectedStudent.name}
               acquiredLevel={acquiredLevel}
               scores={scores}
+              customCriteriaText={customCriteriaText}
               notes={notes}
               customWallpaperUrl={customWallpaperUrl}
               wallpaperFit={wallpaperFit}

@@ -228,6 +228,8 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
                           {levelObj.criteria.map((c) => {
                             const s = parsed.scores[c.id];
                             if (!s) return null;
+                            const criterionText =
+                              parsed.customCriteriaText?.[c.id] || c.text;
                             return (
                               <div
                                 key={c.id}
@@ -240,7 +242,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
                                 }}
                               >
                                 <span>
-                                  {c.number}. {c.text}
+                                  {c.number}. {criterionText}
                                 </span>
                                 <span
                                   style={{
@@ -375,6 +377,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
                     studentName={selectedChild.name}
                     acquiredLevel={parsed.acquiredLevel}
                     scores={parsed.scores}
+                    customCriteriaText={parsed.customCriteriaText}
                     notes={parsed.notes}
                   />
                 );

@@ -12,6 +12,7 @@ export interface ReportCardProps {
   acquiredLevel: number; // 1 to 6 — ONLY this badge is highlighted in full color
   scores: Record<string, number>; // e.g., { "L3_1": 4, "L3_2": 4, ... }
   notes: string;
+  customCriteriaText?: Record<string, string>; // customized criteria wording per student
   customWallpaperUrl?: string | null;
   wallpaperFit?: "cover" | "contain" | "fill";
   sheetOpacity?: number; // 0.8 to 1.0
@@ -20,6 +21,7 @@ export interface ReportCardProps {
   onSelectLevel?: (level: number) => void;
   onScoreChange?: (criterionId: string, score: number) => void;
   onNotesChange?: (notes: string) => void;
+  onCriteriaTextChange?: (criterionId: string, text: string) => void;
   cardRef?: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -354,6 +356,7 @@ function LevelTableBlock({
   isAcquired,
   scores,
   customBadgeUrl,
+  customCriteriaText,
   interactive,
   onSelectLevel,
   onScoreChange,
@@ -362,6 +365,7 @@ function LevelTableBlock({
   isAcquired: boolean;
   scores: Record<string, number>;
   customBadgeUrl?: string;
+  customCriteriaText?: Record<string, string>;
   interactive?: boolean;
   onSelectLevel?: (level: number) => void;
   onScoreChange?: (criterionId: string, score: number) => void;
@@ -408,29 +412,38 @@ function LevelTableBlock({
         }}
       >
         <div>
-          {levelData.criteria.map((criterion, idx) => (
-            <div
-              key={criterion.id}
-              style={{
-                padding: "3.5px 8px",
-                fontSize: "10.2px",
-                lineHeight: "1.28",
-                color: "#0f172a",
-                fontWeight: 600,
-                borderBottom:
-                  idx < levelData.criteria.length - 1 || levelData.hasTimeTable
-                    ? "1px solid #e2e8f0"
-                    : "none",
-                minHeight: "22px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <span>
-                {criterion.number}.{criterion.text}
-              </span>
-            </div>
-          ))}
+          {levelData.criteria.map((criterion, idx) => {
+            const currentText =
+              customCriteriaText &&
+              customCriteriaText[criterion.id] !== undefined &&
+              customCriteriaText[criterion.id].trim() !== ""
+                ? customCriteriaText[criterion.id]
+                : criterion.text;
+
+            return (
+              <div
+                key={criterion.id}
+                style={{
+                  padding: "3.5px 8px",
+                  fontSize: "10.2px",
+                  lineHeight: "1.28",
+                  color: "#0f172a",
+                  fontWeight: 600,
+                  borderBottom:
+                    idx < levelData.criteria.length - 1 || levelData.hasTimeTable
+                      ? "1px solid #e2e8f0"
+                      : "none",
+                  minHeight: "22px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <span>
+                  {criterion.number}. {currentText}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* Level 6 Time Standards Sub-Table */}
@@ -605,6 +618,7 @@ export default function ReportCardView({
   acquiredLevel,
   scores,
   notes,
+  customCriteriaText = {},
   customWallpaperUrl,
   wallpaperFit = "cover",
   sheetOpacity = 0.93,
@@ -931,6 +945,7 @@ export default function ReportCardView({
                 isAcquired={acquiredLevel === lvl.level}
                 scores={scores}
                 customBadgeUrl={customBadges[lvl.level]}
+                customCriteriaText={customCriteriaText}
                 interactive={interactive}
                 onSelectLevel={onSelectLevel}
                 onScoreChange={onScoreChange}
@@ -1013,6 +1028,7 @@ export default function ReportCardView({
                 isAcquired={acquiredLevel === lvl.level}
                 scores={scores}
                 customBadgeUrl={customBadges[lvl.level]}
+                customCriteriaText={customCriteriaText}
                 interactive={interactive}
                 onSelectLevel={onSelectLevel}
                 onScoreChange={onScoreChange}

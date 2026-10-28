@@ -14,9 +14,10 @@ export async function submitStructuredEvaluationAction(payload: {
   acquiredLevel: number;
   scores: Record<string, number>;
   notes: string;
+  customCriteriaText?: Record<string, string>;
 }) {
   try {
-    const { studentId, classId, acquiredLevel, scores, notes, id } = payload;
+    const { studentId, classId, acquiredLevel, scores, notes, customCriteriaText, id } = payload;
 
     if (!studentId) {
       return { error: "Please select a student to evaluate." };
@@ -46,6 +47,7 @@ export async function submitStructuredEvaluationAction(payload: {
     const encodedSkillTag = encodeEvaluationSkillTag({
       acquiredLevel,
       scores,
+      customCriteriaText: customCriteriaText || {},
       notes: cleanNotes,
     });
 
@@ -80,15 +82,27 @@ export async function submitStructuredEvaluationAction(payload: {
       return { error: "Evaluator user profile not found." };
     }
 
+    // RULE: A student only gets ONE badge. If they advance to a new level (e.g. L1 -> L2),
+    // the previous level evaluation is replaced/gone.
     if (id) {
+      // 1. Delete any other records for this student except the current one being updated
+      await supabase
+        .from("student_evaluations")
+        .delete()
+        .eq("student_id", studentId)
+        .neq("id", id);
+
+      // 2. Update this evaluation record
       const { error: updateErr } = await supabase
         .from("student_evaluations")
         .update({
           student_id: studentId,
+          coach_id: evaluatorUserId,
           class_id: classId || null,
           star_rating: starRating,
           comments: cleanNotes,
           skill_tag: encodedSkillTag,
+          updated_at: new Date().toISOString(),
         })
         .eq("id", id);
 
@@ -97,20 +111,57 @@ export async function submitStructuredEvaluationAction(payload: {
         return { error: "Failed to update evaluation: " + updateErr.message };
       }
     } else {
-      const { error: insertErr } = await supabase
+      // Check if student already has existing evaluation(s)
+      const { data: existingEvals } = await supabase
         .from("student_evaluations")
-        .insert({
-          student_id: studentId,
-          coach_id: evaluatorUserId,
-          class_id: classId || null,
-          star_rating: starRating,
-          comments: cleanNotes,
-          skill_tag: encodedSkillTag,
-        });
+        .select("id")
+        .eq("student_id", studentId);
 
-      if (insertErr) {
-        console.error("[submitStructuredEvaluationAction insert]", insertErr.message);
-        return { error: "Failed to save evaluation: " + insertErr.message };
+      if (existingEvals && existingEvals.length > 0) {
+        const primaryId = existingEvals[0].id;
+        // Clean up any extra duplicates
+        if (existingEvals.length > 1) {
+          const idsToDelete = existingEvals.slice(1).map((r) => r.id);
+          await supabase
+            .from("student_evaluations")
+            .delete()
+            .in("id", idsToDelete);
+        }
+
+        // Overwrite the existing evaluation with the new badge evaluation
+        const { error: updateErr } = await supabase
+          .from("student_evaluations")
+          .update({
+            coach_id: evaluatorUserId,
+            class_id: classId || null,
+            star_rating: starRating,
+            comments: cleanNotes,
+            skill_tag: encodedSkillTag,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", primaryId);
+
+        if (updateErr) {
+          console.error("[submitStructuredEvaluationAction overwrite]", updateErr.message);
+          return { error: "Failed to update evaluation: " + updateErr.message };
+        }
+      } else {
+        // No prior evaluation: create brand new single evaluation
+        const { error: insertErr } = await supabase
+          .from("student_evaluations")
+          .insert({
+            student_id: studentId,
+            coach_id: evaluatorUserId,
+            class_id: classId || null,
+            star_rating: starRating,
+            comments: cleanNotes,
+            skill_tag: encodedSkillTag,
+          });
+
+        if (insertErr) {
+          console.error("[submitStructuredEvaluationAction insert]", insertErr.message);
+          return { error: "Failed to save evaluation: " + insertErr.message };
+        }
       }
     }
 
