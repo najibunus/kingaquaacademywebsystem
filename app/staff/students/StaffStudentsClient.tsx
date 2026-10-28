@@ -342,7 +342,9 @@ export default function StaffStudentsClient({ students: initialStudents, classes
                           <div>
                             <div className={styles.denseName}>{s.name}</div>
                             <div className={styles.denseSub}>
-                              {s.gender ? s.gender.charAt(0).toUpperCase() + s.gender.slice(1) : "N/A"} â€¢ {s.date_of_birth || "N/A"}
+                              <span>{s.gender ? s.gender.charAt(0).toUpperCase() + s.gender.slice(1) : "N/A"}</span>
+                              <span style={{ margin: "0 6px", color: "var(--border-gray)" }}>&bull;</span>
+                              <span>{s.date_of_birth || "N/A"}</span>
                             </div>
                           </div>
                         </div>
@@ -382,7 +384,7 @@ export default function StaffStudentsClient({ students: initialStudents, classes
                 onClick={() => setPage(p => Math.max(1, p - 1))} 
                 disabled={safePage <= 1}
               >
-                â† Previous
+                &larr; Previous
               </button>
               <span className={styles.pageInfo}>Page {safePage} of {totalPages}</span>
               <button 
@@ -390,12 +392,12 @@ export default function StaffStudentsClient({ students: initialStudents, classes
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
                 disabled={safePage >= totalPages}
               >
-                Next â†’
+                Next &rarr;
               </button>
             </div>
           )}
 
-          {/* ðŸ“± Mobile card list ðŸ“± */}
+          {/* Mobile card list */}
           <div className={styles.mobileList}>
             {filteredStudents.map((s) => {
               const clsName = s.classes?.name;
