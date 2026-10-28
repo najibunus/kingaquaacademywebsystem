@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import styles from "./evaluations.module.css";
 import {
   EVALUATION_LEVELS,
@@ -34,7 +35,12 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
   );
   const [zoom, setZoom] = useState<number>(0.85);
   const [isFitMode, setIsFitMode] = useState<boolean>(true);
+  const [mounted, setMounted] = useState<boolean>(false);
   const reportCardRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const calculateFitScale = () => {
     if (typeof window === "undefined") return 0.8;
@@ -322,23 +328,24 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
       )}
 
       {/* Report Card Preview Modal for Parents */}
-      {activeReportCardEval && selectedChild && (() => {
-        const parsed = parseEvaluationRecord(activeReportCardEval);
-        const levelObj = EVALUATION_LEVELS.find((l) => l.level === parsed.acquiredLevel);
+      {activeReportCardEval && selectedChild && mounted && typeof document !== "undefined" && createPortal(
+        (() => {
+          const parsed = parseEvaluationRecord(activeReportCardEval);
+          const levelObj = EVALUATION_LEVELS.find((l) => l.level === parsed.acquiredLevel);
 
-        return (
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(11, 15, 25, 0.94)",
-              backdropFilter: "blur(10px)",
-              zIndex: 99999,
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-            }}
-          >
+          return (
+            <div
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(11, 15, 25, 0.94)",
+                backdropFilter: "blur(10px)",
+                zIndex: 99999,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+              }}
+            >
             {/* Top Toolbar */}
             <div
               style={{
@@ -640,7 +647,9 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
             </div>
           </div>
         );
-      })()}
+      })(),
+      document.body
+    )}
     </div>
   );
 }

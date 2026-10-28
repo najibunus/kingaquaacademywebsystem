@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   EVALUATION_LEVELS,
   LEVEL_6_TIME_STANDARDS,
@@ -86,12 +87,36 @@ export default function EvaluationsClient({
     return Math.min(scaleW, scaleH, 1.0);
   };
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (showReportCardModal) {
       const fit = calculateStudioFitScale();
       setStudioZoom(fit);
       setIsStudioFit(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showReportCardModal]);
+
+  useEffect(() => {
+    if (!showReportCardModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowReportCardModal(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [showReportCardModal]);
 
   const [feedback, setFeedback] = useState<{ error?: string; success?: string } | null>(null);
@@ -1141,18 +1166,22 @@ export default function EvaluationsClient({
       </div>
 
       {/* ════════════ STAFF REPORT CARD GENERATOR & WALLPAPER STUDIO MODAL ════════════ */}
-      {showReportCardModal && selectedStudent && (
+      {showReportCardModal && selectedStudent && mounted && typeof document !== "undefined" && createPortal(
         <div
           style={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "rgba(15, 23, 42, 0.78)",
-            backdropFilter: "blur(6px)",
+            backgroundColor: "rgba(11, 15, 25, 0.94)",
+            backdropFilter: "blur(10px)",
             zIndex: 99999,
             display: "flex",
             flexDirection: "column",
             overflowY: "auto",
-            padding: "20px",
+            padding: "20px 16px",
+            boxSizing: "border-box",
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowReportCardModal(false);
           }}
         >
           {/* Top Studio Control Bar */}
@@ -1572,7 +1601,8 @@ export default function EvaluationsClient({
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
