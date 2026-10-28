@@ -518,8 +518,16 @@ export default function StaffStudentsClient({ students: initialStudents, classes
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>Full Name</label>
-                <input type="text" style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-gray)" }} value={editingStudent.name} onChange={e => setEditingStudent({...editingStudent, name: e.target.value})} />
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
+                  Full Name (CAPITAL LETTERS) <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-gray)", textTransform: "uppercase" }}
+                  value={editingStudent.name}
+                  onChange={e => setEditingStudent({...editingStudent, name: e.target.value.toUpperCase()})}
+                  placeholder="e.g. ADAM BIN ALI"
+                />
               </div>
 
               <div>
@@ -706,20 +714,21 @@ export default function StaffStudentsClient({ students: initialStudents, classes
             <form onSubmit={handleCreateStudent} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
-                  Full Name <span style={{ color: "#ef4444" }}>*</span>
+                  Full Name (CAPITAL LETTERS) <span style={{ color: "#ef4444" }}>*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Adam bin Ali"
+                  placeholder="e.g. ADAM BIN ALI"
                   style={{
                     width: "100%",
                     padding: "10px",
                     borderRadius: "8px",
                     border: "1px solid var(--border-gray)",
+                    textTransform: "uppercase",
                   }}
                   value={addForm.name}
-                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
+                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value.toUpperCase() })}
                 />
               </div>
 

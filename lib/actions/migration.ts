@@ -47,7 +47,7 @@ export async function importStudentsAction(formData: FormData) {
     const supabase = await createAdminClient();
 
     const rowsToInsert = result.students.map((s) => ({
-      name: s.name,
+      name: s.name.trim().toUpperCase(),
       class_id: classId,
       session_count: s.sessionCount,
       real_ic: null as string | null,

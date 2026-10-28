@@ -414,7 +414,7 @@ export default function EvaluationsClient({
                               {s.name.charAt(0)}
                             </div>
                             <div style={{ minWidth: 0 }}>
-                              <p className={styles.studentPickerName}>{s.name}</p>
+                              <p className={styles.studentPickerName}>{s.name.toUpperCase()}</p>
                               <p className={styles.studentPickerClass}>
                                 {s.class_name ?? "Assigned Class"}
                               </p>
@@ -463,7 +463,7 @@ export default function EvaluationsClient({
                   {selectedStudent.name.charAt(0)}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p className={styles.selectedName}>{selectedStudent.name}</p>
+                  <p className={styles.selectedName}>{selectedStudent.name.toUpperCase()}</p>
                   <p className={styles.selectedClass}>
                     {selectedStudent.class_name ?? "Active Student"}
                     {editingEvalId ? " • Active Saved Evaluation" : " • New Evaluation"}
@@ -1032,7 +1032,7 @@ export default function EvaluationsClient({
                           />
                           <div>
                             <p className={styles.evalStudentName}>
-                              {ev.student_name}
+                              {ev.student_name.toUpperCase()}
                             </p>
                             <span className={styles.evalSkillBadge}>
                               {lvlObj.title}

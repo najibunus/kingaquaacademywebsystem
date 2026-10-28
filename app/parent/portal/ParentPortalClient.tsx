@@ -213,7 +213,7 @@ export default function ParentPortalClient({ unpaidInvoices, children }: Props) 
     setEditSuccess(false);
 
     const payload = {
-      name: editName.trim(),
+      name: editName.trim().toUpperCase(),
       real_ic: editIc.trim() || null,
       date_of_birth: editDob || null,
       school_name: editSchool.trim() || null,
@@ -894,15 +894,15 @@ export default function ParentPortalClient({ unpaidInvoices, children }: Props) 
                 {/* Full Name */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--ka-black)" }}>
-                    Full Name <span style={{ color: "#dc2626" }}>*</span>
+                    Full Name (CAPITAL LETTERS) <span style={{ color: "#dc2626" }}>*</span>
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="Enter child's full name"
+                    placeholder="e.g. ADAM BIN ALI"
                     value={editName}
-                    onChange={e => setEditName(e.target.value)}
-                    style={{ padding: "10px 14px", borderRadius: "8px", border: "1px solid var(--border-gray)", fontSize: "0.95rem", outline: "none", boxSizing: "border-box", width: "100%" }}
+                    onChange={e => setEditName(e.target.value.toUpperCase())}
+                    style={{ padding: "10px 14px", borderRadius: "8px", border: "1px solid var(--border-gray)", fontSize: "0.95rem", outline: "none", boxSizing: "border-box", width: "100%", textTransform: "uppercase" }}
                   />
                 </div>
 

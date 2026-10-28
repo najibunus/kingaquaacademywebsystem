@@ -22,9 +22,15 @@ export async function updateStudentProfile(
   try {
     const supabase = await createAdminClient();
     
+    // Mandatory student name in CAPITAL LETTERS
+    const payload = { ...data };
+    if (payload.name) {
+      payload.name = payload.name.trim().toUpperCase();
+    }
+
     const { error } = await (supabase
       .from("students" as any)
-      .update(data)
+      .update(payload)
       .eq("id", studentId));
 
     if (error) throw error;
@@ -55,7 +61,8 @@ export async function createStudentProfile(
   revalidatePaths: string[] = []
 ) {
   try {
-    const cleanName = data.name.trim();
+    // Mandatory student name in CAPITAL LETTERS
+    const cleanName = data.name.trim().toUpperCase();
     if (!cleanName) throw new Error("Student name cannot be empty.");
 
     const supabase = await createAdminClient();

@@ -81,7 +81,7 @@ export default function ParentSettingsClient({ profile, childrenData }: { profil
     if (!editingChild) return;
     startTransition(async () => {
       const res = await updateStudentProfile(editingChild.id, {
-        name: editingChild.name,
+        name: editingChild.name.trim().toUpperCase(),
         date_of_birth: editingChild.date_of_birth,
         gender: editingChild.gender,
         avatar_url: editingChild.avatar_url
@@ -201,8 +201,15 @@ export default function ParentSettingsClient({ profile, childrenData }: { profil
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.label}>Full Name</label>
-                <input type="text" className={styles.input} value={editingChild.name} onChange={e => setEditingChild({...editingChild, name: e.target.value})} />
+                <label className={styles.label}>Full Name (CAPITAL LETTERS)</label>
+                <input
+                  type="text"
+                  className={styles.input}
+                  style={{ textTransform: "uppercase" }}
+                  value={editingChild.name}
+                  onChange={e => setEditingChild({...editingChild, name: e.target.value.toUpperCase()})}
+                  placeholder="e.g. ADAM BIN ALI"
+                />
               </div>
 
               <div className={styles.formGroup}>

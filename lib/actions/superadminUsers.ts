@@ -401,7 +401,7 @@ export async function updateStudentField(
 
     const patch: Record<string, any> = {};
     if (field === "name") {
-      const clean = (value ?? "").trim();
+      const clean = (value ?? "").trim().toUpperCase();
       if (!clean) throw new Error("Child name cannot be empty.");
       patch.name = clean;
     } else if (field === "gender") {
@@ -430,7 +430,7 @@ export async function createStudentAccount(payload: {
 }): Promise<{ success: true; student: SheetStudentDTO } | { success: false; error: string }> {
   try {
     await requireSuperadmin();
-    const cleanName = (payload.name ?? "").trim();
+    const cleanName = (payload.name ?? "").trim().toUpperCase();
     if (!cleanName) throw new Error("Child name is required.");
 
     const admin = await createAdminClient();

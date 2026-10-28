@@ -37,7 +37,8 @@ export function printReportCardElement(element: HTMLElement | null, studentName:
     return;
   }
 
-  const safeTitle = `Report_Card_${(studentName || "Student").replace(/\s+/g, "_")}`;
+  const upperName = (studentName || "Student").trim().toUpperCase();
+  const safeTitle = `Report_Card_${upperName.replace(/\s+/g, "_")}`;
   const cloneHtml = element.outerHTML;
 
   printWin.document.open();
@@ -784,7 +785,7 @@ export default function ReportCardView({
               textAlign: "center",
             }}
           >
-            {studentName || "STUDENT NAME"}
+            {(studentName || "STUDENT NAME").trim().toUpperCase()}
           </div>
         </div>
 

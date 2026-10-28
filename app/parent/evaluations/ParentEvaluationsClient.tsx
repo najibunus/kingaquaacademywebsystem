@@ -96,7 +96,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
                         : "var(--ka-black)",
                   }}
                 >
-                  {child.name}
+                  {child.name.toUpperCase()}
                 </span>
               </button>
             ))}
@@ -106,7 +106,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
             {evals.length === 0 ? (
               <div className={styles.emptyCard} style={{ marginTop: "16px" }}>
                 <p style={{ color: "var(--text-secondary)" }}>
-                  No evaluations have been submitted for {selectedChild?.name} yet.
+                  No evaluations have been submitted for {selectedChild?.name.toUpperCase()} yet.
                 </p>
               </div>
             ) : (
@@ -317,7 +317,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
             >
               <div>
                 <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 800 }}>
-                  Official KingAqua Report Card — {selectedChild.name}
+                  Official KingAqua Report Card — {selectedChild.name.toUpperCase()}
                 </h2>
               </div>
               <div style={{ display: "flex", gap: "10px" }}>
@@ -326,7 +326,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
                   onClick={() =>
                     printReportCardElement(
                       reportCardRef.current,
-                      selectedChild.name
+                      selectedChild.name.toUpperCase()
                     )
                   }
                   style={{
@@ -374,7 +374,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
                 return (
                   <ReportCardView
                     cardRef={reportCardRef}
-                    studentName={selectedChild.name}
+                    studentName={selectedChild.name.toUpperCase()}
                     acquiredLevel={parsed.acquiredLevel}
                     scores={parsed.scores}
                     customCriteriaText={parsed.customCriteriaText}
