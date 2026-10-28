@@ -152,6 +152,9 @@ export interface StructuredEvaluationPayload {
   scores: Record<string, number>; // e.g., { "L3_1": 4, "L3_2": 4, ... }
   notes: string;
   customCriteriaText?: Record<string, string>; // e.g., { "L1_1": "Personalized text for this student" }
+  customWallpaperUrl?: string | null;
+  wallpaperFit?: "cover" | "contain" | "fill";
+  sheetOpacity?: number;
 }
 
 const DELIMITER = "|||";
@@ -166,6 +169,9 @@ export function encodeEvaluationSkillTag(payload: StructuredEvaluationPayload): 
     acquiredLevel: payload.acquiredLevel,
     scores: payload.scores,
     customCriteriaText: payload.customCriteriaText || {},
+    customWallpaperUrl: payload.customWallpaperUrl || null,
+    wallpaperFit: payload.wallpaperFit || "cover",
+    sheetOpacity: payload.sheetOpacity !== undefined ? payload.sheetOpacity : 0.93,
   });
   return `${levelObj.title}${DELIMITER}${jsonPart}`;
 }
@@ -186,6 +192,9 @@ export function parseEvaluationRecord(ev: {
   scores: Record<string, number>;
   customCriteriaText: Record<string, string>;
   notes: string;
+  customWallpaperUrl: string | null;
+  wallpaperFit: "cover" | "contain" | "fill";
+  sheetOpacity: number;
   isStructured: boolean;
 } {
   const rawTag = ev.skill_tag || "";
@@ -207,6 +216,9 @@ export function parseEvaluationRecord(ev: {
         scores,
         customCriteriaText,
         notes: rawComments,
+        customWallpaperUrl: parsed.customWallpaperUrl || null,
+        wallpaperFit: parsed.wallpaperFit || "cover",
+        sheetOpacity: typeof parsed.sheetOpacity === "number" ? parsed.sheetOpacity : 0.93,
         isStructured: true,
       };
     } catch {
@@ -234,6 +246,9 @@ export function parseEvaluationRecord(ev: {
     scores: defaultScores,
     customCriteriaText: {},
     notes: rawComments,
+    customWallpaperUrl: null,
+    wallpaperFit: "cover",
+    sheetOpacity: 0.93,
     isStructured: false,
   };
 }

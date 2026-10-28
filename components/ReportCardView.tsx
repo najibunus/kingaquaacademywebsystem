@@ -70,6 +70,7 @@ export function printReportCardElement(element: HTMLElement | null, studentName:
         border-radius: 0 !important;
         width: 1120px !important;
         height: 792px !important;
+        transform: none !important;
       }
     </style>
   </head>
@@ -377,7 +378,7 @@ function LevelTableBlock({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "98px 1fr 125px",
+        gridTemplateColumns: "98px 1fr",
         borderBottom: "1.5px solid #cbd5e1",
         backgroundColor: isAcquired ? "rgba(254, 249, 195, 0.22)" : "transparent",
       }}
@@ -403,111 +404,7 @@ function LevelTableBlock({
         />
       </div>
 
-      {/* Column 2: Criteria List (+ Level 6 Time Table) */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          borderRight: "1.5px solid #cbd5e1",
-        }}
-      >
-        <div>
-          {levelData.criteria.map((criterion, idx) => {
-            const currentText =
-              customCriteriaText &&
-              customCriteriaText[criterion.id] !== undefined &&
-              customCriteriaText[criterion.id].trim() !== ""
-                ? customCriteriaText[criterion.id]
-                : criterion.text;
-
-            return (
-              <div
-                key={criterion.id}
-                style={{
-                  padding: "3.5px 8px",
-                  fontSize: "10.2px",
-                  lineHeight: "1.28",
-                  color: "#0f172a",
-                  fontWeight: 600,
-                  borderBottom:
-                    idx < levelData.criteria.length - 1 || levelData.hasTimeTable
-                      ? "1px solid #e2e8f0"
-                      : "none",
-                  minHeight: "22px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <span>
-                  {criterion.number}. {currentText}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Level 6 Time Standards Sub-Table */}
-        {levelData.hasTimeTable && (
-          <div style={{ padding: "6px 8px 8px 8px", backgroundColor: "rgba(241, 245, 249, 0.6)" }}>
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "9.5px",
-                fontWeight: 700,
-                color: "#0f172a",
-                marginBottom: "3px",
-              }}
-            >
-              Time:
-            </div>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: "9.2px",
-                color: "#0f172a",
-                textAlign: "center",
-              }}
-            >
-              <thead>
-                <tr style={{ fontWeight: 700 }}>
-                  <th style={{ padding: "1px 3px", textAlign: "left" }}></th>
-                  <th style={{ padding: "1px 3px" }}>
-                    Freestyle
-                    <br />
-                    (FR)
-                  </th>
-                  <th style={{ padding: "1px 3px" }}>
-                    Breaststroke
-                    <br />
-                    (BR)
-                  </th>
-                  <th style={{ padding: "1px 3px" }}>
-                    Backstroke
-                    <br />
-                    (BK)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {LEVEL_6_TIME_STANDARDS.map((row) => (
-                  <tr key={row.category}>
-                    <td style={{ padding: "1px 3px", fontWeight: 700, textAlign: "left" }}>
-                      {row.category}
-                    </td>
-                    <td style={{ padding: "1px 3px" }}>{row.freestyle}</td>
-                    <td style={{ padding: "1px 3px" }}>{row.breaststroke}</td>
-                    <td style={{ padding: "1px 3px" }}>{row.backstroke}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Column 3: Scale 5 4 3 2 1 Grid */}
+      {/* Column 2: Aligned Criteria + Scale Rows */}
       <div
         style={{
           display: "flex",
@@ -515,94 +412,195 @@ function LevelTableBlock({
         }}
       >
         {levelData.criteria.map((criterion, idx) => {
+          const currentText =
+            customCriteriaText &&
+            customCriteriaText[criterion.id] !== undefined &&
+            customCriteriaText[criterion.id].trim() !== ""
+              ? customCriteriaText[criterion.id]
+              : criterion.text;
           const currentScore = scores[criterion.id] || 0;
+          const isLastCriterion = idx === levelData.criteria.length - 1;
+          const showRowBottomBorder = !isLastCriterion || levelData.hasTimeTable;
+
           return (
             <div
               key={criterion.id}
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(5, 1fr)",
-                flex: levelData.hasTimeTable ? "0 0 auto" : 1,
+                gridTemplateColumns: "1fr 125px",
+                borderBottom: showRowBottomBorder ? "1px solid #cbd5e1" : "none",
                 minHeight: "22px",
-                borderBottom:
-                  idx < levelData.criteria.length - 1 || levelData.hasTimeTable
-                    ? "1px solid #cbd5e1"
-                    : "none",
-                backgroundColor: "rgba(226, 232, 240, 0.45)",
               }}
             >
-              {scales.map((scaleVal, sIdx) => {
-                const isMarked = currentScore === scaleVal;
-                return (
-                  <div
-                    key={scaleVal}
-                    onClick={() => {
-                      if (interactive && onScoreChange) {
-                        onScoreChange(
-                          criterion.id,
-                          currentScore === scaleVal ? 0 : scaleVal
-                        );
+              {/* Criterion Text */}
+              <div
+                style={{
+                  padding: "3.5px 8px",
+                  fontSize: "10.2px",
+                  lineHeight: "1.28",
+                  color: "#0f172a",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  borderRight: "1.5px solid #cbd5e1",
+                }}
+              >
+                <span>
+                  {criterion.number}. {currentText}
+                </span>
+              </div>
+
+              {/* Scale 5 4 3 2 1 Cells */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(5, 1fr)",
+                  backgroundColor: "rgba(226, 232, 240, 0.45)",
+                }}
+              >
+                {scales.map((scaleVal, sIdx) => {
+                  const isMarked = currentScore === scaleVal;
+                  return (
+                    <div
+                      key={scaleVal}
+                      onClick={() => {
+                        if (interactive && onScoreChange) {
+                          onScoreChange(
+                            criterion.id,
+                            currentScore === scaleVal ? 0 : scaleVal
+                          );
+                        }
+                      }}
+                      title={
+                        interactive
+                          ? `Set score ${scaleVal} for "${criterion.text}"`
+                          : undefined
                       }
-                    }}
-                    title={
-                      interactive
-                        ? `Set score ${scaleVal} for "${criterion.text}"`
-                        : undefined
-                    }
-                    style={{
-                      borderRight: sIdx < 4 ? "1px solid #cbd5e1" : "none",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: interactive ? "pointer" : "default",
-                      fontWeight: 900,
-                      fontSize: "14px",
-                      color: "#0f172a",
-                      backgroundColor: isMarked
-                        ? "rgba(255, 255, 255, 0.75)"
-                        : "transparent",
-                      userSelect: "none",
-                    }}
-                  >
-                    {isMarked && (
-                      <span
-                        style={{
-                          display: "inline-block",
-                          fontWeight: 900,
-                          fontSize: "15px",
-                          lineHeight: 1,
-                          color: "#111111",
-                          transform: "rotate(-15deg)",
-                        }}
-                      >
-                        \
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
+                      style={{
+                        borderRight: sIdx < 4 ? "1px solid #cbd5e1" : "none",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: interactive ? "pointer" : "default",
+                        fontWeight: 900,
+                        fontSize: "14px",
+                        color: "#0f172a",
+                        backgroundColor: isMarked
+                          ? "rgba(255, 255, 255, 0.75)"
+                          : "transparent",
+                        userSelect: "none",
+                      }}
+                    >
+                      {isMarked && (
+                        <span
+                          style={{
+                            display: "inline-block",
+                            fontWeight: 900,
+                            fontSize: "15px",
+                            lineHeight: 1,
+                            color: "#111111",
+                            transform: "rotate(-15deg)",
+                          }}
+                        >
+                          \
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           );
         })}
 
-        {/* Empty filler grid alongside Level 6 Time Table */}
+        {/* Level 6 Time Standards Sub-Table */}
         {levelData.hasTimeTable && (
           <div
             style={{
-              flex: 1,
               display: "grid",
-              gridTemplateColumns: "repeat(5, 1fr)",
-              backgroundColor: "rgba(226, 232, 240, 0.45)",
+              gridTemplateColumns: "1fr 125px",
+              flex: 1,
             }}
           >
-            {scales.map((s, sIdx) => (
+            <div
+              style={{
+                padding: "6px 8px 8px 8px",
+                backgroundColor: "rgba(241, 245, 249, 0.6)",
+                borderRight: "1.5px solid #cbd5e1",
+              }}
+            >
               <div
-                key={s}
                 style={{
-                  borderRight: sIdx < 4 ? "1px solid #cbd5e1" : "none",
+                  textAlign: "center",
+                  fontSize: "9.5px",
+                  fontWeight: 700,
+                  color: "#0f172a",
+                  marginBottom: "3px",
                 }}
-              />
-            ))}
+              >
+                Time:
+              </div>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontSize: "9.2px",
+                  color: "#0f172a",
+                  textAlign: "center",
+                }}
+              >
+                <thead>
+                  <tr style={{ fontWeight: 700 }}>
+                    <th style={{ padding: "1px 3px", textAlign: "left" }}></th>
+                    <th style={{ padding: "1px 3px" }}>
+                      Freestyle
+                      <br />
+                      (FR)
+                    </th>
+                    <th style={{ padding: "1px 3px" }}>
+                      Breaststroke
+                      <br />
+                      (BR)
+                    </th>
+                    <th style={{ padding: "1px 3px" }}>
+                      Backstroke
+                      <br />
+                      (BK)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {LEVEL_6_TIME_STANDARDS.map((row) => (
+                    <tr key={row.category}>
+                      <td style={{ padding: "1px 3px", fontWeight: 700, textAlign: "left" }}>
+                        {row.category}
+                      </td>
+                      <td style={{ padding: "1px 3px" }}>{row.freestyle}</td>
+                      <td style={{ padding: "1px 3px" }}>{row.breaststroke}</td>
+                      <td style={{ padding: "1px 3px" }}>{row.backstroke}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Empty filler grid alongside Level 6 Time Table */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, 1fr)",
+                backgroundColor: "rgba(226, 232, 240, 0.45)",
+              }}
+            >
+              {scales.map((s, sIdx) => (
+                <div
+                  key={s}
+                  style={{
+                    borderRight: sIdx < 4 ? "1px solid #cbd5e1" : "none",
+                  }}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>

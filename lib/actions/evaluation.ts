@@ -15,9 +15,23 @@ export async function submitStructuredEvaluationAction(payload: {
   scores: Record<string, number>;
   notes: string;
   customCriteriaText?: Record<string, string>;
+  customWallpaperUrl?: string | null;
+  wallpaperFit?: "cover" | "contain" | "fill";
+  sheetOpacity?: number;
 }) {
   try {
-    const { studentId, classId, acquiredLevel, scores, notes, customCriteriaText, id } = payload;
+    const {
+      studentId,
+      classId,
+      acquiredLevel,
+      scores,
+      notes,
+      customCriteriaText,
+      customWallpaperUrl,
+      wallpaperFit,
+      sheetOpacity,
+      id,
+    } = payload;
 
     if (!studentId) {
       return { error: "Please select a student to evaluate." };
@@ -49,6 +63,9 @@ export async function submitStructuredEvaluationAction(payload: {
       scores,
       customCriteriaText: customCriteriaText || {},
       notes: cleanNotes,
+      customWallpaperUrl: customWallpaperUrl || null,
+      wallpaperFit: wallpaperFit || "cover",
+      sheetOpacity: sheetOpacity !== undefined ? sheetOpacity : 0.93,
     });
 
     // Resolve the logged-in evaluator's users.id (works for coach, staff, admin, superadmin)

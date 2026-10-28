@@ -74,6 +74,25 @@ export default function EvaluationsClient({
   const [wallpaperFit, setWallpaperFit] = useState<"cover" | "contain" | "fill">("cover");
   const [sheetOpacity, setSheetOpacity] = useState<number>(0.93);
   const [customBadges, setCustomBadges] = useState<Record<number, string>>({});
+  const [studioZoom, setStudioZoom] = useState<number>(0.85);
+  const [isStudioFit, setIsStudioFit] = useState<boolean>(true);
+
+  const calculateStudioFitScale = () => {
+    if (typeof window === "undefined") return 0.8;
+    const availW = Math.max(window.innerWidth - 64, 280);
+    const availH = Math.max(window.innerHeight - 250, 240);
+    const scaleW = availW / 1120;
+    const scaleH = availH / 792;
+    return Math.min(scaleW, scaleH, 1.0);
+  };
+
+  useEffect(() => {
+    if (showReportCardModal) {
+      const fit = calculateStudioFitScale();
+      setStudioZoom(fit);
+      setIsStudioFit(true);
+    }
+  }, [showReportCardModal]);
 
   const [feedback, setFeedback] = useState<{ error?: string; success?: string } | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -190,6 +209,15 @@ export default function EvaluationsClient({
     setScores(parsed.scores);
     setCustomCriteriaText(parsed.customCriteriaText || {});
     setNotes(parsed.notes);
+    if (parsed.customWallpaperUrl) {
+      setCustomWallpaperUrl(parsed.customWallpaperUrl);
+    }
+    if (parsed.wallpaperFit) {
+      setWallpaperFit(parsed.wallpaperFit);
+    }
+    if (typeof parsed.sheetOpacity === "number") {
+      setSheetOpacity(parsed.sheetOpacity);
+    }
     setFeedback(null);
   }
 
@@ -250,6 +278,9 @@ export default function EvaluationsClient({
         scores,
         customCriteriaText,
         notes,
+        customWallpaperUrl,
+        wallpaperFit,
+        sheetOpacity,
       });
 
       if (res.error) {
@@ -1159,7 +1190,121 @@ export default function EvaluationsClient({
                 </p>
               </div>
 
-              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
+                {/* Zoom Controls */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: "#f1f5f9",
+                    padding: "3px 6px",
+                    borderRadius: "8px",
+                    border: "1px solid #cbd5e1",
+                    gap: "4px",
+                  }}
+                >
+                  <button
+                    type="button"
+                    title="Zoom Out (-)"
+                    onClick={() => {
+                      setIsStudioFit(false);
+                      setStudioZoom((z) => Math.max(0.3, Math.round((z - 0.1) * 10) / 10));
+                    }}
+                    style={{
+                      width: "28px",
+                      height: "28px",
+                      borderRadius: "6px",
+                      border: "none",
+                      background: "transparent",
+                      color: "#334155",
+                      fontSize: "1rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    -
+                  </button>
+                  <span
+                    style={{
+                      fontSize: "0.78rem",
+                      fontWeight: 800,
+                      color: "#0f172a",
+                      minWidth: "40px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {Math.round(studioZoom * 100)}%
+                  </span>
+                  <button
+                    type="button"
+                    title="Zoom In (+)"
+                    onClick={() => {
+                      setIsStudioFit(false);
+                      setStudioZoom((z) => Math.min(1.5, Math.round((z + 0.1) * 10) / 10));
+                    }}
+                    style={{
+                      width: "28px",
+                      height: "28px",
+                      borderRadius: "6px",
+                      border: "none",
+                      background: "transparent",
+                      color: "#334155",
+                      fontSize: "1rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    +
+                  </button>
+                  <div style={{ width: "1px", height: "18px", backgroundColor: "#cbd5e1", margin: "0 2px" }} />
+                  <button
+                    type="button"
+                    title="Fit to Screen"
+                    onClick={() => {
+                      setIsStudioFit(true);
+                      setStudioZoom(calculateStudioFitScale());
+                    }}
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      border: isStudioFit ? "1px solid #0284c7" : "1px solid transparent",
+                      background: isStudioFit ? "#e0f2fe" : "transparent",
+                      color: isStudioFit ? "#0284c7" : "#475569",
+                      fontSize: "0.74rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Fit
+                  </button>
+                  <button
+                    type="button"
+                    title="100% Size"
+                    onClick={() => {
+                      setIsStudioFit(false);
+                      setStudioZoom(1.0);
+                    }}
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      border: studioZoom === 1.0 && !isStudioFit ? "1px solid #0284c7" : "1px solid transparent",
+                      background: studioZoom === 1.0 && !isStudioFit ? "#e0f2fe" : "transparent",
+                      color: studioZoom === 1.0 && !isStudioFit ? "#0284c7" : "#475569",
+                      fontSize: "0.74rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    100%
+                  </button>
+                </div>
+
                 <button
                   type="button"
                   onClick={() =>
@@ -1381,31 +1526,51 @@ export default function EvaluationsClient({
           {/* Live Landscape Report Card Preview Container */}
           <div
             style={{
-              maxWidth: "1160px",
               width: "100%",
-              margin: "0 auto",
               overflowX: "auto",
               display: "flex",
               justifyContent: "center",
               paddingBottom: "30px",
             }}
           >
-            <ReportCardView
-              cardRef={reportCardRef}
-              studentName={selectedStudent.name}
-              acquiredLevel={acquiredLevel}
-              scores={scores}
-              customCriteriaText={customCriteriaText}
-              notes={notes}
-              customWallpaperUrl={customWallpaperUrl}
-              wallpaperFit={wallpaperFit}
-              sheetOpacity={sheetOpacity}
-              customBadges={customBadges}
-              interactive={true}
-              onSelectLevel={handleSelectBadgeLevel}
-              onScoreChange={handleScoreChange}
-              onNotesChange={setNotes}
-            />
+            <div
+              style={{
+                width: `${Math.round(1120 * studioZoom)}px`,
+                height: `${Math.round(792 * studioZoom)}px`,
+                flexShrink: 0,
+                margin: "0 auto",
+                position: "relative",
+                boxShadow: "0 20px 50px rgba(0,0,0,0.35)",
+                borderRadius: "6px",
+              }}
+            >
+              <div
+                style={{
+                  width: "1120px",
+                  height: "792px",
+                  transform: `scale(${studioZoom})`,
+                  transformOrigin: "top left",
+                  transition: isStudioFit ? "transform 0.15s ease" : "none",
+                }}
+              >
+                <ReportCardView
+                  cardRef={reportCardRef}
+                  studentName={selectedStudent.name}
+                  acquiredLevel={acquiredLevel}
+                  scores={scores}
+                  customCriteriaText={customCriteriaText}
+                  notes={notes}
+                  customWallpaperUrl={customWallpaperUrl}
+                  wallpaperFit={wallpaperFit}
+                  sheetOpacity={sheetOpacity}
+                  customBadges={customBadges}
+                  interactive={true}
+                  onSelectLevel={handleSelectBadgeLevel}
+                  onScoreChange={handleScoreChange}
+                  onNotesChange={setNotes}
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
