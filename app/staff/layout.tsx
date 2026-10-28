@@ -95,6 +95,12 @@ export default async function StaffLayout({
             </svg>
             Competition
           </NavLink>
+          <NavLink href="/staff/evaluations" exact className={styles.navLink} activeClassName={styles.navLinkActive}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+            Evaluations
+          </NavLink>
           
           <p className={styles.navSectionLabel} style={{marginTop: "1.5rem"}}>
             Classes
@@ -186,6 +192,9 @@ export default async function StaffLayout({
           </NavLink>
           <NavLink href="/staff/games" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
             Competition
+          </NavLink>
+          <NavLink href="/staff/evaluations" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
+            Evaluations
           </NavLink>
           <NavLink href="/staff/pricing" exact className={styles.mobileNavLink} activeClassName={styles.mobileNavLinkActive}>
             Pricing

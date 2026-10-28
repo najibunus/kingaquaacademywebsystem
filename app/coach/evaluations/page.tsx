@@ -3,7 +3,9 @@ import EvaluationsClient from "./EvaluationsClient";
 
 export default async function CoachEvaluationsPage() {
   const authClient = await createClient();
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
 
   const supabase = await createAdminClient();
 
@@ -12,7 +14,7 @@ export default async function CoachEvaluationsPage() {
     .from("users")
     .select("id")
     .eq("auth_id", user?.id ?? "")
-    .single();
+    .maybeSingle();
 
   const coachUsersId = coachRow?.id ?? "";
 
@@ -20,10 +22,11 @@ export default async function CoachEvaluationsPage() {
   const { data: myClasses } = await supabase
     .from("classes")
     .select("id, name")
-    .eq("coach_id", user?.id ?? "") // coach_id on classes stores auth_id
-    .eq("is_active", true);
+    .eq("coach_id", user?.id ?? "")
+    .eq("is_active", true)
+    .order("name");
 
-  // Fallback: if no classes assigned, use all active classes (admin testing)
+  // Fallback: if no classes assigned, use all active classes
   const classesToUse =
     myClasses && myClasses.length > 0
       ? myClasses
@@ -32,20 +35,28 @@ export default async function CoachEvaluationsPage() {
             .from("classes")
             .select("id, name")
             .eq("is_active", true)
+            .order("name")
         ).data ?? [];
 
   const classIds = classesToUse.map((c) => c.id);
-  const classNameMap = Object.fromEntries(classesToUse.map((c) => [c.id, c.name]));
+  const classNameMap = Object.fromEntries(
+    classesToUse.map((c) => [c.id, c.name])
+  );
 
-  // Fetch active students in those classes
-  const { data: rawStudents } = classIds.length > 0
-    ? await supabase
-        .from("students")
-        .select("id, name, class_id")
-        .in("class_id", classIds)
-        .eq("status", "active")
-        .order("name")
-    : { data: [] };
+  // Fetch active students in those classes (or all active students if none)
+  const { data: rawStudents } =
+    classIds.length > 0
+      ? await supabase
+          .from("students")
+          .select("id, name, class_id")
+          .in("class_id", classIds)
+          .eq("status", "active")
+          .order("name")
+      : await supabase
+          .from("students")
+          .select("id, name, class_id")
+          .eq("status", "active")
+          .order("name");
 
   const students = (rawStudents ?? []).map((s) => ({
     id: s.id,
@@ -54,24 +65,35 @@ export default async function CoachEvaluationsPage() {
     class_name: s.class_id ? (classNameMap[s.class_id] ?? null) : null,
   }));
 
-  // Fetch this coach's last 20 evaluations with student names
-  const { data: rawEvals } = coachUsersId
-    ? await supabase
-        .from("student_evaluations")
-        .select("id, star_rating, comments, skill_tag, created_at, students(name)")
-        .eq("coach_id", coachUsersId)
-        .order("created_at", { ascending: false })
-        .limit(20)
-    : { data: [] };
+  // Fetch recent evaluations
+  const evalQuery = supabase
+    .from("student_evaluations")
+    .select(
+      "id, student_id, class_id, star_rating, comments, skill_tag, created_at, students(name)"
+    )
+    .order("created_at", { ascending: false })
+    .limit(40);
 
-  const pastEvals = (rawEvals ?? []).map((ev) => ({
+  const { data: rawEvals } = coachUsersId
+    ? await evalQuery.eq("coach_id", coachUsersId)
+    : await evalQuery;
+
+  const pastEvals = (rawEvals ?? []).map((ev: any) => ({
     id: ev.id,
-    student_name: (ev.students as any)?.name ?? "Unknown",
+    student_id: ev.student_id,
+    class_id: ev.class_id,
+    student_name: ev.students?.name ?? "Unknown",
     star_rating: ev.star_rating,
     comments: ev.comments,
     skill_tag: ev.skill_tag,
     created_at: ev.created_at,
   }));
 
-  return <EvaluationsClient students={students} pastEvals={pastEvals} />;
+  return (
+    <EvaluationsClient
+      students={students}
+      classes={classesToUse}
+      pastEvals={pastEvals}
+    />
+  );
 }

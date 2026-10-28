@@ -760,7 +760,7 @@ export default function ParentPortalClient({ unpaidInvoices, children }: Props) 
                           </div>
                           {latestEval.skill_tag && (
                             <span className="badge" style={{ backgroundColor: "var(--bg-tint)", color: "var(--ka-blue)", display: "inline-block", marginBottom: "8px", fontWeight: 600, fontSize: "0.8rem", padding: "3px 8px", borderRadius: "6px" }}>
-                              {latestEval.skill_tag}
+                              {latestEval.skill_tag.split("|||")[0]}
                             </span>
                           )}
                           <p style={{ margin: 0, fontSize: "0.95rem", color: "var(--ka-black)", fontStyle: "italic" }}>
