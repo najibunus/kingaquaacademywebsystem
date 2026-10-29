@@ -20,8 +20,8 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 
 const DEMO_USERS = [
   {
-    email: "superadmin@kingaqua.test",
-    password: "Password123!",
+    email: "superadmin@kingaqua.com",
+    password: "kingaquaacademy0195177001",
     role: "superadmin",
     display_name: "Superadmin Demo",
   },
