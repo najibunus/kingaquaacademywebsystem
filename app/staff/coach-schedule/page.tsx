@@ -1,15 +1,36 @@
 import { createAdminClient } from "@/lib/supabase/server";
 import StaffCoachScheduleClient from "./StaffCoachScheduleClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function StaffCoachSchedulePage() {
   const supabase = await createAdminClient();
 
   // 1. Fetch all coaches
   const { data: coaches, error: coachesError } = await supabase
     .from("users")
-    .select("id, display_name, phone, is_active, avatar_url")
+    .select("id, auth_id, display_name, phone, is_active, avatar_url")
     .eq("role", "coach")
     .order("display_name", { ascending: true });
+
+  // Fetch per-coach rate_per_class stored in auth.users user_metadata
+  const { data: authUsersData } = await supabase.auth.admin.listUsers({
+    perPage: 1000,
+  });
+  const authRateMap = new Map<string, number>();
+  if (authUsersData?.users) {
+    for (const au of authUsersData.users) {
+      const rate = Number(au.user_metadata?.rate_per_class);
+      if (!isNaN(rate) && rate >= 0) {
+        authRateMap.set(au.id, rate);
+      }
+    }
+  }
+
+  const enrichedCoaches = ((coaches as any[]) || []).map((c) => ({
+    ...c,
+    rate_per_class: c.auth_id && authRateMap.has(c.auth_id) ? authRateMap.get(c.auth_id)! : 0,
+  }));
 
   // 2. Fetch all active classes
   const { data: classes, error: classesError } = await supabase
@@ -54,7 +75,7 @@ export default async function StaffCoachSchedulePage() {
         </div>
       )}
       <StaffCoachScheduleClient
-        coaches={(coaches as any[]) || []}
+        coaches={enrichedCoaches}
         classes={(classes as any[]) || []}
         initialRecords={(scheduleRecords as any[]) || []}
       />

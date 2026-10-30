@@ -61,6 +61,7 @@ export async function proxy(request: NextRequest) {
   // Public API routes must always pass through without redirecting logged-in or anonymous users
   const isPublicApi =
     pathname.startsWith("/api/receipts") ||
+    pathname.startsWith("/api/coach-payment-pdf") ||
     pathname.startsWith("/api/cron") ||
     pathname.startsWith("/api/test-env");
 

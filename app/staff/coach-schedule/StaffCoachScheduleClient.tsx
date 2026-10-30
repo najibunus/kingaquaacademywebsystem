@@ -6,6 +6,8 @@ import {
   addCoachScheduleEntriesAction,
   updateCoachScheduleEntryAction,
   deleteCoachScheduleEntryAction,
+  updateCoachAttendanceStatusAction,
+  updateCoachRatePerClassAction,
 } from "@/lib/actions/coachSchedule";
 import {
   parseScheduleNotes,
@@ -18,6 +20,7 @@ interface CoachOption {
   phone: string | null;
   is_active: boolean;
   avatar_url?: string | null;
+  rate_per_class?: number;
 }
 
 interface ClassOption {
@@ -105,6 +108,24 @@ export default function StaffCoachScheduleClient({
   const [editStartTime, setEditStartTime] = useState<string>("");
   const [editEndTime, setEditEndTime] = useState<string>("");
   const [editRemarks, setEditRemarks] = useState<string>("");
+  const [editStatus, setEditStatus] = useState<"present" | "absent" | "medical" | "leave">("present");
+
+  // Per-coach price per class (RM) state (every coach has a different payment amount)
+  const [coachRates, setCoachRates] = useState<Record<string, string>>(() => {
+    const init: Record<string, string> = {};
+    coaches.forEach((c) => {
+      init[c.id] = c.rate_per_class !== undefined ? String(c.rate_per_class) : "0";
+    });
+    return init;
+  });
+  const [savedCoachRates, setSavedCoachRates] = useState<Record<string, number>>(() => {
+    const init: Record<string, number> = {};
+    coaches.forEach((c) => {
+      init[c.id] = c.rate_per_class ?? 0;
+    });
+    return init;
+  });
+  const [savingRateCoachId, setSavingRateCoachId] = useState<string | null>(null);
 
   // Group classes by location for dropdown
   const groupedClasses = useMemo(() => {
@@ -161,6 +182,102 @@ export default function StaffCoachScheduleClient({
         return (nA.startTime || "").localeCompare(nB.startTime || "");
       });
   }, [initialRecords, year, month, filterCoachId, filterClassId]);
+
+  // Monthly Attendance & Payment Summary per Coach for (year, month)
+  const coachMonthlySummaries = useMemo(() => {
+    const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
+    const monthRecords = initialRecords.filter(
+      (r) => r.date && r.date.startsWith(prefix)
+    );
+
+    return coaches.map((coach) => {
+      const cRecords = monthRecords.filter((r) => r.coach_id === coach.id);
+      const scheduledCount = cRecords.length;
+      const attendedCount = cRecords.filter((r) => r.status === "present").length;
+      const absentCount = scheduledCount - attendedCount;
+      const rawRateStr = coachRates[coach.id] ?? String(coach.rate_per_class ?? 0);
+      const parsedRate = parseFloat(rawRateStr);
+      const ratePerClass = !isNaN(parsedRate) && parsedRate >= 0 ? parsedRate : 0;
+      const totalPayment = attendedCount * ratePerClass;
+
+      return {
+        coach,
+        scheduledCount,
+        attendedCount,
+        absentCount,
+        ratePerClass,
+        rawRateStr,
+        totalPayment,
+      };
+    });
+  }, [coaches, initialRecords, year, month, coachRates]);
+
+  const grandTotals = useMemo(() => {
+    return coachMonthlySummaries.reduce(
+      (acc, item) => {
+        acc.scheduled += item.scheduledCount;
+        acc.attended += item.attendedCount;
+        acc.absent += item.absentCount;
+        acc.payment += item.totalPayment;
+        return acc;
+      },
+      { scheduled: 0, attended: 0, absent: 0, payment: 0 }
+    );
+  }, [coachMonthlySummaries]);
+
+  const handleSaveCoachRate = (coachId: string) => {
+    const rawVal = coachRates[coachId] ?? "0";
+    const parsed = parseFloat(rawVal);
+    if (isNaN(parsed) || parsed < 0) {
+      setFeedback({ type: "error", text: "Please enter a valid price per class (RM 0 or above)." });
+      return;
+    }
+    setSavingRateCoachId(coachId);
+    startTransition(async () => {
+      const res = await updateCoachRatePerClassAction(coachId, parsed);
+      setSavingRateCoachId(null);
+      if (res.error) {
+        setFeedback({ type: "error", text: res.error });
+      } else {
+        setSavedCoachRates((prev) => ({ ...prev, [coachId]: parsed }));
+        setCoachRates((prev) => ({ ...prev, [coachId]: String(parsed) }));
+        const cName = coaches.find((c) => c.id === coachId)?.display_name || "Coach";
+        setFeedback({
+          type: "success",
+          text: `Saved price per class (RM ${parsed.toFixed(2)}) for ${cName}.`,
+        });
+        router.refresh();
+      }
+    });
+  };
+
+  const handleToggleAttendanceStatus = (rec: ScheduleRecord) => {
+    const nextStatus = rec.status === "present" ? "absent" : "present";
+    startTransition(async () => {
+      const res = await updateCoachAttendanceStatusAction(rec.id, nextStatus);
+      if (res.error) {
+        alert(res.error);
+      } else {
+        router.refresh();
+      }
+    });
+  };
+
+  const buildCoachPdfUrl = (coachId: string, download = false) => {
+    const rawRate = coachRates[coachId] ?? "0";
+    const parsedRate = parseFloat(rawRate);
+    const validRate = !isNaN(parsedRate) && parsedRate >= 0 ? parsedRate : 0;
+    const params = new URLSearchParams({
+      coachId,
+      year: String(year),
+      month: String(month + 1),
+      rate: String(validRate),
+    });
+    if (download) {
+      params.set("download", "1");
+    }
+    return `/api/coach-payment-pdf?${params.toString()}`;
+  };
 
   const handlePrevMonth = () => {
     setSelectedDates(new Set());
@@ -266,6 +383,7 @@ export default function StaffCoachScheduleClient({
     setEditStartTime(parsed.startTime || "09:00");
     setEditEndTime(parsed.endTime || "10:00");
     setEditRemarks(parsed.remarks || "");
+    setEditStatus((rec.status as any) || "present");
   };
 
   const handleSaveEdit = (e: React.FormEvent) => {
@@ -280,6 +398,7 @@ export default function StaffCoachScheduleClient({
         startTime: editStartTime,
         endTime: editEndTime,
         remarks: editRemarks.trim(),
+        status: editStatus,
       });
       if (res.error) {
         alert(res.error);
@@ -676,7 +795,342 @@ export default function StaffCoachScheduleClient({
         </div>
       </form>
 
-      {/* ── SECTION 2: Monthly Coach Schedule Table ── */}
+      {/* ── SECTION 2: Coach Monthly Attendance & Payment Summary ── */}
+      <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            padding: "18px 20px",
+            borderBottom: "1px solid var(--border-gray)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "12px",
+            backgroundColor: "var(--ka-white)",
+          }}
+        >
+          <div>
+            <h2 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 700, color: "var(--ka-black)" }}>
+              Coach Monthly Attendance &amp; Payment Summary — {MONTHS[month]} {year}
+            </h2>
+            <p style={{ margin: "2px 0 0 0", fontSize: "0.82rem", color: "var(--text-secondary)" }}>
+              Sum attended classes per coach, set each coach&apos;s price per class, and generate an official PDF payment statement.
+            </p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            <span
+              style={{
+                padding: "6px 12px",
+                borderRadius: "var(--radius-full)",
+                backgroundColor: "#ecfdf5",
+                border: "1px solid #a7f3d0",
+                color: "#065f46",
+                fontSize: "0.8rem",
+                fontWeight: 700,
+              }}
+            >
+              Total Monthly Payout: RM {grandTotals.payment.toFixed(2)} ({grandTotals.attended} Attended Class{grandTotals.attended === 1 ? "" : "es"})
+            </span>
+          </div>
+        </div>
+
+        {coaches.length === 0 ? (
+          <div style={{ padding: "36px 24px", textAlign: "center", color: "var(--text-secondary)" }}>
+            No coaches found.
+          </div>
+        ) : (
+          <div style={{ overflowX: "auto", width: "100%" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "780px", fontSize: "0.88rem" }}>
+              <thead>
+                <tr style={{ backgroundColor: "var(--bg-light)", borderBottom: "1px solid var(--border-gray)" }}>
+                  <th style={{ padding: "12px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+                    Coach
+                  </th>
+                  <th style={{ padding: "12px 16px", textAlign: "center", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+                    Scheduled ({MONTHS[month].slice(0, 3)})
+                  </th>
+                  <th style={{ padding: "12px 16px", textAlign: "center", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+                    Classes Attended
+                  </th>
+                  <th style={{ padding: "12px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+                    Price Per Class (RM)
+                  </th>
+                  <th style={{ padding: "12px 16px", textAlign: "right", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+                    Total Payment (RM)
+                  </th>
+                  <th style={{ padding: "12px 16px", textAlign: "right", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+                    Payment Statement PDF
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {coachMonthlySummaries.map((item, idx) => {
+                  const {
+                    coach,
+                    scheduledCount,
+                    attendedCount,
+                    absentCount,
+                    ratePerClass,
+                    rawRateStr,
+                    totalPayment,
+                  } = item;
+                  const coachName = coach.display_name || "Unnamed Coach";
+                  const savedRate = savedCoachRates[coach.id] ?? 0;
+                  const isRateDirty = Math.abs(ratePerClass - savedRate) > 0.001;
+                  const isSavingThisCoach = savingRateCoachId === coach.id;
+
+                  return (
+                    <tr
+                      key={coach.id}
+                      style={{
+                        borderBottom:
+                          idx < coachMonthlySummaries.length - 1
+                            ? "1px solid var(--bg-light)"
+                            : "none",
+                      }}
+                    >
+                      {/* Coach Info */}
+                      <td style={{ padding: "12px 16px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <div
+                            style={{
+                              width: "34px",
+                              height: "34px",
+                              borderRadius: "50%",
+                              backgroundColor: "var(--bg-tint)",
+                              color: "var(--ka-blue)",
+                              fontWeight: 700,
+                              fontSize: "0.8rem",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexShrink: 0,
+                              overflow: "hidden",
+                            }}
+                          >
+                            {coach.avatar_url ? (
+                              <img
+                                src={coach.avatar_url}
+                                alt={coachName}
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                              />
+                            ) : (
+                              coachName.slice(0, 2).toUpperCase()
+                            )}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 700, color: "var(--ka-black)" }}>
+                              {coachName}
+                            </div>
+                            {coach.phone && (
+                              <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
+                                {coach.phone}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Scheduled Count */}
+                      <td style={{ padding: "12px 16px", textAlign: "center", fontWeight: 600, color: "var(--text-secondary)" }}>
+                        {scheduledCount}
+                      </td>
+
+                      {/* Attended Count */}
+                      <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                        <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: "2px" }}>
+                          <span
+                            style={{
+                              display: "inline-block",
+                              padding: "4px 12px",
+                              borderRadius: "999px",
+                              backgroundColor: attendedCount > 0 ? "#dcfce7" : "#f1f5f9",
+                              color: attendedCount > 0 ? "#166534" : "#64748b",
+                              fontWeight: 800,
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            {attendedCount} Class{attendedCount === 1 ? "" : "es"}
+                          </span>
+                          {absentCount > 0 && (
+                            <span style={{ fontSize: "0.72rem", color: "#dc2626", fontWeight: 600 }}>
+                              {absentCount} Absent
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Price Per Class (RM) Input */}
+                      <td style={{ padding: "12px 16px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                          <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                            <span
+                              style={{
+                                position: "absolute",
+                                left: "10px",
+                                fontSize: "0.8rem",
+                                fontWeight: 700,
+                                color: "var(--text-secondary)",
+                                pointerEvents: "none",
+                              }}
+                            >
+                              RM
+                            </span>
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={rawRateStr}
+                              onChange={(e) =>
+                                setCoachRates((prev) => ({
+                                  ...prev,
+                                  [coach.id]: e.target.value,
+                                }))
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  handleSaveCoachRate(coach.id);
+                                }
+                              }}
+                              style={{
+                                width: "110px",
+                                padding: "6px 8px 6px 34px",
+                                borderRadius: "var(--radius-sm)",
+                                border: isRateDirty
+                                  ? "1.5px solid var(--ka-blue)"
+                                  : "1px solid var(--border-gray)",
+                                fontSize: "0.85rem",
+                                fontWeight: 700,
+                                color: "var(--ka-black)",
+                                outline: "none",
+                              }}
+                              aria-label={`Price per class for ${coachName}`}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleSaveCoachRate(coach.id)}
+                            disabled={isPending && isSavingThisCoach}
+                            style={{
+                              padding: "6px 10px",
+                              borderRadius: "var(--radius-sm)",
+                              border: isRateDirty ? "none" : "1px solid var(--border-gray)",
+                              backgroundColor: isRateDirty ? "var(--ka-blue)" : "var(--bg-light)",
+                              color: isRateDirty ? "#ffffff" : "var(--text-secondary)",
+                              fontSize: "0.75rem",
+                              fontWeight: 700,
+                              cursor: "pointer",
+                              whiteSpace: "nowrap",
+                            }}
+                            title="Save this coach's default price per class"
+                          >
+                            {isSavingThisCoach
+                              ? "Saving..."
+                              : isRateDirty
+                              ? "Save Rate"
+                              : "✓ Saved"}
+                          </button>
+                        </div>
+                      </td>
+
+                      {/* Total Monthly Payment */}
+                      <td style={{ padding: "12px 16px", textAlign: "right", whiteSpace: "nowrap" }}>
+                        <div style={{ fontWeight: 800, fontSize: "1rem", color: "#059669" }}>
+                          RM {totalPayment.toFixed(2)}
+                        </div>
+                        <div style={{ fontSize: "0.72rem", color: "var(--text-secondary)" }}>
+                          {attendedCount} × RM {ratePerClass.toFixed(2)}
+                        </div>
+                      </td>
+
+                      {/* Generate / Download PDF Buttons */}
+                      <td style={{ padding: "12px 16px", textAlign: "right", whiteSpace: "nowrap" }}>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                          <a
+                            href={buildCoachPdfUrl(coach.id, false)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => {
+                              if (isRateDirty) {
+                                handleSaveCoachRate(coach.id);
+                              }
+                            }}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "5px",
+                              padding: "6px 12px",
+                              borderRadius: "var(--radius-sm)",
+                              backgroundColor: "var(--ka-blue)",
+                              color: "#ffffff",
+                              fontSize: "0.78rem",
+                              fontWeight: 700,
+                              textDecoration: "none",
+                            }}
+                          >
+                            📄 Generate PDF
+                          </a>
+                          <a
+                            href={buildCoachPdfUrl(coach.id, true)}
+                            onClick={() => {
+                              if (isRateDirty) {
+                                handleSaveCoachRate(coach.id);
+                              }
+                            }}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              padding: "6px 10px",
+                              borderRadius: "var(--radius-sm)",
+                              border: "1px solid var(--border-gray)",
+                              backgroundColor: "var(--bg-light)",
+                              color: "var(--ka-black)",
+                              fontSize: "0.78rem",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                            }}
+                            title={`Download ${coachName}'s ${MONTHS[month]} ${year} payment PDF`}
+                          >
+                            ⬇ Download
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr
+                  style={{
+                    backgroundColor: "#f8fafc",
+                    borderTop: "2px solid var(--border-gray)",
+                  }}
+                >
+                  <td style={{ padding: "12px 16px", fontWeight: 800, color: "var(--ka-black)" }}>
+                    Monthly Total ({MONTHS[month]} {year})
+                  </td>
+                  <td style={{ padding: "12px 16px", textAlign: "center", fontWeight: 700, color: "var(--text-secondary)" }}>
+                    {grandTotals.scheduled}
+                  </td>
+                  <td style={{ padding: "12px 16px", textAlign: "center", fontWeight: 800, color: "#166534" }}>
+                    {grandTotals.attended} Attended
+                  </td>
+                  <td style={{ padding: "12px 16px", fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+                    Individual coach rates
+                  </td>
+                  <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 800, fontSize: "1.05rem", color: "#059669" }}>
+                    RM {grandTotals.payment.toFixed(2)}
+                  </td>
+                  <td style={{ padding: "12px 16px" }} />
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* ── SECTION 3: Monthly Coach Schedule Table ── */}
       <div className="card" style={{ padding: 0, overflow: "hidden" }}>
         {/* Table Header & Filters */}
         <div
@@ -696,7 +1150,7 @@ export default function StaffCoachScheduleClient({
               Scheduled Coach Classes — {MONTHS[month]} {year}
             </h2>
             <p style={{ margin: "2px 0 0 0", fontSize: "0.82rem", color: "var(--text-secondary)" }}>
-              Showing {monthlyScheduleRecords.length} scheduled session{monthlyScheduleRecords.length === 1 ? "" : "s"}
+              Showing {monthlyScheduleRecords.length} scheduled session{monthlyScheduleRecords.length === 1 ? "" : "s"} • Click the Attendance badge on any class to toggle Attended / Absent
             </p>
           </div>
 
@@ -737,7 +1191,7 @@ export default function StaffCoachScheduleClient({
           </div>
         ) : (
           <div style={{ overflowX: "auto", width: "100%" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "720px", fontSize: "0.88rem" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "780px", fontSize: "0.88rem" }}>
               <thead>
                 <tr style={{ backgroundColor: "var(--bg-light)", borderBottom: "1px solid var(--border-gray)" }}>
                   <th style={{ padding: "12px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase", width: "44px" }}>
@@ -754,6 +1208,9 @@ export default function StaffCoachScheduleClient({
                   </th>
                   <th style={{ padding: "12px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
                     Class to Teach
+                  </th>
+                  <th style={{ padding: "12px 16px", textAlign: "center", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+                    Attendance
                   </th>
                   <th style={{ padding: "12px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase" }}>
                     Remarks
@@ -791,6 +1248,7 @@ export default function StaffCoachScheduleClient({
                   const className = clsObj?.name || "Class";
                   const classType = clsObj?.type || "STANDARD";
                   const locName = clsObj?.locations?.name;
+                  const isPresent = rec.status === "present";
 
                   return (
                     <tr
@@ -855,6 +1313,26 @@ export default function StaffCoachScheduleClient({
                             {locName}
                           </div>
                         )}
+                      </td>
+                      <td style={{ padding: "12px 16px", textAlign: "center", whiteSpace: "nowrap" }}>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleAttendanceStatus(rec)}
+                          disabled={isPending}
+                          title="Click to toggle Attended / Absent"
+                          style={{
+                            padding: "4px 10px",
+                            borderRadius: "999px",
+                            border: isPresent ? "1px solid #86efac" : "1px solid #fca5a5",
+                            backgroundColor: isPresent ? "#dcfce7" : "#fef2f2",
+                            color: isPresent ? "#166534" : "#dc2626",
+                            fontSize: "0.75rem",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                          }}
+                        >
+                          {isPresent ? "✓ Attended" : "✕ Absent"}
+                        </button>
                       </td>
                       <td style={{ padding: "12px 16px", color: "var(--text-secondary)" }}>
                         {rem || <span style={{ opacity: 0.4 }}>—</span>}
@@ -964,17 +1442,32 @@ export default function StaffCoachScheduleClient({
                 </select>
               </div>
 
-              <div>
-                <label className="form-label" style={{ display: "block", marginBottom: "4px" }}>
-                  Date
-                </label>
-                <input
-                  type="date"
-                  className="form-input"
-                  value={editDate}
-                  onChange={(e) => setEditDate(e.target.value)}
-                  required
-                />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                <div>
+                  <label className="form-label" style={{ display: "block", marginBottom: "4px" }}>
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={editDate}
+                    onChange={(e) => setEditDate(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label" style={{ display: "block", marginBottom: "4px" }}>
+                    Attendance Status
+                  </label>
+                  <select
+                    className="form-input"
+                    value={editStatus}
+                    onChange={(e) => setEditStatus(e.target.value as any)}
+                  >
+                    <option value="present">Attended (Present)</option>
+                    <option value="absent">Absent</option>
+                  </select>
+                </div>
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
