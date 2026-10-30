@@ -167,7 +167,7 @@ export default function AssignTaskModal({
               </svg>
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 800 }}>
+              <h2 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 800, color: "#ffffff" }}>
                 Assign Task to Staff
               </h2>
               <p style={{ margin: "2px 0 0 0", fontSize: "0.78rem", color: "#94a3b8" }}>
