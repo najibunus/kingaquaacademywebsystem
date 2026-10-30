@@ -94,6 +94,50 @@ export function formatTimeRange(startTime: string, endTime: string): string {
   return "Time TBD";
 }
 
+/**
+ * Expands any coach_attendance rows that contain multiple sessions on the same day
+ * (stored in notes.sessions) into individual session entries.
+ */
+export function expandScheduleRecords<
+  T extends {
+    id: string;
+    status: string;
+    notes: string | null;
+    created_at?: string;
+  }
+>(records: T[]): T[] {
+  const expanded: T[] = [];
+
+  for (const rec of records) {
+    if (rec.notes && rec.notes.trim().startsWith("{")) {
+      try {
+        const parsed = JSON.parse(rec.notes);
+        if (Array.isArray(parsed.sessions) && parsed.sessions.length > 0) {
+          parsed.sessions.forEach((s: any, idx: number) => {
+            const subId = s.subId || `s_${idx}`;
+            expanded.push({
+              ...rec,
+              id: `${rec.id}::${subId}`,
+              status: s.status || rec.status || "present",
+              notes: JSON.stringify({
+                startTime: s.startTime || "",
+                endTime: s.endTime || "",
+                remarks: s.remarks || "",
+              }),
+            });
+          });
+          continue;
+        }
+      } catch {
+        // fall through
+      }
+    }
+    expanded.push(rec);
+  }
+
+  return expanded;
+}
+
 interface Props {
   scheduleRecords: CoachScheduleItem[];
 }
@@ -104,6 +148,11 @@ export default function CoachScheduleTableClient({ scheduleRecords }: Props) {
 
   const [selectedYear, setSelectedYear] = useState<number>(now.getFullYear());
   const [selectedMonth, setSelectedMonth] = useState<number>(now.getMonth()); // 0-11
+
+  const expandedRecords = useMemo(
+    () => expandScheduleRecords(scheduleRecords),
+    [scheduleRecords]
+  );
 
   const handlePrevMonth = () => {
     if (selectedMonth === 0) {
@@ -130,7 +179,7 @@ export default function CoachScheduleTableClient({ scheduleRecords }: Props) {
 
   const monthlyClasses = useMemo(() => {
     const prefix = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`;
-    return scheduleRecords
+    return expandedRecords
       .filter((r) => r.date && r.date.startsWith(prefix))
       .sort((a, b) => {
         if (a.date !== b.date) return a.date.localeCompare(b.date);
@@ -138,7 +187,7 @@ export default function CoachScheduleTableClient({ scheduleRecords }: Props) {
         const notesB = parseScheduleNotes(b.notes, b.created_at);
         return (notesA.startTime || "").localeCompare(notesB.startTime || "");
       });
-  }, [scheduleRecords, selectedYear, selectedMonth]);
+  }, [expandedRecords, selectedYear, selectedMonth]);
 
   const stats = useMemo(() => {
     let upcoming = 0;

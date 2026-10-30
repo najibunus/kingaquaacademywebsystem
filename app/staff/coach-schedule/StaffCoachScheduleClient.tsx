@@ -12,7 +12,16 @@ import {
 import {
   parseScheduleNotes,
   formatTimeRange,
+  expandScheduleRecords,
 } from "@/app/coach/portal/CoachScheduleTableClient";
+
+interface DailyClassSlot {
+  key: string;
+  classId: string;
+  startTime: string;
+  endTime: string;
+  remarks: string;
+}
 
 interface CoachOption {
   id: string;
@@ -83,12 +92,15 @@ export default function StaffCoachScheduleClient({
   const [selectedCoachId, setSelectedCoachId] = useState<string>(
     coaches.length > 0 ? coaches[0].id : ""
   );
-  const [selectedClassId, setSelectedClassId] = useState<string>(
-    classes.length > 0 ? classes[0].id : ""
-  );
-  const [startTime, setStartTime] = useState<string>("09:00");
-  const [endTime, setEndTime] = useState<string>("10:00");
-  const [remarks, setRemarks] = useState<string>("");
+  const [classSlots, setClassSlots] = useState<DailyClassSlot[]>([
+    {
+      key: "slot_1",
+      classId: classes.length > 0 ? classes[0].id : "",
+      startTime: "09:00",
+      endTime: "10:00",
+      remarks: "",
+    },
+  ]);
   const [selectedDates, setSelectedDates] = useState<Set<string>>(new Set());
 
   const [feedback, setFeedback] = useState<{
@@ -127,6 +139,12 @@ export default function StaffCoachScheduleClient({
   });
   const [savingRateCoachId, setSavingRateCoachId] = useState<string | null>(null);
 
+  // Expand any multi-session coach_attendance rows into individual session entries
+  const expandedRecords = useMemo(
+    () => expandScheduleRecords(initialRecords),
+    [initialRecords]
+  );
+
   // Group classes by location for dropdown
   const groupedClasses = useMemo(() => {
     return classes.reduce((acc, cls) => {
@@ -157,18 +175,18 @@ export default function StaffCoachScheduleClient({
   const existingCoachDatesMap = useMemo(() => {
     const map = new Map<string, number>();
     const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
-    initialRecords.forEach((r) => {
+    expandedRecords.forEach((r) => {
       if (r.coach_id === selectedCoachId && r.date && r.date.startsWith(prefix)) {
         map.set(r.date, (map.get(r.date) || 0) + 1);
       }
     });
     return map;
-  }, [initialRecords, selectedCoachId, year, month]);
+  }, [expandedRecords, selectedCoachId, year, month]);
 
   // Filtered monthly schedule records for the table
   const monthlyScheduleRecords = useMemo(() => {
     const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
-    return initialRecords
+    return expandedRecords
       .filter((r) => {
         if (!r.date || !r.date.startsWith(prefix)) return false;
         if (filterCoachId !== "all" && r.coach_id !== filterCoachId) return false;
@@ -181,12 +199,12 @@ export default function StaffCoachScheduleClient({
         const nB = parseScheduleNotes(b.notes, b.created_at);
         return (nA.startTime || "").localeCompare(nB.startTime || "");
       });
-  }, [initialRecords, year, month, filterCoachId, filterClassId]);
+  }, [expandedRecords, year, month, filterCoachId, filterClassId]);
 
   // Monthly Attendance & Payment Summary per Coach for (year, month)
   const coachMonthlySummaries = useMemo(() => {
     const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
-    const monthRecords = initialRecords.filter(
+    const monthRecords = expandedRecords.filter(
       (r) => r.date && r.date.startsWith(prefix)
     );
 
@@ -210,7 +228,7 @@ export default function StaffCoachScheduleClient({
         totalPayment,
       };
     });
-  }, [coaches, initialRecords, year, month, coachRates]);
+  }, [coaches, expandedRecords, year, month, coachRates]);
 
   const grandTotals = useMemo(() => {
     return coachMonthlySummaries.reduce(
@@ -328,6 +346,47 @@ export default function StaffCoachScheduleClient({
     });
   };
 
+  const handleAddClassSlot = () => {
+    setClassSlots((prev) => {
+      const last = prev[prev.length - 1];
+      let nextStart = "10:00";
+      let nextEnd = "11:00";
+      if (last?.endTime) {
+        const [hStr, mStr] = last.endTime.split(":");
+        const h = parseInt(hStr, 10);
+        if (!isNaN(h)) {
+          nextStart = `${String(h).padStart(2, "0")}:${mStr || "00"}`;
+          const endH = Math.min(23, h + 1);
+          nextEnd = `${String(endH).padStart(2, "0")}:${mStr || "00"}`;
+        }
+      }
+      return [
+        ...prev,
+        {
+          key: `slot_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          classId: last?.classId || (classes.length > 0 ? classes[0].id : ""),
+          startTime: nextStart,
+          endTime: nextEnd,
+          remarks: "",
+        },
+      ];
+    });
+  };
+
+  const handleRemoveClassSlot = (key: string) => {
+    setClassSlots((prev) => (prev.length > 1 ? prev.filter((s) => s.key !== key) : prev));
+  };
+
+  const handleUpdateClassSlot = (
+    key: string,
+    field: keyof Omit<DailyClassSlot, "key">,
+    value: string
+  ) => {
+    setClassSlots((prev) =>
+      prev.map((slot) => (slot.key === key ? { ...slot, [field]: value } : slot))
+    );
+  };
+
   const handleAssignSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFeedback(null);
@@ -336,8 +395,8 @@ export default function StaffCoachScheduleClient({
       setFeedback({ type: "error", text: "Please select a coach." });
       return;
     }
-    if (!selectedClassId) {
-      setFeedback({ type: "error", text: "Please select a class." });
+    if (classSlots.length === 0 || classSlots.some((s) => !s.classId)) {
+      setFeedback({ type: "error", text: "Please select a class for every slot." });
       return;
     }
     if (selectedDates.size === 0) {
@@ -349,15 +408,18 @@ export default function StaffCoachScheduleClient({
     }
 
     const datesArray = Array.from(selectedDates).sort();
+    const totalSessionsToSave = datesArray.length * classSlots.length;
 
     startTransition(async () => {
       const res = await addCoachScheduleEntriesAction({
         coachId: selectedCoachId,
-        classId: selectedClassId,
         dates: datesArray,
-        startTime,
-        endTime,
-        remarks: remarks.trim(),
+        slots: classSlots.map((s) => ({
+          classId: s.classId,
+          startTime: s.startTime,
+          endTime: s.endTime,
+          remarks: s.remarks.trim(),
+        })),
       });
 
       if (res.error) {
@@ -365,10 +427,18 @@ export default function StaffCoachScheduleClient({
       } else {
         setFeedback({
           type: "success",
-          text: `Scheduled ${datesArray.length} class session(s) for ${MONTHS[month]} ${year}.`,
+          text: `Scheduled ${res.count ?? totalSessionsToSave} class session(s) across ${datesArray.length} date(s) for ${MONTHS[month]} ${year}.`,
         });
         setSelectedDates(new Set());
-        setRemarks("");
+        setClassSlots([
+          {
+            key: `slot_${Date.now()}`,
+            classId: classSlots[0]?.classId || (classes.length > 0 ? classes[0].id : ""),
+            startTime: "09:00",
+            endTime: "10:00",
+            remarks: "",
+          },
+        ]);
         router.refresh();
       }
     });
@@ -420,6 +490,8 @@ export default function StaffCoachScheduleClient({
     });
   };
 
+  const totalPendingSessions = selectedDates.size * classSlots.length;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Page Header & Month Selector */}
@@ -445,7 +517,7 @@ export default function StaffCoachScheduleClient({
             Coach Monthly Schedule
           </h1>
           <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: "0.9rem" }}>
-            Assign and manage the classes each coach will teach in a month.
+            Assign and manage the classes each coach will teach in a month (supports multiple classes per day).
           </p>
         </div>
 
@@ -529,14 +601,14 @@ export default function StaffCoachScheduleClient({
           alignItems: "start",
         }}
       >
-        {/* Left Column: Coach, Class, Time & Remarks */}
+        {/* Left Column: Coach & Multi-Class Daily Slots */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ borderBottom: "1px solid var(--border-gray)", paddingBottom: "10px" }}>
             <h2 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700, color: "var(--ka-black)" }}>
-              1. Class &amp; Coach Details
+              1. Coach &amp; Daily Class Slots
             </h2>
             <p style={{ margin: "4px 0 0 0", fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-              Choose the coach, class, and teaching time slot.
+              A coach can teach multiple classes in a day. Add one or more class slots below for the selected date(s).
             </p>
           </div>
 
@@ -559,66 +631,150 @@ export default function StaffCoachScheduleClient({
             </select>
           </div>
 
-          <div>
-            <label className="form-label" style={{ display: "block", marginBottom: "6px" }}>
-              Select Class to Teach
-            </label>
-            <select
-              className="form-input"
-              value={selectedClassId}
-              onChange={(e) => setSelectedClassId(e.target.value)}
-              required
+          {/* Daily Class Slots List */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {classSlots.map((slot, slotIdx) => (
+              <div
+                key={slot.key}
+                style={{
+                  border: "1px solid var(--border-gray)",
+                  borderRadius: "var(--radius-md)",
+                  padding: "12px 14px",
+                  backgroundColor: "var(--bg-light)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "0.78rem",
+                      fontWeight: 800,
+                      color: "var(--ka-blue)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.03em",
+                    }}
+                  >
+                    Class Slot #{slotIdx + 1}
+                  </span>
+                  {classSlots.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveClassSlot(slot.key)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "#dc2626",
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        padding: "2px 6px",
+                      }}
+                    >
+                      ✕ Remove Slot
+                    </button>
+                  )}
+                </div>
+
+                <div>
+                  <label className="form-label" style={{ display: "block", marginBottom: "4px", fontSize: "0.8rem" }}>
+                    Select Class to Teach
+                  </label>
+                  <select
+                    className="form-input"
+                    value={slot.classId}
+                    onChange={(e) =>
+                      handleUpdateClassSlot(slot.key, "classId", e.target.value)
+                    }
+                    required
+                  >
+                    {Object.entries(groupedClasses).map(([locName, clsList]) => (
+                      <optgroup key={locName} label={locName}>
+                        {clsList.map((cls) => (
+                          <option key={cls.id} value={cls.id}>
+                            {cls.name} ({cls.type})
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                  <div>
+                    <label className="form-label" style={{ display: "block", marginBottom: "4px", fontSize: "0.8rem" }}>
+                      Start Time
+                    </label>
+                    <input
+                      type="time"
+                      className="form-input"
+                      value={slot.startTime}
+                      onChange={(e) =>
+                        handleUpdateClassSlot(slot.key, "startTime", e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="form-label" style={{ display: "block", marginBottom: "4px", fontSize: "0.8rem" }}>
+                      End Time
+                    </label>
+                    <input
+                      type="time"
+                      className="form-input"
+                      value={slot.endTime}
+                      onChange={(e) =>
+                        handleUpdateClassSlot(slot.key, "endTime", e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="form-label" style={{ display: "block", marginBottom: "4px", fontSize: "0.8rem" }}>
+                    Remarks / Notes <span style={{ color: "var(--text-secondary)", fontWeight: 400 }}>(Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. Lane 1-2, Morning Group"
+                    value={slot.remarks}
+                    onChange={(e) =>
+                      handleUpdateClassSlot(slot.key, "remarks", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={handleAddClassSlot}
+              style={{
+                padding: "9px 14px",
+                borderRadius: "var(--radius-md)",
+                border: "1.5px dashed var(--ka-blue)",
+                backgroundColor: "#f0f9ff",
+                color: "var(--ka-blue)",
+                fontSize: "0.84rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+              }}
             >
-              {Object.entries(groupedClasses).map(([locName, clsList]) => (
-                <optgroup key={locName} label={locName}>
-                  {clsList.map((cls) => (
-                    <option key={cls.id} value={cls.id}>
-                      {cls.name} ({cls.type})
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-            <div>
-              <label className="form-label" style={{ display: "block", marginBottom: "6px" }}>
-                Start Time
-              </label>
-              <input
-                type="time"
-                className="form-input"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label className="form-label" style={{ display: "block", marginBottom: "6px" }}>
-                End Time
-              </label>
-              <input
-                type="time"
-                className="form-input"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="form-label" style={{ display: "block", marginBottom: "6px" }}>
-              Remarks / Notes <span style={{ color: "var(--text-secondary)", fontWeight: 400 }}>(Optional)</span>
-            </label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="e.g. Lane 1-2, Bring kickboards"
-              value={remarks}
-              onChange={(e) => setRemarks(e.target.value)}
-            />
+              + Add Another Class Slot on Same Day
+            </button>
           </div>
         </div>
 
@@ -630,12 +786,12 @@ export default function StaffCoachScheduleClient({
                 2. Select Teaching Dates in {MONTHS[month]} {year}
               </h2>
               <p style={{ margin: "4px 0 0 0", fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                Click individual dates or quick-select a recurring day of the week.
+                Click dates (including dates that already have classes) to add the {classSlots.length} class slot{classSlots.length === 1 ? "" : "s"} to each date.
               </p>
             </div>
             {selectedDates.size > 0 && (
               <span className="badge badge-primary">
-                {selectedDates.size} Date{selectedDates.size !== 1 ? "s" : ""} Selected
+                {selectedDates.size} Date{selectedDates.size !== 1 ? "s" : ""} × {classSlots.length} Slot{classSlots.length !== 1 ? "s" : ""} = {totalPendingSessions} Session{totalPendingSessions !== 1 ? "s" : ""}
               </span>
             )}
           </div>
@@ -736,7 +892,7 @@ export default function StaffCoachScheduleClient({
                     onClick={() => toggleDate(cell.dateStr!)}
                     title={
                       existingCount > 0
-                        ? `${existingCount} class(es) already scheduled for this coach on ${cell.dateStr}`
+                        ? `${existingCount} class(es) already scheduled for this coach on ${cell.dateStr} (click to add more)`
                         : cell.dateStr
                     }
                     style={{
@@ -764,17 +920,26 @@ export default function StaffCoachScheduleClient({
                     }}
                   >
                     {cell.day}
-                    {existingCount > 0 && !isSelected && (
+                    {existingCount > 0 && (
                       <span
                         style={{
                           position: "absolute",
-                          bottom: "3px",
-                          width: "5px",
-                          height: "5px",
-                          borderRadius: "50%",
-                          backgroundColor: "var(--ka-blue)",
+                          top: "2px",
+                          right: "3px",
+                          minWidth: "14px",
+                          height: "14px",
+                          padding: "0 3px",
+                          borderRadius: "999px",
+                          backgroundColor: isSelected ? "#ffffff" : "var(--ka-blue)",
+                          color: isSelected ? "var(--ka-blue)" : "#ffffff",
+                          fontSize: "0.62rem",
+                          fontWeight: 800,
+                          lineHeight: "14px",
+                          textAlign: "center",
                         }}
-                      />
+                      >
+                        {existingCount}
+                      </span>
                     )}
                   </button>
                 );
@@ -790,7 +955,7 @@ export default function StaffCoachScheduleClient({
           >
             {isPending
               ? "Saving Schedule..."
-              : `Save ${selectedDates.size > 0 ? `${selectedDates.size} ` : ""}Class Session${selectedDates.size === 1 ? "" : "s"} to Monthly Schedule`}
+              : `Save ${totalPendingSessions > 0 ? `${totalPendingSessions} ` : ""}Class Session${totalPendingSessions === 1 ? "" : "s"} to Monthly Schedule`}
           </button>
         </div>
       </form>

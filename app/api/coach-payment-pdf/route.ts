@@ -199,7 +199,34 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: recErr.message }, { status: 500 });
     }
 
-    const rawRecords = (records as any[]) || [];
+    const dbRecords = (records as any[]) || [];
+    const rawRecords: any[] = [];
+
+    for (const rec of dbRecords) {
+      if (rec.notes && rec.notes.trim().startsWith("{")) {
+        try {
+          const parsed = JSON.parse(rec.notes);
+          if (Array.isArray(parsed.sessions) && parsed.sessions.length > 0) {
+            parsed.sessions.forEach((s: any, idx: number) => {
+              rawRecords.push({
+                ...rec,
+                id: `${rec.id}::${s.subId || idx}`,
+                status: s.status || rec.status || "present",
+                notes: JSON.stringify({
+                  startTime: s.startTime || "",
+                  endTime: s.endTime || "",
+                  remarks: s.remarks || "",
+                }),
+              });
+            });
+            continue;
+          }
+        } catch {
+          // fall through
+        }
+      }
+      rawRecords.push(rec);
+    }
 
     // Sort chronologically by date and startTime
     rawRecords.sort((a, b) => {
