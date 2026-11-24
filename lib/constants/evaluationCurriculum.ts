@@ -24,6 +24,9 @@ export interface TimeStandardRow {
   backstroke: string;
 }
 
+export type TimeStandardStroke = "freestyle" | "breaststroke" | "backstroke";
+export type CustomTimeStandards = Record<string, Partial<Record<TimeStandardStroke, string>>>;
+
 export const LEVEL_6_TIME_STANDARDS: TimeStandardRow[] = [
   { category: "L12", freestyle: "0:40.00", breaststroke: "0:50.00", backstroke: "0:45.00" },
   { category: "P12", freestyle: "0:42.00", breaststroke: "0:52.00", backstroke: "0:47.00" },
@@ -32,6 +35,23 @@ export const LEVEL_6_TIME_STANDARDS: TimeStandardRow[] = [
   { category: "L18", freestyle: "0:33.00", breaststroke: "0:42.00", backstroke: "0:38.00" },
   { category: "P18", freestyle: "0:35.00", breaststroke: "0:45.00", backstroke: "0:40.00" },
 ];
+
+/**
+ * Merges per-student Level 6 qualifying time overrides with the default standards.
+ */
+export function resolveLevel6TimeStandards(custom?: CustomTimeStandards): TimeStandardRow[] {
+  if (!custom) return LEVEL_6_TIME_STANDARDS;
+  return LEVEL_6_TIME_STANDARDS.map((row) => {
+    const ov = custom[row.category];
+    if (!ov) return row;
+    return {
+      category: row.category,
+      freestyle: ov.freestyle !== undefined && ov.freestyle.trim() !== "" ? ov.freestyle : row.freestyle,
+      breaststroke: ov.breaststroke !== undefined && ov.breaststroke.trim() !== "" ? ov.breaststroke : row.breaststroke,
+      backstroke: ov.backstroke !== undefined && ov.backstroke.trim() !== "" ? ov.backstroke : row.backstroke,
+    };
+  });
+}
 
 export const EVALUATION_LEVELS: EvaluationLevel[] = [
   {
@@ -152,6 +172,7 @@ export interface StructuredEvaluationPayload {
   scores: Record<string, number>; // e.g., { "L3_1": 4, "L3_2": 4, ... }
   notes: string;
   customCriteriaText?: Record<string, string>; // e.g., { "L1_1": "Personalized text for this student" }
+  customTimeStandards?: CustomTimeStandards; // personalized Level 6 qualifying times
   customWallpaperUrl?: string | null;
   wallpaperFit?: "cover" | "contain" | "fill";
   sheetOpacity?: number;
@@ -169,6 +190,7 @@ export function encodeEvaluationSkillTag(payload: StructuredEvaluationPayload): 
     acquiredLevel: payload.acquiredLevel,
     scores: payload.scores,
     customCriteriaText: payload.customCriteriaText || {},
+    customTimeStandards: payload.customTimeStandards || {},
     customWallpaperUrl: payload.customWallpaperUrl || null,
     wallpaperFit: payload.wallpaperFit || "cover",
     sheetOpacity: payload.sheetOpacity !== undefined ? payload.sheetOpacity : 0.93,
@@ -191,6 +213,7 @@ export function parseEvaluationRecord(ev: {
   acquiredLevel: number;
   scores: Record<string, number>;
   customCriteriaText: Record<string, string>;
+  customTimeStandards: CustomTimeStandards;
   notes: string;
   customWallpaperUrl: string | null;
   wallpaperFit: "cover" | "contain" | "fill";
@@ -210,11 +233,16 @@ export function parseEvaluationRecord(ev: {
         parsed.customCriteriaText && typeof parsed.customCriteriaText === "object"
           ? parsed.customCriteriaText
           : {};
+      const customTimeStandards =
+        parsed.customTimeStandards && typeof parsed.customTimeStandards === "object"
+          ? parsed.customTimeStandards
+          : {};
       return {
         displayLabel: label || `Level ${level}`,
         acquiredLevel: level,
         scores,
         customCriteriaText,
+        customTimeStandards,
         notes: rawComments,
         customWallpaperUrl: parsed.customWallpaperUrl || null,
         wallpaperFit: parsed.wallpaperFit || "cover",
@@ -245,6 +273,7 @@ export function parseEvaluationRecord(ev: {
     acquiredLevel,
     scores: defaultScores,
     customCriteriaText: {},
+    customTimeStandards: {},
     notes: rawComments,
     customWallpaperUrl: null,
     wallpaperFit: "cover",

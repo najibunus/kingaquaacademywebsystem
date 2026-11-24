@@ -637,6 +637,7 @@ export default function ParentEvaluationsClient({ children }: { children: Child[
                     acquiredLevel={parsed.acquiredLevel}
                     scores={parsed.scores}
                     customCriteriaText={parsed.customCriteriaText}
+                    customTimeStandards={parsed.customTimeStandards}
                     notes={parsed.notes}
                     customWallpaperUrl={parsed.customWallpaperUrl}
                     wallpaperFit={parsed.wallpaperFit}

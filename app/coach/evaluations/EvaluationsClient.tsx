@@ -6,6 +6,8 @@ import {
   EVALUATION_LEVELS,
   LEVEL_6_TIME_STANDARDS,
   parseEvaluationRecord,
+  type CustomTimeStandards,
+  type TimeStandardStroke,
 } from "@/lib/constants/evaluationCurriculum";
 import {
   submitStructuredEvaluationAction,
@@ -66,6 +68,7 @@ export default function EvaluationsClient({
   const [acquiredLevel, setAcquiredLevel] = useState<number>(1);
   const [scores, setScores] = useState<Record<string, number>>({});
   const [customCriteriaText, setCustomCriteriaText] = useState<Record<string, string>>({});
+  const [customTimeStandards, setCustomTimeStandards] = useState<CustomTimeStandards>({});
   const [notes, setNotes] = useState("");
   const [showAllLevelsInForm, setShowAllLevelsInForm] = useState(false);
 
@@ -198,6 +201,33 @@ export default function EvaluationsClient({
     });
   }
 
+  function handleTimeStandardChange(
+    category: string,
+    stroke: TimeStandardStroke,
+    val: string,
+    defaultVal: string
+  ) {
+    setCustomTimeStandards((prev) => {
+      const next: CustomTimeStandards = { ...prev };
+      const rowOverrides = { ...(next[category] || {}) };
+      if (val === defaultVal) {
+        delete rowOverrides[stroke];
+      } else {
+        rowOverrides[stroke] = val;
+      }
+      if (Object.keys(rowOverrides).length === 0) {
+        delete next[category];
+      } else {
+        next[category] = rowOverrides;
+      }
+      return next;
+    });
+  }
+
+  function handleResetTimeStandards() {
+    setCustomTimeStandards({});
+  }
+
   function startNewEvaluationForStudent(student: EvalStudent) {
     setSelectedStudent(student);
     setFeedback(null);
@@ -216,6 +246,7 @@ export default function EvaluationsClient({
       });
       setScores(initialScores);
       setCustomCriteriaText({});
+      setCustomTimeStandards({});
       setNotes("");
     }
   }
@@ -233,6 +264,7 @@ export default function EvaluationsClient({
     setAcquiredLevel(parsed.acquiredLevel);
     setScores(parsed.scores);
     setCustomCriteriaText(parsed.customCriteriaText || {});
+    setCustomTimeStandards(parsed.customTimeStandards || {});
     setNotes(parsed.notes);
     if (parsed.customWallpaperUrl) {
       setCustomWallpaperUrl(parsed.customWallpaperUrl);
@@ -302,6 +334,7 @@ export default function EvaluationsClient({
         acquiredLevel,
         scores,
         customCriteriaText,
+        customTimeStandards,
         notes,
         customWallpaperUrl,
         wallpaperFit,
@@ -898,55 +931,141 @@ export default function EvaluationsClient({
                         })}
 
                         {/* Level 6 Reference Time Table */}
-                        {lvl.hasTimeTable && (
-                          <div
-                            style={{
-                              padding: "12px 14px",
-                              backgroundColor: "#f8fafc",
-                              borderTop: "1px dashed #cbd5e1",
-                            }}
-                          >
+                        {lvl.hasTimeTable && (() => {
+                          const strokes: TimeStandardStroke[] = ["freestyle", "breaststroke", "backstroke"];
+                          const hasCustomTimes = LEVEL_6_TIME_STANDARDS.some((row) =>
+                            strokes.some((st) => {
+                              const ov = customTimeStandards[row.category]?.[st];
+                              return ov !== undefined && ov.trim() !== "" && ov !== row[st];
+                            })
+                          );
+                          return (
                             <div
                               style={{
-                                fontSize: "0.8rem",
-                                fontWeight: 700,
-                                marginBottom: "6px",
-                                color: "#0f172a",
+                                padding: "12px 14px",
+                                backgroundColor: "#f8fafc",
+                                borderTop: "1px dashed #cbd5e1",
                               }}
                             >
-                              Level 6 Qualifying Time Standards (50m):
-                            </div>
-                            <table
-                              style={{
-                                width: "100%",
-                                maxWidth: "420px",
-                                borderCollapse: "collapse",
-                                fontSize: "0.78rem",
-                                backgroundColor: "#fff",
-                                border: "1px solid #e2e8f0",
-                              }}
-                            >
-                              <thead>
-                                <tr style={{ backgroundColor: "#f1f5f9", fontWeight: 700 }}>
-                                  <th style={{ padding: "4px 8px", textAlign: "left" }}>Cat</th>
-                                  <th style={{ padding: "4px 8px" }}>Freestyle (FR)</th>
-                                  <th style={{ padding: "4px 8px" }}>Breaststroke (BR)</th>
-                                  <th style={{ padding: "4px 8px" }}>Backstroke (BK)</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {LEVEL_6_TIME_STANDARDS.map((r) => (
-                                  <tr key={r.category} style={{ borderTop: "1px solid #e2e8f0", textAlign: "center" }}>
-                                    <td style={{ padding: "4px 8px", fontWeight: 700, textAlign: "left" }}>{r.category}</td>
-                                    <td style={{ padding: "4px 8px" }}>{r.freestyle}</td>
-                                    <td style={{ padding: "4px 8px" }}>{r.breaststroke}</td>
-                                    <td style={{ padding: "4px 8px" }}>{r.backstroke}</td>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  gap: "8px",
+                                  flexWrap: "wrap",
+                                  marginBottom: "6px",
+                                  maxWidth: "460px",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    fontSize: "0.8rem",
+                                    fontWeight: 700,
+                                    color: "#0f172a",
+                                  }}
+                                >
+                                  Level 6 Qualifying Time Standards (50m):
+                                  <span
+                                    style={{
+                                      marginLeft: "6px",
+                                      fontSize: "0.7rem",
+                                      fontWeight: 500,
+                                      color: "#64748b",
+                                    }}
+                                  >
+                                    (Editable for this student)
+                                  </span>
+                                </div>
+                                {hasCustomTimes && (
+                                  <button
+                                    type="button"
+                                    onClick={handleResetTimeStandards}
+                                    style={{
+                                      fontSize: "0.7rem",
+                                      padding: "2px 8px",
+                                      borderRadius: "4px",
+                                      border: "1px solid #cbd5e1",
+                                      backgroundColor: "#fff",
+                                      color: "#64748b",
+                                      cursor: "pointer",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    ↺ Reset Times
+                                  </button>
+                                )}
+                              </div>
+                              <table
+                                style={{
+                                  width: "100%",
+                                  maxWidth: "460px",
+                                  borderCollapse: "collapse",
+                                  fontSize: "0.78rem",
+                                  backgroundColor: "#fff",
+                                  border: "1px solid #e2e8f0",
+                                }}
+                              >
+                                <thead>
+                                  <tr style={{ backgroundColor: "#f1f5f9", fontWeight: 700 }}>
+                                    <th style={{ padding: "5px 8px", textAlign: "left" }}>Cat</th>
+                                    <th style={{ padding: "5px 8px" }}>Freestyle (FR)</th>
+                                    <th style={{ padding: "5px 8px" }}>Breaststroke (BR)</th>
+                                    <th style={{ padding: "5px 8px" }}>Backstroke (BK)</th>
                                   </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
+                                </thead>
+                                <tbody>
+                                  {LEVEL_6_TIME_STANDARDS.map((r) => (
+                                    <tr key={r.category} style={{ borderTop: "1px solid #e2e8f0", textAlign: "center" }}>
+                                      <td style={{ padding: "4px 8px", fontWeight: 700, textAlign: "left" }}>{r.category}</td>
+                                      {strokes.map((stroke) => {
+                                        const defaultVal = r[stroke];
+                                        const overrideVal = customTimeStandards[r.category]?.[stroke];
+                                        const displayVal = overrideVal !== undefined ? overrideVal : defaultVal;
+                                        const isCellCustomized =
+                                          overrideVal !== undefined &&
+                                          overrideVal.trim() !== "" &&
+                                          overrideVal !== defaultVal;
+                                        return (
+                                          <td key={stroke} style={{ padding: "4px 6px" }}>
+                                            <input
+                                              type="text"
+                                              aria-label={`${r.category} ${stroke} qualifying time`}
+                                              value={displayVal}
+                                              onChange={(e) =>
+                                                handleTimeStandardChange(
+                                                  r.category,
+                                                  stroke,
+                                                  e.target.value,
+                                                  defaultVal
+                                                )
+                                              }
+                                              placeholder={defaultVal}
+                                              style={{
+                                                width: "100%",
+                                                maxWidth: "96px",
+                                                textAlign: "center",
+                                                fontSize: "0.78rem",
+                                                fontWeight: isCellCustomized ? 700 : 500,
+                                                color: isCellCustomized ? "#15803d" : "#0f172a",
+                                                backgroundColor: isCellCustomized ? "#f0fdf4" : "#f8fafc",
+                                                border: isCellCustomized ? "1.5px solid #22c55e" : "1px solid #cbd5e1",
+                                                borderRadius: "5px",
+                                                padding: "3px 6px",
+                                                boxSizing: "border-box",
+                                                outline: "none",
+                                              }}
+                                            />
+                                          </td>
+                                        );
+                                      })}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          );
+                        })()}
                       </div>
                     );
                   })}
@@ -1588,6 +1707,7 @@ export default function EvaluationsClient({
                   acquiredLevel={acquiredLevel}
                   scores={scores}
                   customCriteriaText={customCriteriaText}
+                  customTimeStandards={customTimeStandards}
                   notes={notes}
                   customWallpaperUrl={customWallpaperUrl}
                   wallpaperFit={wallpaperFit}

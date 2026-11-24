@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import {
   EVALUATION_LEVELS,
   encodeEvaluationSkillTag,
+  type CustomTimeStandards,
 } from "@/lib/constants/evaluationCurriculum";
 
 export async function submitStructuredEvaluationAction(payload: {
@@ -15,6 +16,7 @@ export async function submitStructuredEvaluationAction(payload: {
   scores: Record<string, number>;
   notes: string;
   customCriteriaText?: Record<string, string>;
+  customTimeStandards?: CustomTimeStandards;
   customWallpaperUrl?: string | null;
   wallpaperFit?: "cover" | "contain" | "fill";
   sheetOpacity?: number;
@@ -27,6 +29,7 @@ export async function submitStructuredEvaluationAction(payload: {
       scores,
       notes,
       customCriteriaText,
+      customTimeStandards,
       customWallpaperUrl,
       wallpaperFit,
       sheetOpacity,
@@ -62,6 +65,7 @@ export async function submitStructuredEvaluationAction(payload: {
       acquiredLevel,
       scores,
       customCriteriaText: customCriteriaText || {},
+      customTimeStandards: customTimeStandards || {},
       notes: cleanNotes,
       customWallpaperUrl: customWallpaperUrl || null,
       wallpaperFit: wallpaperFit || "cover",

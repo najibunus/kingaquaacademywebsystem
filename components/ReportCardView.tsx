@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import {
   EVALUATION_LEVELS,
-  LEVEL_6_TIME_STANDARDS,
+  resolveLevel6TimeStandards,
+  type CustomTimeStandards,
   EvaluationLevel,
 } from "@/lib/constants/evaluationCurriculum";
 
@@ -13,6 +14,7 @@ export interface ReportCardProps {
   scores: Record<string, number>; // e.g., { "L3_1": 4, "L3_2": 4, ... }
   notes: string;
   customCriteriaText?: Record<string, string>; // customized criteria wording per student
+  customTimeStandards?: CustomTimeStandards; // customized Level 6 qualifying times per student
   customWallpaperUrl?: string | null;
   wallpaperFit?: "cover" | "contain" | "fill";
   sheetOpacity?: number; // 0.8 to 1.0
@@ -359,6 +361,7 @@ function LevelTableBlock({
   scores,
   customBadgeUrl,
   customCriteriaText,
+  customTimeStandards,
   interactive,
   onSelectLevel,
   onScoreChange,
@@ -368,6 +371,7 @@ function LevelTableBlock({
   scores: Record<string, number>;
   customBadgeUrl?: string;
   customCriteriaText?: Record<string, string>;
+  customTimeStandards?: CustomTimeStandards;
   interactive?: boolean;
   onSelectLevel?: (level: number) => void;
   onScoreChange?: (criterionId: string, score: number) => void;
@@ -570,7 +574,7 @@ function LevelTableBlock({
                   </tr>
                 </thead>
                 <tbody>
-                  {LEVEL_6_TIME_STANDARDS.map((row) => (
+                  {resolveLevel6TimeStandards(customTimeStandards).map((row) => (
                     <tr key={row.category}>
                       <td style={{ padding: "1px 3px", fontWeight: 700, textAlign: "left" }}>
                         {row.category}
@@ -618,6 +622,7 @@ export default function ReportCardView({
   scores,
   notes,
   customCriteriaText = {},
+  customTimeStandards = {},
   customWallpaperUrl,
   wallpaperFit = "cover",
   sheetOpacity = 0.93,
@@ -1028,6 +1033,7 @@ export default function ReportCardView({
                 scores={scores}
                 customBadgeUrl={customBadges[lvl.level]}
                 customCriteriaText={customCriteriaText}
+                customTimeStandards={customTimeStandards}
                 interactive={interactive}
                 onSelectLevel={onSelectLevel}
                 onScoreChange={onScoreChange}
