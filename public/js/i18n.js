@@ -228,7 +228,7 @@
     { sel: '.timeline .timeline-item:nth-of-type(2) .timeline-title', html: 'Percikan Pertama' },
     {
       sel: '.timeline .timeline-item:nth-of-type(2) .timeline-desc',
-      html: 'Perjalanan anda bermula dengan membiasakan diri di dalam air. Tanpa tekanan &mdash; hanya keseronokan, permainan, dan penyesuaian mengikut rentak anda sendiri.',
+      html: 'Perjalanan anda bermula dengan orientasi air dan membiasakan diri di dalam air. Tanpa tekanan &mdash; hanya keseronokan, permainan, dan bimbingan mengikut rentak anda sendiri.',
     },
     { sel: '.timeline .timeline-item:nth-of-type(3) .timeline-step', html: 'Langkah 2' },
     { sel: '.timeline .timeline-item:nth-of-type(3) .timeline-title', html: 'Keyakinan Di Air' },
