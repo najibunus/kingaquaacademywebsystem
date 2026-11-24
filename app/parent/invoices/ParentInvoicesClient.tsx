@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import { submitPaymentProofAction } from "@/lib/actions/parentPayment";
 import styles from "./invoices.module.css";
 
@@ -32,7 +33,18 @@ function statusLabel(s: PaymentStatus) {
   }
 }
 
-function InvoiceCard({ invoice }: { invoice: Invoice }) {
+function InvoiceCard({
+  invoice,
+  selectable = false,
+  isSelected = false,
+  onToggleSelect,
+}: {
+  invoice: Invoice;
+  selectable?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (id: string) => void;
+}) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [method, setMethod] = useState<string>("duitnow");
   const [file, setFile] = useState<File | null>(null);
@@ -64,6 +76,7 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
         setOpen(false);
         setFile(null);
         setResult({ success: true });
+        router.refresh();
       } else {
         setResult({ error: res.error });
       }
@@ -71,9 +84,39 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
   }
 
   return (
-    <div className={`${styles.invoiceCard} ${invoice.payment_status === "confirmed_paid" ? styles.cardPaid : invoice.payment_status === "receipt_submitted" ? styles.cardPending : ""}`}>
+    <div
+      className={`${styles.invoiceCard} ${invoice.payment_status === "confirmed_paid" ? styles.cardPaid : invoice.payment_status === "receipt_submitted" ? styles.cardPending : ""}`}
+      style={
+        isSelected && submittable
+          ? { borderColor: "var(--ka-blue)", backgroundColor: "#f0f9ff" }
+          : undefined
+      }
+    >
       <div className={styles.cardTop}>
         <div className={styles.cardLeft}>
+          {selectable && submittable && onToggleSelect && (
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+              title="Select invoice for combined payment"
+            >
+              <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => onToggleSelect(invoice.id)}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  accentColor: "var(--ka-blue)",
+                  cursor: "pointer",
+                }}
+              />
+            </label>
+          )}
           <div className={styles.studentInitial}>
             {invoice.student_name.charAt(0)}
           </div>
@@ -260,8 +303,79 @@ interface Props {
 }
 
 export default function ParentInvoicesClient({ unpaid, pending, history, children = [], allInvoices = [] }: Props) {
+  const router = useRouter();
   const totalActionable = unpaid.length + pending.length;
   const [copied, setCopied] = useState(false);
+
+  // Multi-child simultaneous payment state
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [multiModalOpen, setMultiModalOpen] = useState(false);
+  const [multiMethod, setMultiMethod] = useState<string>("duitnow");
+  const [multiFile, setMultiFile] = useState<File | null>(null);
+  const [multiResult, setMultiResult] = useState<{ error?: string; success?: boolean; count?: number } | null>(null);
+  const [isMultiPending, startMultiTransition] = useTransition();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const getInvoiceTotal = (inv: Invoice) =>
+    inv.items.reduce((s, i) => s + i.quantity * i.unit_price, 0);
+
+  const selectedInvoices = unpaid.filter((inv) => selectedIds.has(inv.id));
+  const selectedTotal = selectedInvoices.reduce((sum, inv) => sum + getInvoiceTotal(inv), 0);
+  const allUnpaidTotal = unpaid.reduce((sum, inv) => sum + getInvoiceTotal(inv), 0);
+  const allSelected = unpaid.length > 0 && selectedInvoices.length === unpaid.length;
+
+  const toggleSelectInvoice = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(unpaid.map((i) => i.id)));
+    }
+  };
+
+  const openPayAllModal = () => {
+    setSelectedIds(new Set(unpaid.map((i) => i.id)));
+    setMultiResult(null);
+    setMultiModalOpen(true);
+  };
+
+  const handleMultiSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setMultiResult(null);
+    if (selectedInvoices.length === 0) return;
+
+    const fd = new FormData();
+    fd.append("invoice_ids", JSON.stringify(selectedInvoices.map((i) => i.id)));
+    fd.append("payment_method", multiMethod);
+    if (multiFile) {
+      fd.append("receipt_file", multiFile);
+    }
+
+    startMultiTransition(async () => {
+      const res = await submitPaymentProofAction(fd);
+      if (res.success) {
+        setMultiModalOpen(false);
+        setMultiFile(null);
+        setSelectedIds(new Set());
+        setMultiResult({ success: true, count: res.count ?? selectedInvoices.length });
+        router.refresh();
+      } else {
+        setMultiResult({ error: res.error });
+      }
+    });
+  };
 
   const handleCopyAccount = () => {
     navigator.clipboard.writeText("551584068475");
@@ -522,11 +636,128 @@ export default function ParentInvoicesClient({ unpaid, pending, history, childre
         </div>
       )}
 
+      {multiResult?.success && (
+        <div
+          style={{
+            padding: "14px 18px",
+            borderRadius: "12px",
+            backgroundColor: "#ecfdf5",
+            border: "1px solid #a7f3d0",
+            color: "#065f46",
+            fontSize: "0.92rem",
+            fontWeight: 600,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span>
+            Payment proof submitted for {multiResult.count} invoice{multiResult.count === 1 ? "" : "s"}! Our staff will verify your receipt shortly.
+          </span>
+          <button
+            type="button"
+            onClick={() => setMultiResult(null)}
+            style={{ background: "none", border: "none", color: "inherit", fontWeight: 700, cursor: "pointer", fontSize: "1.1rem" }}
+          >
+            &times;
+          </button>
+        </div>
+      )}
+
       {unpaid.length > 0 ? (
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Outstanding</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "var(--space-4)" }}>
+            <h2 className={styles.sectionTitle} style={{ margin: 0 }}>Outstanding</h2>
+            {unpaid.length > 1 && (
+              <span style={{ fontSize: "0.82rem", color: "var(--ka-blue)", fontWeight: 600 }}>
+                Tip: Select multiple children below to pay together with 1 receipt
+              </span>
+            )}
+          </div>
+
+          {/* Multi-Child Simultaneous Payment Bar */}
+          {unpaid.length > 1 && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: "12px",
+                padding: "14px 18px",
+                marginBottom: "16px",
+                borderRadius: "12px",
+                backgroundColor: selectedInvoices.length > 0 ? "#f0f9ff" : "var(--ka-white)",
+                border: selectedInvoices.length > 0 ? "2px solid var(--ka-blue)" : "1px solid var(--border-gray)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+              }}
+            >
+              <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer", fontWeight: 600, fontSize: "0.92rem", color: "var(--ka-black)" }}>
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleSelectAll}
+                  style={{ width: "18px", height: "18px", accentColor: "var(--ka-blue)", cursor: "pointer" }}
+                />
+                <span>
+                  {allSelected
+                    ? `All ${unpaid.length} Outstanding Selected`
+                    : selectedInvoices.length > 0
+                    ? `${selectedInvoices.length} of ${unpaid.length} Selected`
+                    : `Select All (${unpaid.length} Outstanding)`}
+                </span>
+              </label>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                {selectedInvoices.length > 0 && (
+                  <button
+                    type="button"
+                    className={styles.btnPay}
+                    onClick={() => {
+                      setMultiResult(null);
+                      setMultiModalOpen(true);
+                    }}
+                    style={{ margin: 0 }}
+                  >
+                    Pay Selected ({selectedInvoices.length}) &mdash; RM {selectedTotal.toFixed(2)}
+                  </button>
+                )}
+
+                {!allSelected && (
+                  <button
+                    type="button"
+                    onClick={openPayAllModal}
+                    style={{
+                      padding: "10px 16px",
+                      borderRadius: "8px",
+                      border: "none",
+                      backgroundColor: "#0f172a",
+                      color: "#ffffff",
+                      fontWeight: 700,
+                      fontSize: "0.85rem",
+                      cursor: "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    Pay All ({unpaid.length}) &mdash; RM {allUnpaidTotal.toFixed(2)}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className={styles.list}>
-            {unpaid.map(inv => <InvoiceCard key={inv.id} invoice={inv} />)}
+            {unpaid.map((inv) => (
+              <InvoiceCard
+                key={inv.id}
+                invoice={inv}
+                selectable={unpaid.length > 1}
+                isSelected={selectedIds.has(inv.id)}
+                onToggleSelect={toggleSelectInvoice}
+              />
+            ))}
           </div>
         </section>
       ) : pending.length === 0 ? (
@@ -535,6 +766,163 @@ export default function ParentInvoicesClient({ unpaid, pending, history, childre
           <p className={styles.emptyText}>You have no outstanding payments. Great work!</p>
         </div>
       ) : null}
+
+      {/* Combined Multi-Child Payment Proof Modal */}
+      {multiModalOpen && mounted && selectedInvoices.length > 0 && createPortal(
+        <div
+          className={styles.modalOverlay}
+          onClick={() => { setMultiModalOpen(false); setMultiResult(null); }}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="multi-pay-modal-title"
+          >
+            <div className={styles.modalHeader}>
+              <div>
+                <h3 id="multi-pay-modal-title" className={styles.modalTitle}>
+                  Pay Multiple Invoices Together
+                </h3>
+                <p className={styles.modalSubtitle}>
+                  {selectedInvoices.length} invoice{selectedInvoices.length === 1 ? "" : "s"} selected &bull; Upload 1 combined receipt
+                </p>
+              </div>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => { setMultiModalOpen(false); setMultiResult(null); }}
+                aria-label="Close modal"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Selected Children / Invoices Breakdown */}
+            <div
+              style={{
+                maxHeight: "170px",
+                overflowY: "auto",
+                border: "1px solid #e2e8f0",
+                borderRadius: "10px",
+                backgroundColor: "#f8fafc",
+                padding: "10px 14px",
+                marginBottom: "14px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
+              {selectedInvoices.map((inv) => {
+                const amt = getInvoiceTotal(inv);
+                return (
+                  <div
+                    key={inv.id}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: "12px",
+                      fontSize: "0.85rem",
+                      paddingBottom: "6px",
+                      borderBottom: "1px dashed #e2e8f0",
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700, color: "#0f172a" }}>{inv.student_name}</div>
+                      <div style={{ fontSize: "0.75rem", color: "#64748b" }}>
+                        {inv.invoice_number} &bull; {inv.title}
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap" }}>
+                      RM {amt.toFixed(2)}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className={styles.modalAmountBanner}>
+              <span>Combined Total Payable Amount</span>
+              <strong>RM {selectedTotal.toFixed(2)}</strong>
+            </div>
+
+            <form className={styles.modalForm} onSubmit={handleMultiSubmit}>
+              <div className={styles.formField}>
+                <label className={styles.formLabel}>Payment Method</label>
+                <select
+                  className={styles.formSelect}
+                  value={multiMethod}
+                  onChange={(e) => setMultiMethod(e.target.value)}
+                  required
+                >
+                  <option value="duitnow">DuitNow / QR</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className={styles.formField}>
+                <label className={styles.formLabel}>Upload Combined Receipt (Image / PDF)</label>
+                <label className={styles.fileDropzone}>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg, application/pdf"
+                    onChange={(e) => setMultiFile(e.target.files?.[0] || null)}
+                    required
+                    style={{ display: "none" }}
+                  />
+                  <div className={styles.fileDropzoneContent}>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" style={{ color: "#2596be" }}>
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    {multiFile ? (
+                      <div>
+                        <div style={{ fontWeight: 600, color: "#0f172a", fontSize: "0.9rem" }}>{multiFile.name}</div>
+                        <div style={{ color: "#64748b", fontSize: "0.75rem", marginTop: "2px" }}>{(multiFile.size / 1024).toFixed(1)} KB &bull; Click to change</div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div style={{ fontWeight: 600, color: "#1e293b", fontSize: "0.88rem" }}>Tap or click to select receipt</div>
+                        <div style={{ color: "#94a3b8", fontSize: "0.78rem", marginTop: "2px" }}>PNG, JPG or PDF (max 5MB)</div>
+                      </div>
+                    )}
+                  </div>
+                </label>
+                <p className={styles.formHint}>
+                  One transfer receipt for RM {selectedTotal.toFixed(2)} will be linked to all {selectedInvoices.length} selected invoices.
+                </p>
+              </div>
+
+              {multiResult?.error && (
+                <div className={styles.errorMsg}>{multiResult.error}</div>
+              )}
+
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.btnCancel}
+                  onClick={() => { setMultiModalOpen(false); setMultiResult(null); }}
+                  disabled={isMultiPending}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className={styles.btnSubmit}
+                  disabled={isMultiPending || !multiFile}
+                >
+                  {isMultiPending ? "Uploading..." : `Confirm & Submit (${selectedInvoices.length})`}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
 
       {pending.length > 0 && (
         <section className={styles.section}>
