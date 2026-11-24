@@ -193,7 +193,7 @@
       sel: '.programs-grid .program-card:nth-child(6) .program-desc',
       html: 'Sesi bimbingan satu-ke-satu yang disesuaikan sepenuhnya mengikut matlamat individu anda &mdash; sama ada untuk penguasaan pantas, pembetulan kuak, atau persediaan ujian.',
     },
-    { sel: '#prog-private-btn', html: 'Tempah Sesi &rarr;' },
+    { sel: '#prog-private-btn', html: 'Daftar Sekarang &rarr;' },
 
     // Card 7: Ladies Swimming
     { sel: '.programs-grid .program-card:nth-child(7) .program-badge', html: 'Wanita Sahaja' },
