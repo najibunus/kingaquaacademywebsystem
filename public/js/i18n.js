@@ -176,10 +176,11 @@
     { sel: '.programs-grid .program-card:nth-child(5) .program-badge', html: 'Prestasi Tinggi' },
     { sel: '.programs-grid .program-card:nth-child(5) .program-meta span:nth-child(2)', html: 'Semua Peringkat Umur' },
     { sel: '.programs-grid .program-card:nth-child(5) .program-meta span:nth-child(4)', html: 'Tahap Kompetitif' },
+    { sel: '.programs-grid .program-card:nth-child(5) .program-meta span:nth-child(6)', html: 'Termasuk Sesi Gim' },
     { sel: '.programs-grid .program-card:nth-child(5) .program-title', html: 'Lanjutan (Advanced)' },
     {
       sel: '.programs-grid .program-card:nth-child(5) .program-desc',
-      html: 'Latihan intensif untuk perenang kompetitif. Merangkumi keempat-empat kuak, pusingan (turn), terjunan permulaan, strategi perlumbaan, dan latihan kecergasan darat.',
+      html: 'Latihan intensif untuk perenang kompetitif. Merangkumi keempat-empat kuak, pusingan (turn), terjunan permulaan, strategi perlumbaan, latihan kecergasan darat, dan sesi gim untuk prestasi optimum.',
     },
     { sel: '#prog-advanced-btn', html: 'Daftar Sekarang &rarr;' },
 
