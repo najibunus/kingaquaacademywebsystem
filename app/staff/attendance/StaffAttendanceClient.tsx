@@ -5,6 +5,7 @@ import styles from "./staff-attendance.module.css";
 import { bulkLogAttendanceAction, deleteAttendanceAction } from "@/lib/actions/attendance";
 import { updateStudentProfile } from "@/lib/actions/students";
 import { deleteInvoiceAction } from "@/lib/actions/invoices";
+import { groupClassesByVenue } from "@/lib/utils/venueOrder";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -158,12 +159,7 @@ export default function StaffAttendanceClient({ students, classes }: Props) {
 
   // ── Derived data ──────────────────────────────────────────────────────────────
 
-  const groupedClasses = useMemo(() => classes.reduce((acc, cls) => {
-    const loc = cls.locations?.name || "Other";
-    if (!acc[loc]) acc[loc] = [];
-    acc[loc].push(cls);
-    return acc;
-  }, {} as Record<string, ClassOption[]>), [classes]);
+  const groupedClasses = useMemo(() => groupClassesByVenue(classes, "Other"), [classes]);
 
   const filteredStudents = useMemo(() => students.filter(s => {
     const matchClass = selectedClass === "all" || s.class_id === selectedClass;

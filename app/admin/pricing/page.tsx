@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/server";
+import { sortByVenuePriority } from "@/lib/utils/venueOrder";
 import AdminPricingClient from "./AdminPricingClient";
 
 export default async function AdminPricingPage() {
@@ -18,11 +19,13 @@ export default async function AdminPricingPage() {
     return <div className="animate-fade-in-up p-6 text-red-500">Error loading pricing: {pricingError.message}</div>;
   }
 
+  const sortedLocations = sortByVenuePriority((locations as any[]) || [], (l) => l.name);
+
   return (
     <AdminPricingClient 
       pricingData={pricingData as any[]} 
       classes={classes as any[]} 
-      locations={locations as any[]} 
+      locations={sortedLocations} 
     />
   );
 }

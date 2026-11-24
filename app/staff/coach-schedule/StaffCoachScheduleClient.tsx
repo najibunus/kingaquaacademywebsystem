@@ -14,6 +14,7 @@ import {
   formatTimeRange,
   expandScheduleRecords,
 } from "@/app/coach/portal/CoachScheduleTableClient";
+import { groupClassesByVenue } from "@/lib/utils/venueOrder";
 
 interface DailyClassSlot {
   key: string;
@@ -145,14 +146,9 @@ export default function StaffCoachScheduleClient({
     [initialRecords]
   );
 
-  // Group classes by location for dropdown
+  // Group classes by location for dropdown (UTHM prioritized first)
   const groupedClasses = useMemo(() => {
-    return classes.reduce((acc, cls) => {
-      const loc = cls.locations?.name || "General";
-      if (!acc[loc]) acc[loc] = [];
-      acc[loc].push(cls);
-      return acc;
-    }, {} as Record<string, ClassOption[]>);
+    return groupClassesByVenue(classes, "General");
   }, [classes]);
 
   // Calendar grid generation for (year, month)

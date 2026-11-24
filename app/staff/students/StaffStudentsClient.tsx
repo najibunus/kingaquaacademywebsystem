@@ -6,6 +6,7 @@ import styles from "./staff-students.module.css";
 import { createClient } from "@/lib/supabase/client";
 import { updateStudentProfile, createStudentProfile, deleteStudentProfile } from "@/lib/actions/students";
 import ImageCropperModal from "@/components/ui/ImageCropperModal";
+import { groupClassesByVenue } from "@/lib/utils/venueOrder";
 
 interface Student {
   id: string;
@@ -227,12 +228,7 @@ export default function StaffStudentsClient({ students: initialStudents, classes
     }
   };
 
-  const groupedClasses = classes.reduce((acc, cls) => {
-    const loc = cls.locations?.name || "Other";
-    if (!acc[loc]) acc[loc] = [];
-    acc[loc].push(cls);
-    return acc;
-  }, {} as Record<string, ClassOption[]>);
+  const groupedClasses = groupClassesByVenue(classes, "Other");
 
   return (
     <div className="animate-fade-in-up">

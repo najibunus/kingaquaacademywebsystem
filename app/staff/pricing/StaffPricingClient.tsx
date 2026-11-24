@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import styles from "./pricing.module.css";
 import { updatePricingAction, addPricingAction, deletePricingAction } from "@/lib/actions/pricing";
+import { sortByVenuePriority } from "@/lib/utils/venueOrder";
 
 export default function StaffPricingClient({ pricingData, classes, locations }: { pricingData: any[], classes: any[], locations: any[] }) {
   const [isPending, startTransition] = useTransition();
@@ -27,11 +28,12 @@ export default function StaffPricingClient({ pricingData, classes, locations }: 
   const [editTier, setEditTier] = useState("");
   const [editBilling, setEditBilling] = useState("");
 
-  // Location tabs
+  // Location tabs (UTHM prioritized first)
   const [activeTab, setActiveTab] = useState("All");
-  const locationTabs = ["All", ...Array.from(new Set(pricingList.map((p: any) => p.locations?.name).filter(Boolean)))];
+  const rawLocationNames = Array.from(new Set(pricingList.map((p: any) => p.locations?.name).filter(Boolean))) as string[];
+  const locationTabs = ["All", ...sortByVenuePriority(rawLocationNames, (n) => n)];
   const filteredPricing = activeTab === "All"
-    ? pricingList
+    ? sortByVenuePriority(pricingList, (p: any) => p.locations?.name)
     : pricingList.filter((p: any) => p.locations?.name === activeTab);
 
   const cleanClassName = (rawName: string) => {

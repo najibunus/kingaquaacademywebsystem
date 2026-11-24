@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AttendanceClient from "@/app/coach/attendance/AttendanceClient";
+import { groupClassesByVenue } from "@/lib/utils/venueOrder";
 
 interface Props {
   classes: any[];
@@ -29,12 +30,7 @@ export default function TakeAttendanceClient({
     router.push(`?classId=${selectedClass}&date=${selectedDate}`);
   }
 
-  const groupedClasses = classes.reduce((acc, cls) => {
-    const loc = cls.locations?.name || "Other";
-    if (!acc[loc]) acc[loc] = [];
-    acc[loc].push(cls);
-    return acc;
-  }, {} as Record<string, any[]>);
+  const groupedClasses = groupClassesByVenue(classes, "Other");
 
   return (
     <div className="animate-fade-in-up" style={{ paddingBottom: "40px" }}>

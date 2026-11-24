@@ -58,14 +58,14 @@
     },
     {
       sel: '.about-text p:nth-child(2)',
-      html: 'Daripada kanak-kanak kecil dan dewasa baru belajar hinggalah atlet remaja kompetitif dan pelajar universiti, kami komited terhadap pencegahan lemas, keyakinan di air, dan kecemerlangan sukan. Melalui kerjasama strategik bersama <strong>Universiti Tun Hussein Onn Malaysia (UTHM)</strong>, kami beroperasi di lokasi latihan di <strong>Pura Kencana, Sri Gading (Batu Pahat)</strong>, serta di <strong>UTHM Parit Raja</strong> dan <strong>Pontian</strong>.',
+      html: 'Daripada kanak-kanak kecil dan dewasa baru belajar hinggalah atlet remaja kompetitif dan pelajar universiti, kami komited terhadap pencegahan lemas, keyakinan di air, dan kecemerlangan sukan. Melalui kerjasama strategik bersama <strong>Universiti Tun Hussein Onn Malaysia (UTHM)</strong>, lokasi latihan utama kami adalah di <strong>UTHM Parit Raja</strong>, serta cawangan di <strong>Pura Kencana, Sri Gading (Batu Pahat)</strong> dan <strong>Pontian</strong>.',
     },
     { sel: '.about-features .about-feature:nth-child(1) strong', html: 'Penyelamatan &amp; BLS' },
     { sel: '.about-features .about-feature:nth-child(1) .about-feature-text span', html: 'Latihan penyelamatan bertauliah MAQRA' },
     { sel: '.about-features .about-feature:nth-child(2) strong', html: 'Rakan Institusi' },
     { sel: '.about-features .about-feature:nth-child(2) .about-feature-text span', html: 'Modul renang rasmi UTHM' },
     { sel: '.about-features .about-feature:nth-child(3) strong', html: 'Lokasi Pelbagai Hab' },
-    { sel: '.about-features .about-feature:nth-child(3) .about-feature-text span', html: 'Pura Kencana, UTHM Parit Raja &amp; Pontian' },
+    { sel: '.about-features .about-feature:nth-child(3) .about-feature-text span', html: 'UTHM Parit Raja, Pura Kencana &amp; Pontian' },
     { sel: '.about-features .about-feature:nth-child(4) strong', html: 'Semua Peringkat Umur' },
     { sel: '.about-features .about-feature:nth-child(4) .about-feature-text span', html: 'Kanak-kanak, atlet &amp; pelajar universiti' },
     { sel: '#about-programs-btn', html: 'Lihat Program' },
@@ -489,10 +489,10 @@
     { sel: '#contact-office-val', html: 'Pura Kencana, Sri Gading' },
     { sel: '#contact-office-sub', html: '83000 Batu Pahat, Johor, Malaysia' },
     { sel: '#contact-venues-label', html: 'Lokasi Latihan' },
-    { sel: '#contact-venues-val', html: 'Pura Kencana, UTHM Parit Raja &amp; Pontian' },
+    { sel: '#contact-venues-val', html: 'UTHM Parit Raja, Pura Kencana &amp; Pontian' },
     {
       sel: '#contact-venues-sub',
-      html: '&bull; Pura Kencana (Sri Gading)<br/>&bull; UTHM Parit Raja<br/>&bull; Pontian',
+      html: '&bull; UTHM Parit Raja (Lokasi Utama)<br/>&bull; Pura Kencana (Sri Gading)<br/>&bull; Pontian',
     },
     { sel: '#contact-hours-label', html: 'Waktu Operasi Pejabat' },
     { sel: '#contact-hours-val', html: '8:30 PG &ndash; 12:00 TGH' },
@@ -513,8 +513,8 @@
     { sel: '#form-email', attr: { placeholder: 'emel@anda.com' } },
     { sel: 'label[for="form-venue"]', html: 'Lokasi Latihan Pilihan *' },
     { sel: '#form-venue option[value=""]', html: 'Pilih lokasi pilihan...' },
+    { sel: '#form-venue option[value="UTHM Parit Raja"]', html: 'UTHM Parit Raja (Lokasi Utama)' },
     { sel: '#form-venue option[value="Pura Kencana, Sri Gading"]', html: 'Pura Kencana, Sri Gading' },
-    { sel: '#form-venue option[value="UTHM Parit Raja"]', html: 'UTHM Parit Raja' },
     { sel: '#form-venue option[value="Pontian"]', html: 'Pontian' },
     { sel: '#form-venue option[value="Flexible / Any Venue"]', html: 'Fleksibel / Mana-mana Lokasi' },
 
@@ -567,7 +567,7 @@
     { sel: '.footer-grid > div:nth-child(4) .footer-col-title', html: 'Hubungi Rasmi' },
     {
       sel: '#footer-location-block span',
-      html: '<strong>Pejabat:</strong> Pura Kencana, Sri Gading<br/><span style="font-size:var(--text-xs); color:rgba(255,255,255,0.65);">Lokasi Latihan: Pura Kencana, UTHM Parit Raja &amp; Pontian</span><br/><span style="font-size:var(--text-xs); color:rgba(255,255,255,0.5);">Waktu Pejabat: 8:30 PG &ndash; 12:00 TGH (Selasa Tutup)</span>',
+      html: '<strong>Pejabat:</strong> Pura Kencana, Sri Gading<br/><span style="font-size:var(--text-xs); color:rgba(255,255,255,0.65);">Lokasi Latihan: UTHM Parit Raja, Pura Kencana &amp; Pontian</span><br/><span style="font-size:var(--text-xs); color:rgba(255,255,255,0.5);">Waktu Pejabat: 8:30 PG &ndash; 12:00 TGH (Selasa Tutup)</span>',
     },
     {
       sel: '.footer-copyright',

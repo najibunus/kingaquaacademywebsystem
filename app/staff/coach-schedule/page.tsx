@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/server";
+import { sortByVenuePriority } from "@/lib/utils/venueOrder";
 import StaffCoachScheduleClient from "./StaffCoachScheduleClient";
 
 export const dynamic = "force-dynamic";
@@ -76,7 +77,7 @@ export default async function StaffCoachSchedulePage() {
       )}
       <StaffCoachScheduleClient
         coaches={enrichedCoaches}
-        classes={(classes as any[]) || []}
+        classes={sortByVenuePriority((classes as any[]) || [], (c) => c.locations?.name || c.name)}
         initialRecords={(scheduleRecords as any[]) || []}
       />
     </div>
