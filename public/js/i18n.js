@@ -363,7 +363,7 @@
     { sel: '.achievements-grid .achievement-card:nth-child(6) .achievement-title', html: 'Impak Komuniti' },
     {
       sel: '.achievements-grid .achievement-card:nth-child(6) .achievement-desc',
-      html: 'Kami bekerjasama dengan sekolah tempatan dan organisasi untuk mempromosikan pendidikan keselamatan air kepada masyarakat.',
+      html: 'Kami bekerjasama dengan sekolah tempatan dan organisasi untuk mempromosikan pendidikan keselamatan air serta menawarkan kelas renang kepada kanak-kanak kurang berkemampuan melalui program jangkauan komuniti khas kami.',
     },
 
     // ── TESTIMONIALS ──
