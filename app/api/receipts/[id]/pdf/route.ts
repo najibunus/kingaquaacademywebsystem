@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { generateReceiptId } from "@/lib/utils/whatsapp";
 import { ReceiptPdfDocument } from "@/lib/pdf/ReceiptPdf";
+import { SalesInvoicePdfDocument } from "@/lib/pdf/SalesInvoicePdf";
+import { getInvoices as getSalesInvoices } from "@/lib/sales/store";
 import { renderToBuffer } from "@react-pdf/renderer";
 import React from "react";
 
@@ -27,10 +29,78 @@ export async function GET(
         invoice_items(description, quantity, unit_price)
       `)
       .eq("id", id)
-      .single();
+      .maybeSingle();
 
+    // Fallback: Check Sales Invoices stored in Supabase Storage ("sales-data/invoices.json")
     if (error || !inv) {
-      return NextResponse.json({ error: "Invoice not found." }, { status: 404 });
+      const salesInvoices = await getSalesInvoices();
+      const salesInv = salesInvoices.find((s) => s.id === id);
+
+      if (!salesInv) {
+        return NextResponse.json({ error: "Invoice not found." }, { status: 404 });
+      }
+
+      const salesDoc = React.createElement(SalesInvoicePdfDocument, {
+        invoice: salesInv,
+      });
+      const pdfBuffer = await renderToBuffer(salesDoc);
+      const safeInvNum = (salesInv.number || salesInv.id).replace(/[^A-Za-z0-9_-]/g, "_");
+      const safeFilename = `${salesInv.status === "paid" ? "Sales-Receipt" : "Sales-Invoice"}-${safeInvNum}.pdf`;
+
+      const storagePath = `sales_invoices/${safeInvNum}.pdf`;
+      let publicPdfUrl = "";
+      try {
+        const { error: uploadErr } = await supabase.storage
+          .from("receipts")
+          .upload(storagePath, pdfBuffer, {
+            upsert: true,
+            contentType: "application/pdf",
+          });
+        if (!uploadErr) {
+          const { data: pubData } = supabase.storage
+            .from("receipts")
+            .getPublicUrl(storagePath);
+          publicPdfUrl = pubData.publicUrl;
+        }
+      } catch (storageErr) {
+        console.warn("Could not cache Sales PDF in storage:", storageErr);
+      }
+
+      const url = new URL(request.url);
+      const isJson =
+        url.searchParams.get("json") === "1" ||
+        request.headers.get("accept")?.includes("application/json");
+      const forceDownload = url.searchParams.get("download") === "1";
+
+      const resolvedPublicUrl =
+        publicPdfUrl || `${url.origin}/api/receipts/${id}/pdf`;
+      const resolvedDownloadUrl = publicPdfUrl
+        ? `${publicPdfUrl}?download=${encodeURIComponent(safeFilename)}`
+        : `${url.origin}/api/receipts/${id}/pdf?download=1`;
+
+      if (isJson) {
+        return NextResponse.json({
+          success: true,
+          invoiceNumber: salesInv.number,
+          customerName: salesInv.customerName,
+          amount: salesInv.total,
+          publicPdfUrl: resolvedPublicUrl,
+          downloadPdfUrl: resolvedDownloadUrl,
+          filename: safeFilename,
+          pdfBase64: Buffer.from(pdfBuffer).toString("base64"),
+        });
+      }
+
+      return new Response(new Uint8Array(pdfBuffer), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `${
+            forceDownload ? "attachment" : "inline"
+          }; filename="${safeFilename}"`,
+          "Cache-Control": "no-store, max-age=0",
+        },
+      });
     }
 
     const student = inv.students as any;
