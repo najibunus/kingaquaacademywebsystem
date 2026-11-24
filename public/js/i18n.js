@@ -338,7 +338,7 @@
     { sel: '.achievements-grid .achievement-card:nth-child(1) .achievement-title', html: 'Juara Pertandingan' },
     {
       sel: '.achievements-grid .achievement-card:nth-child(1) .achievement-desc',
-      html: 'Pelajar kami telah menyertai dan cemerlang dalam kejohanan renang peringkat daerah, negeri dan antara sekolah, membawa pulang pingat serta kedudukan podium.',
+      html: 'Pelajar kami telah menyertai dan cemerlang dalam kejohanan renang peringkat daerah, negeri dan antara kelab, membawa pulang pingat serta kedudukan podium.',
     },
     { sel: '.achievements-grid .achievement-card:nth-child(2) .achievement-title', html: 'Kolam Bersaiz Olimpik' },
     {
