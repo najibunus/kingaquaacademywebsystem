@@ -168,7 +168,7 @@
     { sel: '.programs-grid .program-card:nth-child(4) .program-title', html: 'Novis (Novice)' },
     {
       sel: '.programs-grid .program-card:nth-child(4) .program-desc',
-      html: 'Untuk pelajar yang sudah boleh melakukan kuak asas tetapi ingin memperkemas teknik, meningkatkan stamina, dan membina keyakinan dalam pelbagai gaya renang.',
+      html: 'Program ini direka khas untuk pelajar yang sudah menguasai kuak asas dan ingin memperkemas teknik, meningkatkan stamina, serta membina keyakinan dalam pelbagai gaya renang, termasuk pelajar berkeperluan khas.',
     },
     { sel: '#prog-novice-btn', html: 'Daftar Sekarang &rarr;' },
 
