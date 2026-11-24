@@ -1,5 +1,5 @@
 /**
- * All user roles in the Kingaqua Academy system.
+ * All user roles in the KingAqua Academy system.
  * This is the single source of truth for role names.
  */
 export type UserRole =

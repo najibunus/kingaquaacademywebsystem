@@ -25,7 +25,7 @@ export default async function SuperadminPage() {
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>System Health</h1>
-          <p className={styles.subtitle}>Overview of the Kingaqua Academy database and infrastructure.</p>
+          <p className={styles.subtitle}>Overview of the KingAqua Academy database and infrastructure.</p>
         </div>
       </div>
 

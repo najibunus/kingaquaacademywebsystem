@@ -3,13 +3,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Kingaqua Academy",
-    template: "%s | Kingaqua Academy",
+    default: "KingAqua Academy",
+    template: "%s | KingAqua Academy",
   },
   description:
-    "Kingaqua Academy — Swimming class management portal for students, coaches, staff, and parents.",
-  keywords: ["swimming academy", "aqua", "swimming classes", "Kingaqua"],
-  authors: [{ name: "Kingaqua Academy" }],
+    "KingAqua Academy — Swimming class management portal for students, coaches, staff, and parents.",
+  keywords: ["swimming academy", "aqua", "swimming classes", "KingAqua"],
+  authors: [{ name: "KingAqua Academy" }],
   robots: "noindex, nofollow", // Internal portal — not for public indexing
 };
 

@@ -269,7 +269,7 @@ async function renderLandscapeReceiptCanvas(
   ctx.fillStyle = "#64748B";
   ctx.font = "500 18px sans-serif";
   ctx.fillText(
-    "Thank you for your payment! This is an official computer-generated receipt issued by Kingaqua Academy.",
+    "Thank you for your payment! This is an official computer-generated receipt issued by KingAqua Academy.",
     96,
     H - 110
   );
@@ -2378,7 +2378,7 @@ export default function InvoicesClient({
                   <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                     <img
                       src="/logo.png"
-                      alt="Kingaqua Academy Logo"
+                      alt="KingAqua Academy Logo"
                       width={56}
                       height={56}
                       style={{
@@ -2660,10 +2660,10 @@ export default function InvoicesClient({
                 >
                   <span>
                     Thank you for your payment! This is an official computer-generated receipt
-                    issued by Kingaqua Academy.
+                    issued by KingAqua Academy.
                   </span>
                   <span style={{ fontWeight: 700, color: "#0f172a" }}>
-                    Verified by Kingaqua Academy Staff
+                    Verified by KingAqua Academy Staff
                   </span>
                 </div>
               </div>

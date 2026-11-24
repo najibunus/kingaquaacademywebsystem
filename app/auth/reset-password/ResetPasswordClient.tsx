@@ -49,7 +49,7 @@ export default function ResetPasswordClient() {
       <div className={styles.bannerPanel} aria-hidden="true">
         <Image
           src={BANNER_IMAGE}
-          alt="Kingaqua Academy Banner"
+          alt="KingAqua Academy Banner"
           fill
           priority
           sizes="(max-width: 900px) 0px, calc(100vw - 540px)"
@@ -299,7 +299,7 @@ export default function ResetPasswordClient() {
         </div>
 
         <p className={styles.footer}>
-          &copy; {new Date().getFullYear()} Kingaqua Academy &bull; All rights reserved
+          &copy; {new Date().getFullYear()} KingAqua Academy &bull; All rights reserved
         </p>
       </main>
     </div>

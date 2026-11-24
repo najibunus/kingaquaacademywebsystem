@@ -7,7 +7,7 @@ export default function AdminStudentsPage() {
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Student Management</h1>
-          <p className={styles.subtitle}>Search, enroll, and manage all Kingaqua Academy students.</p>
+          <p className={styles.subtitle}>Search, enroll, and manage all KingAqua Academy students.</p>
         </div>
         <Link href="/admin/students/import" className="btn btn-primary">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: "0.5rem"}}>

@@ -61,7 +61,7 @@ export default async function AdminDashboardPage() {
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Overview</h1>
-          <p className={styles.subtitle}>Here&apos;s what&apos;s happening at Kingaqua Academy.</p>
+          <p className={styles.subtitle}>Here&apos;s what&apos;s happening at KingAqua Academy.</p>
         </div>
         <div className={styles.actionButtons}>
           <Link href="/admin/students/import" className="btn btn-secondary">

@@ -41,7 +41,7 @@ export default function BrandLogo({
       >
         <img
           src="/logo.png"
-          alt="Kingaqua Academy"
+          alt="KingAqua Academy"
           style={{
             width: "100%",
             height: "100%",
@@ -62,7 +62,7 @@ export default function BrandLogo({
             lineHeight: 1.2,
           }}
         >
-          Kingaqua Academy
+          KingAqua Academy
         </span>
       )}
     </div>

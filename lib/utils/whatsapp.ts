@@ -86,7 +86,7 @@ export function buildReceiptMessageText(params: ReceiptSummaryParams): string {
           `----------------------------------------`,
         ]
       : []),
-    `Thank you for your payment! Your child's swimming class payment at Kingaqua Academy has been confirmed.`,
+    `Thank you for your payment! Your child's swimming class payment at KingAqua Academy has been confirmed.`,
   ];
 
   return lines.join("\n");

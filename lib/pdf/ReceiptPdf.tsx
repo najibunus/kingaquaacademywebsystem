@@ -357,10 +357,10 @@ export function ReceiptPdfDocument(props: ReceiptPdfProps) {
           <View style={styles.footer}>
             <Text>
               Thank you for your payment! This is an official computer-generated
-              receipt issued by Kingaqua Academy.
+              receipt issued by KingAqua Academy.
             </Text>
             <Text style={{ fontFamily: "Helvetica-Bold", color: "#0F172A" }}>
-              Verified by Kingaqua Academy Staff
+              Verified by KingAqua Academy Staff
             </Text>
           </View>
         </View>

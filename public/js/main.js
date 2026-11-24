@@ -413,7 +413,7 @@
       childrenFormatted,
       message ? '----------------------------------------\n*💬 Other Enquiries / Questions:*\n' + message : '',
       '----------------------------------------',
-      '_Sent via Kingaqua Academy Website (kingaquaacademy.com)_'
+      '_Sent via KingAqua Academy Website (kingaquaacademy.com)_'
     ].filter(Boolean);
 
     const fullMessage = lines.join('\n');

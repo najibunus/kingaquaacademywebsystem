@@ -37,7 +37,7 @@
     // ── HERO SECTION ──
     {
       sel: '.hero-description',
-      html: 'Kingaqua Academy, tempat keyakinan dibina satu pusingan demi satu pusingan. Program renang profesional untuk semua peringkat umur, dibimbing oleh jurulatih bertauliah dalam persekitaran yang selamat dan mesra.',
+      html: 'KingAqua Academy, tempat keyakinan dibina satu pusingan demi satu pusingan. Program renang profesional untuk semua peringkat umur, dibimbing oleh jurulatih bertauliah dalam persekitaran yang selamat dan mesra.',
     },
     { sel: '#hero-join-btn', html: 'Daftar Sekarang' },
     { sel: '#hero-programs-btn', html: 'Log Masuk' },
@@ -47,14 +47,14 @@
 
     // ── ABOUT SECTION ──
     { sel: '.about-badge-text', html: 'Tahun Kecemerlangan' },
-    { sel: '#about .section-label', html: 'Tentang Kingaqua Academy' },
+    { sel: '#about .section-label', html: 'Tentang KingAqua Academy' },
     {
       sel: '#about-heading',
       html: 'Kecemerlangan Akuatik,<br/><span class="highlight">Penyelamatan &amp; Kepimpinan</span>',
     },
     {
       sel: '.about-text p:nth-child(1)',
-      html: 'Diasaskan oleh <strong>Encik Abu Sufian bin Supaat</strong> &mdash; Presiden Gerakan Belia 4B Sri Gading dan Presiden MAQRA Johor &mdash; <strong>Kingaqua Academy</strong> merupakan pusat latihan sukan akuatik dan penyelamatan terkemuka di Johor. Dipacu oleh slogan institusi kami <em>"FlyHigh"</em>, kami menggabungkan program renang berstruktur dengan latihan Penyelamat &amp; Bantuan Hidup Asas (BLS) bertauliah serta pemulihan terapi akuatik.',
+      html: 'Diasaskan oleh <strong>Encik Abu Sufian bin Supaat</strong> &mdash; Presiden Gerakan Belia 4B Sri Gading dan Presiden MAQRA Johor &mdash; <strong>KingAqua Academy</strong> merupakan pusat latihan sukan akuatik dan penyelamatan terkemuka di Johor. Dipacu oleh slogan institusi kami <em>"FlyHigh"</em>, kami menggabungkan program renang berstruktur dengan latihan Penyelamat &amp; Bantuan Hidup Asas (BLS) bertauliah serta pemulihan terapi akuatik.',
     },
     {
       sel: '.about-text p:nth-child(2)',
@@ -73,7 +73,7 @@
 
     // ── WHY CHOOSE US ──
     { sel: '#why-us .section-label', html: 'Mengapa Pilih Kami' },
-    { sel: '#why-heading', html: 'Keistimewaan Kingaqua' },
+    { sel: '#why-heading', html: 'Keistimewaan KingAqua' },
     {
       sel: '#why-us .section-subheading',
       html: 'Kami menawarkan lebih daripada sekadar kelas renang biasa. Akademi kami komited terhadap kecemerlangan, keselamatan, dan membantu setiap pelajar mencapai potensi penuh mereka di dalam air.',
@@ -372,11 +372,11 @@
     { sel: '#testimonials-heading', html: 'Apa Kata Ibu Bapa' },
     {
       sel: '#testimonials .section-subheading',
-      html: 'Kisah sebenar daripada keluarga yang mempercayai Kingaqua Academy untuk perjalanan renang anak-anak mereka.',
+      html: 'Kisah sebenar daripada keluarga yang mempercayai KingAqua Academy untuk perjalanan renang anak-anak mereka.',
     },
     {
       sel: '#testimonials-track .testimonial-card:nth-child(1) .testimonial-quote',
-      html: 'Anak perempuan saya sangat takutkan air sebelum menyertai Kingaqua Academy. Dalam masa 3 bulan sahaja, dia sudah berenang dengan yakin dan amat menyukai setiap sesi. Jurulatih sangat sabar dan memberi galakan. Keputusan terbaik yang pernah kami buat!',
+      html: 'Anak perempuan saya sangat takutkan air sebelum menyertai KingAqua Academy. Dalam masa 3 bulan sahaja, dia sudah berenang dengan yakin dan amat menyukai setiap sesi. Jurulatih sangat sabar dan memberi galakan. Keputusan terbaik yang pernah kami buat!',
     },
     { sel: '#testimonials-track .testimonial-card:nth-child(1) .testimonial-program', html: 'Ibu Bapa &mdash; Program Permulaan' },
     {
@@ -407,7 +407,7 @@
 
     // ── GALLERY ──
     { sel: '#gallery .section-label', html: 'Galeri' },
-    { sel: '#gallery-heading', html: 'Detik Indah di Kingaqua' },
+    { sel: '#gallery-heading', html: 'Detik Indah di KingAqua' },
     {
       sel: '#gallery .section-subheading',
       html: 'Sorotan keterujaan, pencapaian, dan kegembiraan harian yang berlaku di akademi kami.',
@@ -418,7 +418,7 @@
     { sel: '#faq-heading', html: 'Ada Soalan?<br/>Kami Ada Jawapannya.' },
     {
       sel: '#faq .faq-intro .section-subheading',
-      html: 'Segala yang anda perlu tahu tentang program kami, proses pendaftaran, dan apa yang boleh dijangkakan di Kingaqua Academy.',
+      html: 'Segala yang anda perlu tahu tentang program kami, proses pendaftaran, dan apa yang boleh dijangkakan di KingAqua Academy.',
     },
     { sel: '.faq-contact-text strong', html: 'Masih ada soalan?' },
     { sel: '.faq-contact-text span', html: 'Kami sedia membantu! WhatsApp kami pada bila-bila masa dan kami akan membalas dengan segera &rarr;' },
@@ -473,7 +473,7 @@
     { sel: '#cta-heading', html: 'Bersedia Untuk Mula Berenang?' },
     {
       sel: '.cta-desc',
-      html: 'Sertai ratusan pelajar yang telah menemui keseronokan berenang di Kingaqua Academy. Perjalanan anda bermula dengan langkah pertama ke dalam air.',
+      html: 'Sertai ratusan pelajar yang telah menemui keseronokan berenang di KingAqua Academy. Perjalanan anda bermula dengan langkah pertama ke dalam air.',
     },
     { sel: '#cta-register-btn', html: 'Daftar Hari Ini' },
     { sel: '#cta-whatsapp-btn', html: 'WhatsApp Kami' },
@@ -500,7 +500,7 @@
     { sel: '#contact-hours-days', html: 'Rabu &ndash; Isnin: 8:30 PG &ndash; 12:00 TGH' },
     { sel: '#contact-hours-offday', html: 'Hari Cuti: Selasa (Tutup)' },
     { sel: '#contact-whatsapp-btn', keepSvgText: 'Sembang di WhatsApp' },
-    { sel: '#map-badge-title', html: 'Pejabat Kingaqua Academy' },
+    { sel: '#map-badge-title', html: 'Pejabat KingAqua Academy' },
     { sel: '#map-badge-sub', html: 'Pura Kencana, Sri Gading (Batu Pahat)' },
     { sel: '#map-directions-btn', keepSvgText: 'Dapatkan Arah ke Pejabat' },
 
@@ -572,7 +572,7 @@
     },
     {
       sel: '.footer-copyright',
-      html: '&copy; 2026 Kingaqua Academy. Hak cipta terpelihara. &bull; Akademi Latihan Akuatik Bertauliah MAS Swimming &amp; MAQRA.',
+      html: '&copy; 2026 KingAqua Academy. Hak cipta terpelihara. &bull; Akademi Latihan Akuatik Bertauliah MAS Swimming &amp; MAQRA.',
     },
     { sel: '.footer-bottom-links .footer-bottom-link:nth-child(1)', html: 'Log Masuk Portal' },
     { sel: '.footer-bottom-links .footer-bottom-link:nth-child(2)', html: 'Tentang Kami' },
