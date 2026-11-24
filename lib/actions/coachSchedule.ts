@@ -272,6 +272,7 @@ export async function addCoachScheduleEntriesAction(payload: {
   }
 
   revalidatePath("/staff/coach-schedule");
+  revalidatePath("/admin/coach-schedule");
   revalidatePath("/coach/portal");
   revalidatePath("/coach/students");
   return { success: true, count: totalAddedSessions };
@@ -388,6 +389,7 @@ export async function updateCoachScheduleEntryAction(
   }
 
   revalidatePath("/staff/coach-schedule");
+  revalidatePath("/admin/coach-schedule");
   revalidatePath("/coach/portal");
   revalidatePath("/coach/students");
   return { success: true };
@@ -435,6 +437,7 @@ export async function updateCoachAttendanceStatusAction(
   }
 
   revalidatePath("/staff/coach-schedule");
+  revalidatePath("/admin/coach-schedule");
   revalidatePath("/coach/portal");
   revalidatePath("/coach/students");
   return { success: true };
@@ -490,6 +493,7 @@ export async function deleteCoachScheduleEntryAction(compositeId: string) {
   }
 
   revalidatePath("/staff/coach-schedule");
+  revalidatePath("/admin/coach-schedule");
   revalidatePath("/coach/portal");
   revalidatePath("/coach/students");
   return { success: true };
@@ -539,5 +543,6 @@ export async function updateCoachRatePerClassAction(
   }
 
   revalidatePath("/staff/coach-schedule");
+  revalidatePath("/admin/coach-schedule");
   return { success: true, ratePerClass: Number(ratePerClass) };
 }
