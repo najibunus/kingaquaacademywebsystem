@@ -258,7 +258,9 @@ export function ReceiptPdfDocument(props: ReceiptPdfProps) {
               </View>
 
               <View style={styles.metaCol}>
-                <Text style={styles.metaLabel}>Received From (Parent)</Text>
+                <Text style={styles.metaLabel}>
+                  {props.isPaid !== false ? "Received From (Parent)" : "Billed To (Parent)"}
+                </Text>
                 <Text style={styles.metaValue}>{props.parentName}</Text>
                 <Text style={styles.metaSub}>{props.parentPhone || "Verified Parent"}</Text>
               </View>
@@ -344,9 +346,31 @@ export function ReceiptPdfDocument(props: ReceiptPdfProps) {
               ))}
 
               {/* Total Row */}
-              <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>TOTAL AMOUNT PAID:</Text>
-                <Text style={styles.totalAmount}>
+              <View
+                style={
+                  props.isPaid !== false
+                    ? styles.totalRow
+                    : [styles.totalRow, { backgroundColor: "#FEF2F2" }]
+                }
+              >
+                <Text
+                  style={
+                    props.isPaid !== false
+                      ? styles.totalLabel
+                      : [styles.totalLabel, { color: "#991B1B" }]
+                  }
+                >
+                  {props.isPaid !== false
+                    ? "TOTAL AMOUNT PAID:"
+                    : "TOTAL AMOUNT DUE (UNPAID):"}
+                </Text>
+                <Text
+                  style={
+                    props.isPaid !== false
+                      ? styles.totalAmount
+                      : [styles.totalAmount, { color: "#DC2626" }]
+                  }
+                >
                   RM {props.amount.toFixed(2)}
                 </Text>
               </View>
@@ -356,11 +380,14 @@ export function ReceiptPdfDocument(props: ReceiptPdfProps) {
           {/* Footer */}
           <View style={styles.footer}>
             <Text>
-              Thank you for your payment! This is an official computer-generated
-              receipt issued by KingAqua Academy.
+              {props.isPaid !== false
+                ? "Thank you for your payment! This is an official computer-generated receipt issued by KingAqua Academy."
+                : "Payment Status: UNPAID. Please settle via Maybank (5515 8406 8475 - KENCANA AQUA ACADEMY) or DuitNow QR and upload receipt in the Parent Portal."}
             </Text>
             <Text style={{ fontFamily: "Helvetica-Bold", color: "#0F172A" }}>
-              Verified by KingAqua Academy Staff
+              {props.isPaid !== false
+                ? "Verified by KingAqua Academy Staff"
+                : "Issued by KingAqua Academy"}
             </Text>
           </View>
         </View>

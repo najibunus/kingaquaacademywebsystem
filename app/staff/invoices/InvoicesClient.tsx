@@ -85,6 +85,7 @@ async function renderLandscapeReceiptCanvas(
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
+  const isPaid = inv.payment_status === "confirmed_paid";
   const receiptId = inv.receipt_id || generateReceiptId(inv.invoice_number, inv.id);
   const dateFormatted = new Date(inv.payment_date || inv.created_at).toLocaleDateString(
     "en-MY",
@@ -102,7 +103,7 @@ async function renderLandscapeReceiptCanvas(
   ctx.strokeRect(48, 48, W - 96, H - 96);
 
   // Top Accent Bar
-  ctx.fillStyle = "#0284C7";
+  ctx.fillStyle = isPaid ? "#0284C7" : "#DC2626";
   ctx.fillRect(50, 50, W - 100, 14);
 
   // Load Logo if possible
@@ -128,24 +129,30 @@ async function renderLandscapeReceiptCanvas(
 
   ctx.fillStyle = "#475569";
   ctx.font = "600 20px sans-serif";
-  ctx.fillText("OFFICIAL PAYMENT RECEIPT  •  LANDSCAPE LETTER FORMAT", 204, 172);
+  ctx.fillText(
+    isPaid
+      ? "OFFICIAL PAYMENT RECEIPT  •  LANDSCAPE LETTER FORMAT"
+      : "OFFICIAL UNPAID INVOICE  •  PAYMENT REMINDER",
+    204,
+    172
+  );
 
-  // Right Header: PAID Badge & Receipt ID
-  ctx.fillStyle = "#DCFCE7";
+  // Right Header: PAID or UNPAID Badge & Receipt/Invoice ID
+  ctx.fillStyle = isPaid ? "#DCFCE7" : "#FEF2F2";
   ctx.fillRect(W - 380, 96, 284, 52);
-  ctx.strokeStyle = "#86EFAC";
+  ctx.strokeStyle = isPaid ? "#86EFAC" : "#FCA5A5";
   ctx.lineWidth = 2;
   ctx.strokeRect(W - 380, 96, 284, 52);
 
-  ctx.fillStyle = "#166534";
+  ctx.fillStyle = isPaid ? "#166534" : "#DC2626";
   ctx.font = "bold 22px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("PAID & VERIFIED ✓", W - 238, 130);
+  ctx.fillText(isPaid ? "PAID & VERIFIED ✓" : "UNPAID INVOICE ❌", W - 238, 130);
 
   ctx.textAlign = "right";
   ctx.fillStyle = "#0F172A";
   ctx.font = "bold 24px monospace";
-  ctx.fillText(receiptId, W - 96, 184);
+  ctx.fillText(isPaid ? receiptId : inv.invoice_number, W - 96, 184);
 
   // Divider
   ctx.strokeStyle = "#CBD5E1";
@@ -163,17 +170,17 @@ async function renderLandscapeReceiptCanvas(
   ctx.strokeRect(96, 256, W - 192, 220);
 
   ctx.textAlign = "left";
-  // Column 1: Receipt ID & Date
+  // Column 1: Receipt/Invoice ID & Date
   ctx.fillStyle = "#64748B";
   ctx.font = "bold 16px sans-serif";
-  ctx.fillText("RECEIPT NUMBER", 132, 304);
+  ctx.fillText(isPaid ? "RECEIPT NUMBER" : "INVOICE NUMBER", 132, 304);
   ctx.fillStyle = "#0F172A";
   ctx.font = "bold 24px sans-serif";
-  ctx.fillText(receiptId, 132, 338);
+  ctx.fillText(isPaid ? receiptId : inv.invoice_number, 132, 338);
 
   ctx.fillStyle = "#64748B";
   ctx.font = "bold 16px sans-serif";
-  ctx.fillText("PAYMENT DATE", 132, 396);
+  ctx.fillText(isPaid ? "PAYMENT DATE" : "DATE ISSUED", 132, 396);
   ctx.fillStyle = "#0F172A";
   ctx.font = "bold 24px sans-serif";
   ctx.fillText(dateFormatted, 132, 430);
@@ -181,7 +188,7 @@ async function renderLandscapeReceiptCanvas(
   // Column 2: Parent Info
   ctx.fillStyle = "#64748B";
   ctx.font = "bold 16px sans-serif";
-  ctx.fillText("RECEIVED FROM (PARENT)", 640, 304);
+  ctx.fillText(isPaid ? "RECEIVED FROM (PARENT)" : "BILLED TO (PARENT)", 640, 304);
   ctx.fillStyle = "#0F172A";
   ctx.font = "bold 24px sans-serif";
   ctx.fillText(inv.parent_name, 640, 338);
@@ -220,7 +227,7 @@ async function renderLandscapeReceiptCanvas(
   ctx.fillText("INVOICE NO.", 920, tableTop + 35);
   ctx.fillText("CLASS", 1180, tableTop + 35);
   ctx.textAlign = "right";
-  ctx.fillText("AMOUNT PAID (RM)", W - 128, tableTop + 35);
+  ctx.fillText(isPaid ? "AMOUNT PAID (RM)" : "AMOUNT DUE (RM)", W - 128, tableTop + 35);
 
   // Package Row
   const rowTop = tableTop + 56;
@@ -246,30 +253,32 @@ async function renderLandscapeReceiptCanvas(
   ctx.font = "bold 26px sans-serif";
   ctx.fillText(`RM ${inv.amount.toFixed(2)}`, W - 128, rowTop + 54);
 
-  // Total Paid Box
+  // Total Paid / Due Box
   const totalTop = rowTop + 130;
-  ctx.fillStyle = "#F0FDF4";
-  ctx.fillRect(W - 640, totalTop, 544, 88);
-  ctx.strokeStyle = "#86EFAC";
+  ctx.fillStyle = isPaid ? "#F0FDF4" : "#FEF2F2";
+  ctx.fillRect(W - 680, totalTop, 584, 88);
+  ctx.strokeStyle = isPaid ? "#86EFAC" : "#FCA5A5";
   ctx.lineWidth = 2;
-  ctx.strokeRect(W - 640, totalTop, 544, 88);
+  ctx.strokeRect(W - 680, totalTop, 584, 88);
 
   ctx.textAlign = "left";
-  ctx.fillStyle = "#166534";
-  ctx.font = "bold 24px sans-serif";
-  ctx.fillText("TOTAL AMOUNT PAID", W - 608, totalTop + 53);
+  ctx.fillStyle = isPaid ? "#166534" : "#991B1B";
+  ctx.font = "bold 22px sans-serif";
+  ctx.fillText(isPaid ? "TOTAL AMOUNT PAID" : "TOTAL AMOUNT DUE (UNPAID)", W - 650, totalTop + 53);
 
   ctx.textAlign = "right";
-  ctx.fillStyle = "#15803D";
+  ctx.fillStyle = isPaid ? "#15803D" : "#DC2626";
   ctx.font = "bold 34px sans-serif";
   ctx.fillText(`RM ${inv.amount.toFixed(2)}`, W - 128, totalTop + 56);
 
   // Footer
   ctx.textAlign = "left";
-  ctx.fillStyle = "#64748B";
-  ctx.font = "500 18px sans-serif";
+  ctx.fillStyle = isPaid ? "#64748B" : "#991B1B";
+  ctx.font = isPaid ? "500 18px sans-serif" : "600 18px sans-serif";
   ctx.fillText(
-    "Thank you for your payment! This is an official computer-generated receipt issued by KingAqua Academy.",
+    isPaid
+      ? "Thank you for your payment! This is an official computer-generated receipt issued by KingAqua Academy."
+      : "UNPAID INVOICE: Kindly transfer to Maybank 5515 8406 8475 (KENCANA AQUA ACADEMY) & upload receipt in Parent Portal.",
     96,
     H - 110
   );
@@ -586,6 +595,35 @@ function InvoiceTable({
                           </svg>
                           View / Print PDF
                         </a>
+
+                        {listType === "unpaid" && onSendWhatsApp && (
+                          <button
+                            type="button"
+                            onClick={() => onSendWhatsApp(inv)}
+                            disabled={isPreparingPdf === inv.id}
+                            title={`Send Unpaid Invoice Reminder to ${inv.parent_name} via WhatsApp`}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "5px",
+                              padding: "6px 12px",
+                              fontSize: "0.75rem",
+                              fontWeight: 700,
+                              borderRadius: "6px",
+                              backgroundColor: "#25D366",
+                              color: "#ffffff",
+                              border: "none",
+                              cursor: isPreparingPdf === inv.id ? "wait" : "pointer",
+                              boxShadow: "0 1px 4px rgba(37, 211, 102, 0.25)",
+                              transition: "all 0.15s ease",
+                            }}
+                          >
+                            <WhatsAppIcon size={14} />
+                            {isPreparingPdf === inv.id
+                              ? "Preparing PDF..."
+                              : "Send WhatsApp (Unpaid)"}
+                          </button>
+                        )}
                       </div>
                     ) : (
                       <div
@@ -1115,6 +1153,7 @@ export default function InvoicesClient({
         amountPaid: inv.amount,
         invoiceNumber: inv.invoice_number,
         pdfUrl: downloadPdfUrl,
+        isPaid: inv.payment_status === "confirmed_paid",
       });
 
       // 5. Open WhatsApp directly to the registered parent's number
@@ -1925,6 +1964,8 @@ export default function InvoicesClient({
           handleApprove={handleApprove}
           onViewUploadedReceipt={handleViewUploadedReceipt}
           onGenerateReceipt={handleGenerateReceipt}
+          isPreparingPdf={isPreparingPdf}
+          onSendWhatsApp={handleSendWhatsAppWithPdf}
         />
 
         {/* SECTION 3: Paid Invoices (History) */}
@@ -2943,12 +2984,35 @@ export default function InvoicesClient({
                       fontSize: "1.1rem",
                       fontWeight: 800,
                       color: "#0f172a",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      flexWrap: "wrap",
                     }}
                   >
-                    WhatsApp Receipt Dispatched
+                    {whatsAppModalInfo.inv.payment_status === "confirmed_paid"
+                      ? "WhatsApp Receipt Dispatched"
+                      : "WhatsApp Unpaid Reminder Dispatched"}
+                    {whatsAppModalInfo.inv.payment_status !== "confirmed_paid" && (
+                      <span
+                        style={{
+                          fontSize: "0.7rem",
+                          fontWeight: 800,
+                          padding: "2px 8px",
+                          borderRadius: "999px",
+                          backgroundColor: "#fef2f2",
+                          color: "#dc2626",
+                          border: "1px solid #fca5a5",
+                        }}
+                      >
+                        UNPAID
+                      </span>
+                    )}
                   </h3>
                   <p style={{ margin: "2px 0 0", fontSize: "0.78rem", color: "#64748b" }}>
-                    Official landscape PDF receipt generated &amp; sent
+                    {whatsAppModalInfo.inv.payment_status === "confirmed_paid"
+                      ? "Official landscape PDF receipt generated & sent"
+                      : "Unpaid invoice reminder PDF generated & opened in WhatsApp"}
                   </p>
                 </div>
               </div>
@@ -3008,10 +3072,15 @@ export default function InvoicesClient({
                   </div>
                   <div>
                     <div style={{ fontSize: "0.72rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>
-                      Receipt ID / Amount
+                      {whatsAppModalInfo.inv.payment_status === "confirmed_paid"
+                        ? "Receipt ID / Amount"
+                        : "Invoice No / Amount Due"}
                     </div>
-                    <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#334155", marginTop: "2px" }}>
-                      {whatsAppModalInfo.receiptId} • RM {whatsAppModalInfo.inv.amount.toFixed(2)}
+                    <div style={{ fontSize: "0.9rem", fontWeight: 700, color: whatsAppModalInfo.inv.payment_status === "confirmed_paid" ? "#334155" : "#dc2626", marginTop: "2px" }}>
+                      {whatsAppModalInfo.inv.payment_status === "confirmed_paid"
+                        ? whatsAppModalInfo.receiptId
+                        : whatsAppModalInfo.inv.invoice_number}{" "}
+                      • RM {whatsAppModalInfo.inv.amount.toFixed(2)}
                     </div>
                   </div>
                 </div>

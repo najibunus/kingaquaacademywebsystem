@@ -56,16 +56,44 @@ export interface ReceiptSummaryParams {
   amountPaid: number;
   invoiceNumber?: string;
   pdfUrl?: string;
+  isPaid?: boolean;
 }
 
 /**
- * Builds the plain text message content for a receipt.
+ * Builds the plain text message content for a receipt or unpaid invoice reminder.
  */
 export function buildReceiptMessageText(params: ReceiptSummaryParams): string {
   const pkgLine =
     params.className && params.className !== "Unassigned"
       ? `${params.packageDetails} (${params.className})`
       : params.packageDetails;
+
+  const isPaid = params.isPaid !== false;
+
+  if (!isPaid) {
+    const unpaidLines = [
+      `*KINGAQUA ACADEMY — PAYMENT REMINDER (UNPAID INVOICE)* ⚠️`,
+      `----------------------------------------`,
+      `*Payment Status:* *UNPAID ❌ (NOT YET PAID)*`,
+      ...(params.invoiceNumber ? [`*Invoice No:* ${params.invoiceNumber}`] : []),
+      `*Date Issued:* ${params.date}`,
+      `*Parent Name:* ${params.parentName}`,
+      `*Child Name:* ${params.childName}`,
+      `*Package Details:* ${pkgLine}`,
+      `*Total Amount Due:* *RM ${params.amountPaid.toFixed(2)}*`,
+      `----------------------------------------`,
+      ...(params.pdfUrl
+        ? [
+            `📄 *View / Download Unpaid Invoice (PDF):*`,
+            `${params.pdfUrl}`,
+            `----------------------------------------`,
+          ]
+        : []),
+      `⚠️ *Reminder:* Our records show that this invoice is currently *UNPAID*. Please make payment via Maybank (*5515 8406 8475* - KENCANA AQUA ACADEMY) or DuitNow QR, and upload your receipt in the KingAqua Academy Parent Portal. Thank you!`,
+    ];
+
+    return unpaidLines.join("\n");
+  }
 
   const lines = [
     `*KINGAQUA ACADEMY — OFFICIAL PAYMENT RECEIPT*`,

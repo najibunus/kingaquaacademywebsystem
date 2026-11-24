@@ -87,12 +87,18 @@ export async function GET(
       isPaid: inv.payment_status === "confirmed_paid",
     });
 
+    const isPaid = inv.payment_status === "confirmed_paid";
     const pdfBuffer = await renderToBuffer(doc);
     const safeReceiptId = receiptId.replace(/[^A-Za-z0-9_-]/g, "_");
-    const safeFilename = `Receipt-${safeReceiptId}.pdf`;
+    const safeInvNum = (inv.invoice_number || id).replace(/[^A-Za-z0-9_-]/g, "_");
+    const safeFilename = isPaid
+      ? `Receipt-${safeReceiptId}.pdf`
+      : `Unpaid-Invoice-${safeInvNum}.pdf`;
 
     // 1. Upload to Supabase Storage (public receipts bucket) so it has a permanent public HTTPS URL accessible on any phone
-    const storagePath = `official_receipts/${safeReceiptId}.pdf`;
+    const storagePath = isPaid
+      ? `official_receipts/${safeReceiptId}.pdf`
+      : `unpaid_invoices/${safeInvNum}.pdf`;
     let publicPdfUrl = "";
 
     try {
