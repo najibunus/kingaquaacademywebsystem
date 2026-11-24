@@ -39,7 +39,9 @@ export default function AdminPricingClient({ pricingData, classes, locations }: 
   const cleanClassName = (rawName: string) => {
     if (!rawName) return "";
     let c = rawName.replace(/\s*\([^)]*\)\s*$/, "").replace(/^(UTHM|Pura Kencana|Pontian)\s+/i, "").trim();
-    if (c === c.toUpperCase() && c.length > 1) c = c.charAt(0) + c.slice(1).toLowerCase();
+    if (c === c.toUpperCase() && c.length > 1) {
+      c = c.toLowerCase().replace(/\b\w/g, (ch) => ch.toUpperCase());
+    }
     return c;
   };
 

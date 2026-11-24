@@ -165,10 +165,11 @@
     { sel: '.programs-grid .program-card:nth-child(4) .program-badge', html: 'Pertengahan' },
     { sel: '.programs-grid .program-card:nth-child(4) .program-meta span:nth-child(2)', html: 'Umur 7 &ndash; 12 tahun' },
     { sel: '.programs-grid .program-card:nth-child(4) .program-meta span:nth-child(4)', html: 'Asas Renang' },
-    { sel: '.programs-grid .program-card:nth-child(4) .program-title', html: 'Novis (Novice)' },
+    { sel: '.programs-grid .program-card:nth-child(4) .program-meta span:nth-child(6)', html: 'Novice Plus (RM 250)' },
+    { sel: '.programs-grid .program-card:nth-child(4) .program-title', html: 'Novis &amp; Novice Plus' },
     {
       sel: '.programs-grid .program-card:nth-child(4) .program-desc',
-      html: 'Program ini direka khas untuk pelajar yang sudah menguasai kuak asas dan ingin memperkemas teknik, meningkatkan stamina, serta membina keyakinan dalam pelbagai gaya renang, termasuk pelajar berkeperluan khas.',
+      html: 'Program ini direka khas untuk pelajar yang sudah menguasai kuak asas dan ingin memperkemas teknik, meningkatkan stamina, serta membina keyakinan dalam pelbagai gaya renang, termasuk pelajar berkeperluan khas. Pakej Novice Plus turut ditawarkan pada harga RM 250.',
     },
     { sel: '#prog-novice-btn', html: 'Daftar Sekarang &rarr;' },
 
