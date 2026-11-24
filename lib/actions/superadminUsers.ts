@@ -164,7 +164,10 @@ export async function updateUserPhone(userId: string, phone: string): Promise<Ac
     const clean = phone.trim();
     if (clean && !/^[0-9+\-\s()]{6,20}$/.test(clean)) throw new Error("Enter a valid phone number.");
 
-    const { admin } = await loadTarget(userId, caller.id);
+    const { admin, target } = await loadTarget(userId, caller.id);
+    if (target.role === "parent" && !clean) {
+      throw new Error("Phone number is required for parent accounts.");
+    }
 
     const { error } = await admin
       .from("users")
@@ -309,6 +312,9 @@ export async function createUserAccount(payload: {
     }
     if (!MANAGED_ROLES.includes(payload.role)) {
       throw new Error("Invalid role selected.");
+    }
+    if (payload.role === "parent" && !cleanPhone) {
+      throw new Error("Phone number is required for parent accounts.");
     }
     if (cleanPhone && !/^[0-9+\-\s()]{6,20}$/.test(cleanPhone)) {
       throw new Error("Enter a valid phone number.");

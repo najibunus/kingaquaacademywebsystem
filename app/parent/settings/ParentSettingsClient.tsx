@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./settings.module.css";
 import { createClient } from "@/lib/supabase/client";
 import { updateStudentProfile } from "@/lib/actions/students";
+import { updateParentProfileAction } from "@/lib/actions/profile";
 import ImageCropperModal from "@/components/ui/ImageCropperModal";
 
 interface ProfileData {
@@ -22,7 +24,9 @@ interface ChildData {
 }
 
 export default function ParentSettingsClient({ profile, childrenData }: { profile: ProfileData, childrenData?: ChildData[] }) {
+  const router = useRouter();
   const [showToast, setShowToast] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
   const [name, setName] = useState(profile.displayName);
   const [phone, setPhone] = useState(profile.phone);
 
@@ -37,8 +41,28 @@ export default function ParentSettingsClient({ profile, childrenData }: { profil
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    setProfileError(null);
+
+    const trimmedPhone = phone.trim();
+    const digitsOnly = trimmedPhone.replace(/\D/g, "");
+    if (!trimmedPhone || digitsOnly.length < 7 || !/^[0-9+\-\s()]{7,20}$/.test(trimmedPhone)) {
+      setProfileError("Phone number is required (minimum 7 digits, e.g. 012-345 6789).");
+      return;
+    }
+
+    startTransition(async () => {
+      const res = await updateParentProfileAction({
+        display_name: name.trim(),
+        phone: trimmedPhone,
+      });
+      if (res.error) {
+        setProfileError(res.error);
+      } else {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+        router.refresh();
+      }
+    });
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,11 +142,20 @@ export default function ParentSettingsClient({ profile, childrenData }: { profil
           </div>
 
           <div className={styles.formGroup}>
-            <label className={styles.label}>Phone Number (WhatsApp)</label>
-            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className={styles.input} />
+            <label className={styles.label}>Phone Number (WhatsApp) <span style={{ color: "#dc2626" }}>*</span></label>
+            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="e.g. 012-345 6789" className={styles.input} required />
+            <p className={styles.hint}>Required for WhatsApp receipts, payment reminders, and class updates.</p>
           </div>
 
-          <button type="submit" className={styles.saveBtn}>Save Changes</button>
+          {profileError && (
+            <div style={{ padding: "10px 12px", borderRadius: "8px", backgroundColor: "#fef2f2", border: "1px solid #fecaca", color: "#dc2626", fontSize: "0.85rem", fontWeight: 600 }}>
+              ⚠️ {profileError}
+            </div>
+          )}
+
+          <button type="submit" disabled={isPending} className={styles.saveBtn}>
+            {isPending ? "Saving..." : "Save Changes"}
+          </button>
         </form>
       </div>
 

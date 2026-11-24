@@ -1,5 +1,6 @@
 import NavLink from "@/components/NavLink";
 import BrandLogo from "@/components/BrandLogo";
+import ParentPhonePromptModal from "@/components/parent/ParentPhonePromptModal";
 import { logoutAction } from "@/lib/actions/auth";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./layout.module.css";
@@ -15,16 +16,20 @@ export default async function ParentLayout({
   
   let displayName = user?.user_metadata?.display_name || "";
   let avatarUrl: string | null = null;
+  let needsPhone = false;
 
   if (user?.id) {
     const { data: profile } = await supabase
       .from("users")
-      .select("display_name, avatar_url")
+      .select("display_name, avatar_url, phone, role")
       .eq("auth_id", user.id)
       .maybeSingle();
 
     if (profile?.display_name) displayName = profile.display_name;
     if (profile?.avatar_url) avatarUrl = profile.avatar_url;
+    if (profile?.role === "parent" && (!profile?.phone || !profile.phone.trim())) {
+      needsPhone = true;
+    }
   }
 
   if (!displayName) {
@@ -143,6 +148,7 @@ export default async function ParentLayout({
 
         {/* Page Content */}
         <div className={styles.pageContainer}>
+          {needsPhone && <ParentPhonePromptModal parentName={displayName} />}
           {children}
         </div>
       </main>

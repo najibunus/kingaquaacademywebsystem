@@ -129,12 +129,17 @@ export default function StaffParentsClient({ initialParents, allStudents }: Prop
 
   const handleCreateParent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!addForm.display_name.trim() || !addForm.email.trim() || !addForm.password.trim()) {
-      setAddError("Please fill in all required fields.");
+    if (!addForm.display_name.trim() || !addForm.email.trim() || !addForm.password.trim() || !addForm.phone.trim()) {
+      setAddError("Please fill in all required fields including phone number.");
       return;
     }
     if (addForm.password.length < 6) {
       setAddError("Password must be at least 6 characters.");
+      return;
+    }
+    const phoneDigits = addForm.phone.replace(/\D/g, "");
+    if (phoneDigits.length < 7) {
+      setAddError("Please enter a valid phone number (minimum 7 digits).");
       return;
     }
 
@@ -195,6 +200,11 @@ export default function StaffParentsClient({ initialParents, allStudents }: Prop
 
   const handleSave = () => {
     if (!editingParent) return;
+    const phoneDigits = (editForm.phone || "").replace(/\D/g, "");
+    if (!editForm.phone.trim() || phoneDigits.length < 7) {
+      alert("Parent phone number is required (minimum 7 digits).");
+      return;
+    }
 
     startTransition(async () => {
       const res = await updateUserProfile(
@@ -457,10 +467,12 @@ export default function StaffParentsClient({ initialParents, allStudents }: Prop
 
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
-                  Phone Number
+                  Phone Number <span style={{ color: "#dc2626" }}>*</span>
                 </label>
                 <input
-                  type="text"
+                  type="tel"
+                  required
+                  placeholder="e.g. 0123456789"
                   style={{
                     width: "100%",
                     padding: "10px",
@@ -697,10 +709,11 @@ export default function StaffParentsClient({ initialParents, allStudents }: Prop
 
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "6px" }}>
-                  Phone Number
+                  Phone Number <span style={{ color: "#dc2626" }}>*</span>
                 </label>
                 <input
-                  type="text"
+                  type="tel"
+                  required
                   placeholder="e.g. 0123456789"
                   style={{
                     width: "100%",

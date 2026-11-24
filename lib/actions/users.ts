@@ -16,13 +16,28 @@ export async function updateUserProfile(
 ) {
   try {
     const supabase = await createAdminClient();
+    const cleanPhone = data.phone !== undefined ? (data.phone?.trim() || null) : undefined;
+
+    if (cleanPhone !== undefined) {
+      const { data: targetUser } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", userId)
+        .single();
+      if (targetUser?.role === "parent") {
+        const digits = (cleanPhone || "").replace(/\D/g, "");
+        if (!cleanPhone || digits.length < 7) {
+          throw new Error("Parent phone number is required (minimum 7 digits).");
+        }
+      }
+    }
 
     // 1. Update basic user profile
     const { error } = await supabase
       .from("users")
       .update({
         display_name: data.display_name,
-        phone: data.phone
+        phone: cleanPhone !== undefined ? cleanPhone : data.phone,
       })
       .eq("id", userId);
 
@@ -84,6 +99,10 @@ export async function createParentUser(
     }
     if (!data.password || data.password.length < 6) {
       throw new Error("Password must be at least 6 characters.");
+    }
+    const phoneDigits = (cleanPhone || "").replace(/\D/g, "");
+    if (!cleanPhone || phoneDigits.length < 7 || !/^[0-9+\-\s()]{7,20}$/.test(cleanPhone)) {
+      throw new Error("Parent phone number is required (minimum 7 digits).");
     }
 
     // 1. Create auth user

@@ -1,6 +1,6 @@
 "use server";
 
-import { createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function updateCoachProfileAction(formData: FormData) {
@@ -38,4 +38,62 @@ export async function updateCoachProfileAction(formData: FormData) {
   revalidatePath("/coach/evaluations");
   revalidatePath("/coach", "layout");
   return { success: true };
+}
+
+export async function updateParentProfileAction(payload: {
+  display_name?: string;
+  phone: string;
+}) {
+  const authClient = await createClient();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
+
+  if (!user) {
+    return { error: "You must be logged in." };
+  }
+
+  const cleanPhone = (payload.phone || "").trim();
+  const digitsOnly = cleanPhone.replace(/\D/g, "");
+  if (!cleanPhone || digitsOnly.length < 7 || !/^[0-9+\-\s()]{7,20}$/.test(cleanPhone)) {
+    return { error: "Please enter a valid WhatsApp / phone number (at least 7 digits)." };
+  }
+
+  const cleanName = payload.display_name?.trim();
+  if (payload.display_name !== undefined && !cleanName) {
+    return { error: "Full name is required." };
+  }
+
+  const supabase = await createAdminClient();
+
+  const updateFields: { phone: string; display_name?: string } = {
+    phone: cleanPhone,
+  };
+  if (cleanName) {
+    updateFields.display_name = cleanName;
+  }
+
+  const { error } = await (supabase.from("users") as any)
+    .update(updateFields)
+    .eq("auth_id", user.id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  // Keep auth user_metadata in sync
+  await supabase.auth.admin.updateUserById(user.id, {
+    user_metadata: {
+      ...(user.user_metadata || {}),
+      phone: cleanPhone,
+      ...(cleanName ? { display_name: cleanName } : {}),
+    },
+  });
+
+  revalidatePath("/parent", "layout");
+  revalidatePath("/parent/portal");
+  revalidatePath("/parent/settings");
+  revalidatePath("/parent/invoices");
+  revalidatePath("/staff/parents");
+  return { success: true, phone: cleanPhone };
 }
