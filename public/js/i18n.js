@@ -152,11 +152,12 @@
     // Card 3: Aquaplay
     { sel: '.programs-grid .program-card:nth-child(3) .program-badge', html: 'Seronok &amp; Aktif' },
     { sel: '.programs-grid .program-card:nth-child(3) .program-meta span:nth-child(2)', html: 'Umur 4 &ndash; 10 tahun' },
-    { sel: '.programs-grid .program-card:nth-child(3) .program-meta span:nth-child(4)', html: 'Rekreasi' },
+    { sel: '.programs-grid .program-card:nth-child(3) .program-meta span:nth-child(4)', html: 'Kanak-kanak Keperluan Khas' },
+    { sel: '.programs-grid .program-card:nth-child(3) .program-meta span:nth-child(6)', html: 'Rekreasi' },
     { sel: '.programs-grid .program-card:nth-child(3) .program-title', html: 'Aquaplay' },
     {
       sel: '.programs-grid .program-card:nth-child(3) .program-desc',
-      html: 'Permainan dan aktiviti air berstruktur yang membina kecergasan fizikal, koordinasi, dan minat terhadap air dalam suasana berkumpulan yang bertenaga.',
+      html: 'Permainan dan aktiviti air berstruktur yang membina kecergasan fizikal, koordinasi, dan minat terhadap air dalam suasana berkumpulan yang bertenaga &mdash; termasuk sokongan khusus untuk kanak-kanak berkeperluan khas.',
     },
     { sel: '#prog-aquaplay-btn', html: 'Daftar Sekarang &rarr;' },
 
